@@ -1,0 +1,50 @@
+<p><br><br></p>
+<div class="commentFormCSS" style="text-align: center;">
+<form name="commentForm" action="{{ site.url }}/assets/save_comment.php" method="POST" onsubmit="submitButton.disabled = true; return true;">
+<input type="hidden" id="url" name="url">
+
+<textarea id="comment" name="comment" maxlength="2100"
+ placeholder="Maximal comment length is 2000 characters.
+Add links like that: [Example](www.example.com).
+You can also use **bold** or *italics*.
+If your cookies are on, you will be able to edit your comment.
+You can comment without registering.
+However, you can register your nick on {{ site.url }}/registration.html"
+ required>
+</textarea><br>
+
+<input id="name" name="name"
+placeholder="Signature is required" required>
+<br>
+
+<input id="password" name="password" type="password"
+placeholder="Enter password if you have registered your nick">
+<br>
+
+<input id="webpage" name="webpage"
+ placeholder="Optionally, your webpage (you can omit http(s)://)" >
+<br>
+
+<input id="email" name="email" type="email"
+ placeholder="Enter your email if you wish to subscribe to further comments" >
+ <br><br>
+
+<label for="captcha">
+    Poor man's captcha:<br>Esay but ofubcstaed quistoen?<br><br>
+</label>
+
+<input id="captcha" name="captcha" 
+placeholder="####">
+<br><br>
+
+<input type="submit" name="submitButton" value="Send">
+</form>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+        var urlField = document.getElementById("url");
+        var currentURL = window.location.href;
+        urlField.value = currentURL;
+        });
+</script>
