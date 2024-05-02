@@ -17,9 +17,10 @@ function prepareString($string, $length, $breaklines, $markdown, $http) {
     if ($breaklines) { $string = str_replace(array("\r\n", "\r", "\n"), "<br>", $string); }
     else { $string = str_replace(array("\r\n", "\r", "\n"), "", $string); }
     if ($markdown) {
-        $string = preg_replace('/\[(.*?)\]\((https?:\/\/)?(.*?)\)($|\s|\.|,)/', '<a href="http://$3">$1</a>$4', $string, -1);
-        $string = preg_replace('/\*\*(.*?)\*\*/', '<b>$1</b>', $string, -1);
-        $string = preg_replace('/\*(.*?)\*/', '<i>$1</i>', $string, -1);
+        $string = preg_replace('/`(.*?)`/', '<code>$1</code>', $string);
+        $string = preg_replace('/\[(.*?)\]\((https?:\/\/)?(.*?)\)($|\s|\.|,)/', '<a href="http://$3">$1</a>$4', $string);
+        $string = preg_replace('/\*\*(.*?)\*\*/', '<b>$1</b>', $string);
+        $string = preg_replace('/\*(.*?)\*/', '<i>$1</i>', $string);
     }
     if ($http && stripos($string, "http") !== 0) { $string = "http://" . $string; }
     return $string;
@@ -42,7 +43,7 @@ function checkIfDuplicate($commentFilePath, $comment) {
 
 function checkVip($userName, $userPassword, $vipNicks) {
     if (array_key_exists($userName, $vipNicks)) {
-        if($vipNicks[$userName][0] === $userPassword) {
+        if($vipNicks[$userName][0] === hash("xxh3", $userPassword)) {
             return [true, $vipNicks[$userName][1], $vipNicks[$userName][2], $vipNicks[$userName][3]];
         } else {
             return [false, -1, "", ""];
@@ -62,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["comment"]) && isset($
             $userRank = $vipInfo[1];
         } else { exit($exitmsg_wrongPassword); }
     } else { $vipInfo = [false, 0, "", ""]; }
-    $userComment = prepareString($_POST["comment"], 2000, true, true, false);
+    $userComment = prepareString($_POST["comment"], $maxCommentLength, true, true, false);
     $userURL = prepareString($_POST["webpage"], 60, false, false, true);
     $userRank = $vipInfo[1];
     if (empty($userURL) && $vipInfo[0] === true) { $userURL = $vipInfo[2]; }

@@ -35,17 +35,19 @@ function HTML2markdown($comment) {
     $comment = preg_replace('/<b>(.*?)<\/b>/', '**$1**', $comment);
     $comment = preg_replace('/<i>(.*?)<\/i>/', '*$1*', $comment);
     $comment = preg_replace('/<a href="(.*?)">(.*?)<\/a>/', '[$2]($1)', $comment);
+    $comment = preg_replace('/<code>(.*?)<\/code>/', '`$1`', $comment);
     return $comment;
 }
 
 function markdown2HTML($comment) {
     $comment = htmlspecialchars($comment, ENT_QUOTES);
     $comment = trim($comment);
-    $comment = substr($comment, 0, 2000);
+    $comment = substr($comment, 0, $maxCommentLength);
     $comment = str_replace(array("\r\n", "\r", "\n"), "<br>", $comment);
-    $comment = preg_replace('/\[(.*?)\]\((https?:\/\/)?(.*?)\)($|\s|\.|,)/', '<a href="http://$3">$1</a>$4', $comment, -1);
-    $comment = preg_replace('/\*\*(.*?)\*\*/', '<b>$1</b>', $comment, -1);
-    $comment = preg_replace('/\*(.*?)\*/', '<i>$1</i>', $comment, -1);
+    $comment = preg_replace('/`(.*?)`/', '<code>$1</code>', $comment);
+    $comment = preg_replace('/\[(.*?)\]\((https?:\/\/)?(.*?)\)($|\s|\.|,)/', '<a href="http://$3">$1</a>$4', $comment);
+    $comment = preg_replace('/\*\*(.*?)\*\*/', '<b>$1</b>', $comment);
+    $comment = preg_replace('/\*(.*?)\*/', '<i>$1</i>', $comment);
     return $comment;
 }
 
@@ -106,7 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (earlyEnoughToEdit($commentElements[1]) || $adminAccess) {
         changeComment($commentElements, markdown2HTML($_POST["editedComment"]), false);
         changeComment($commentElements, markdown2HTML($_POST["editedComment"]), true);
-        header("Location: {{ site.url }}${commentElements[0]}index.php");
+        header("Location: {{ site.url }}{$commentElements[0]}index.php");
     } else { exit($exitmsg_tooLateToEditComment); }
 }
 ?>
