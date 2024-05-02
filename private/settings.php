@@ -34,6 +34,10 @@ $timestamp = "Y-m-d H:i:s";
 // There will be a master file with ALL comments in the blog's main folder.
 // Here you can choose the name for the file:
 $allCommentsFile = "all_comments.txt";
+// Maximal length of a comment, in characters.
+// Remember to set `maxlength` in `form-submit_comment.php` at slightly smaller
+// value for a safety margin for tags.
+$maxCommentLength = 4000;
 
 # search
 // Server subpath for where you keep searchable blog posts.
