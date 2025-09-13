@@ -1,13 +1,22 @@
 #Remove HTML tags
 s|<[^>]*>||g
+#Remove quotation marks
+s|^> ||g
+s|^>||g
 #Remove Markdown bolds
+s|^\*\*||g
 s| \*\*| |g
 s|\*\*[ .:;-]| |g
-#Remove Markdown italics
-s| _| |g
-s|_[ .:;-]| |g
 #Remove Markdown bullet points
 s|^\* ||g
+s|^\- ||g
+#Remove Markdown italics (both styles: _ and *)
+s|^_||g
+s|^\*||g
+s| _| |g
+s| \*| |g
+s|_[ .:;-]| |g
+s|\[ .:;-]| |g
 #Remove Markdown code markers
 s|`||g
 #Replace Markdown links with their names (delete URL)
