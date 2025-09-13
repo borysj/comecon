@@ -19,3 +19,4 @@ $exitmsg_wrongCommentAdminPassword = "Nieprawidłowe hasło do edycji komentarzy
 $exitmsg_wrongCommentID = "BŁĄD! Nie znaleziono komentarza do edycji. Data albo kod komentarza w linku jest niepoprawny.";
 $exitmsg_tooLateToEditComment = "Już po ptokach. Na edycję tego komentarza jest za późno.";
 $exitmsg_wrongEmailNotificationPassword = "Are you trying to hack me?";
+$exitmsg_noSearchPhrase = "No search phrase has been provided";

@@ -3,6 +3,7 @@ layout: null
 ---
 <?php
 require "{{ site.dir_with_data }}/settings.php";
+include "messages.php";
 
 function searchThroughFiles($searchDir, $searchString, $pattern, $trailingChars) {
     $searchResults = [];
@@ -34,7 +35,7 @@ function saveSearchString($searchString) {
 
 $searchString = htmlspecialchars($_POST["searchPhrase"], ENT_QUOTES);
 if (empty($searchString)) {
-    exit("No phrase to search for");
+    exit($exitmsg_noSearchPhrase);
 }
 if (str_starts_with($searchString, '123')) {
     $searchString = substr($searchString, 3);
