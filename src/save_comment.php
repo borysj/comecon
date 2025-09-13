@@ -18,7 +18,7 @@ function prepareString($string, $length, $breaklines, $markdown, $http) {
     else { $string = str_replace(array("\r\n", "\r", "\n"), "", $string); }
     if ($markdown) {
         $string = preg_replace('/`(.*?)`/', '<code>$1</code>', $string);
-        $string = preg_replace('/\[(.*?)\]\((https?:\/\/)?(.*?)\)($|\s|\.|,)/', '<a href="http://$3">$1</a>$4', $string);
+        $string = preg_replace('/\[(.*?)\]\((https?:\/\/)?(.*?)\)/', '<a href="http://$3">$1</a>', $string);
         $string = preg_replace('/\*\*(.*?)\*\*/', '<b>$1</b>', $string);
         $string = preg_replace('/\*(.*?)\*/', '<i>$1</i>', $string);
     }
@@ -127,7 +127,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["comment"]) && isset($
         //echo $exitmsg_success;
         //subscriptionResult($subAdded, true);
         //fastcgi_finish_request();
-        header("Location: {{ site.url }}{$filePath}index.php");
+        header("Location: {{ site.url }}{$filePath}index.php#lastComment");
         sendNotifications($year, $month, $day, $title, $userName, $userURL, $userComment, false);
     } else { unset($_POST); echo $exitmsg_errorSavingComment; }
 }

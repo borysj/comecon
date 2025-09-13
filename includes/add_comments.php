@@ -15,13 +15,18 @@ if (file_exists($commentFilePath)) {
     <h2>Comments</h2>
 <?php
     $comments = explode(PHP_EOL, file_get_contents($commentFilePath));
-    foreach ($comments as $c) {
+    foreach ($comments as $key => $c) {
         if (!empty($c)) {
             $cc = explode("<|>", $c);
             if (!empty($cc[3])) {
                 $nick = '<a href="' . $cc[3] . '">' . $cc[2] . '</a>';
             } else {
                 $nick = $cc[2];
+            }
+            if ($key === array_key_last($comments) - 1) {
+?>
+            <a id="lastComment"></a>
+<?php
             }
 ?>
             <span class="comm_author<?=$cc[5]?>"><p><b><?=$nick?></b> (<?=$cc[1]?>)</p></span>

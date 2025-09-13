@@ -134,8 +134,23 @@ For the same reason you should convert paragraphs into single lines if your
 editor is doing hard wraps. It can be done with `tr`:
 `tr "\n" " " < blogpost.txt`
 
-Furthermore, the script will also look for the phrase in all comment files
+Alternatively, use this cryptic sed command:
+`sed ':a;N;$!ba;s|\n\([^\n]\)| \1|g' blogpost.md > blogpost.txt`
+
+It is superior to `tr`, because `tr` while mash the entire post into a single
+line. The above sed command will respect blank lines which are normally used to
+divide paragraphs in Markdown.
+
+The search script will also look for the phrase in all comment files
 within `$commentsDir` as defined in `settings.php`.
+
+Notice that the phrase will be saved to `$searchQueriesRecord` as defined in
+`settings.php` unless the phrase starts with `123`. This simple "password" can
+be easily changed inside `search.php`.
+
+The rationale is that the site owner might want to use the search engine without
+necessarily saving the query. The idea behind saving the phrases is to provide a
+record of what the visitors are looking for.
 
 
 

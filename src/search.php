@@ -33,7 +33,14 @@ function saveSearchString($searchString) {
 }
 
 $searchString = htmlspecialchars($_POST["searchPhrase"], ENT_QUOTES);
-saveSearchString($searchString);
+if (empty($searchString)) {
+    exit("No phrase to search for");
+}
+if (str_starts_with($searchString, '123')) {
+    $searchString = substr($searchString, 3);
+} else {
+    saveSearchString($searchString);
+}
 $patternPost = "/(\d{4})-(\d{2})-(\d{2})-([^.]*)/";
 $patternComment = "/(\d{4})-(\d{2})-(\d{2})-(.*)-COMMENTS.txt/";
 
