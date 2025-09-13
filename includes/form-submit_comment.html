@@ -1,43 +1,48 @@
 <p><br><br></p>
 <div class="commentFormCSS" style="text-align: center;">
 <form name="commentForm" action="{{ site.url }}/assets/save_comment.php" method="POST" onsubmit="submitButton.disabled = true; return true;">
+<fieldset>
+<legend align="left">C O M E C O N</legend>
 <input type="hidden" id="url" name="url">
 
+<label for="comment">Leave your opinion (max. 4000 characters):</label>
 <textarea id="comment" name="comment" maxlength="3900"
- placeholder="Maximal comment length is 2000 characters.
-Add links like that: [Example](www.example.com).
+ placeholder="Add links like that: [Example](www.example.com).
 You can also use **bold** or *italics*.
-If your cookies are on, you will be able to edit your comment.
-You can comment without registering.
-However, you can register your nick on {{ site.url }}/registration.html"
+You can mark code and filenames `like this`.
+Use paragraphs, newlines and blank lines will be preserved.
+If your cookies are on, you will be able to edit your comment."
  required>
-</textarea><br>
+</textarea>
 
-<input id="name" name="name"
-placeholder="Signature is required" required>
-<br>
+<label for="name">Signature:</label>
+<input id="name" name="name" required>
 
-<input id="password" name="password" type="password"
-placeholder="Enter password if you have registered your nick">
-<br>
+<label for="password">Password (if you have <a href="{{ site.url }}/registration.html">registered</a>):</label>
+<input id="password" name="password" type="password">
 
+<label for="webpage">Your webpage:</label>
 <input id="webpage" name="webpage"
- placeholder="Optionally, your webpage (you can omit http(s)://)" >
-<br>
+ placeholder="You can omit the initial http(s):// in the URL">
 
+<label for="email">Your email (for <a href="https://gravatar.com">gravatar</a> and possibly notifications):</label>
 <input id="email" name="email" type="email"
- placeholder="Enter your email if you wish to subscribe to further comments" >
- <br><br>
+ placeholder="You can leave it empty" >
+
+<label for="email2">
+    <input id="email-comments" name="email-comments" type="checkbox">
+    Check it if you wish to subscribe to these comments through your email
+</label>
 
 <label for="captcha">
     Poor man's captcha:<br>Esay but ofubcstaed quistoen?<br><br>
 </label>
 
-<input id="captcha" name="captcha" 
+<input id="captcha" name="captcha"
 placeholder="####">
-<br><br>
 
 <input type="submit" name="submitButton" value="Send">
+</fieldset>
 </form>
 </div>
 
