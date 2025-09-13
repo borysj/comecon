@@ -3,8 +3,7 @@ layout: null
 ---
 <?php
 include "{{ site.dir_with_data }}/settings.php";
-include "email_messages.php";
-include "exit_messages.php";
+include "messages.php";
 
 $subsFilePath = $homeDir . $subscribersDir . "/" . $subscribersFile;
 

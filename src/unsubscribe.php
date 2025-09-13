@@ -3,7 +3,7 @@ layout: null
 ---
 <?php
 require "{{ site.dir_with_data }}/settings.php";
-include "exit_messages.php";
+include "messages.php";
 
 if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["user"]) && isset($_GET["pw"]) && isset($_GET["what"])) {
     $filePath = $subscribersDir . "/" . $_GET["what"];

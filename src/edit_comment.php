@@ -3,7 +3,7 @@ layout: null
 ---
 <?php
 include "{{ site.dir_with_data }}/settings.php";
-include "exit_messages.php";
+include "messages.php";
 
 function findComment($postDate, $commentID, $adminAccess) {
     global $commentsDir, $commentSalt;
