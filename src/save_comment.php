@@ -13,7 +13,7 @@ function prepareString($string, $length, $breaklines, $markdown, $http) {
     $string = htmlspecialchars($string, ENT_QUOTES);
     $string = trim($string);
     $string = substr($string, 0, $length);
-    if ($breaklines) { $string = str_replace(array("\r\n", "\r", "\n"), "<br>", $string); }
+    if ($breaklines) { $string = str_replace(array("\r\n", "\r", "\n"), "<br/>", $string); }
     else { $string = str_replace(array("\r\n", "\r", "\n"), "", $string); }
     if ($markdown) {
         $string = preg_replace('/`(.*?)`/', '<code>$1</code>', $string);
@@ -34,7 +34,7 @@ function checkIfDuplicate($commentFilePath, $comment) {
         $commentFile = file($commentFilePath);
         $lastCommentLine = $commentFile[count($commentFile)-1];
         $lastComment = explode("<|>", $lastCommentLine);
-        if (trim($lastComment[4]) === $comment) {
+        if (trim($lastComment[5]) === $comment) {
             return true;
         } else { return false; }
     } else { return false; }
@@ -43,12 +43,13 @@ function checkIfDuplicate($commentFilePath, $comment) {
 function checkVip($userName, $userPassword, $vipNicks) {
     if (array_key_exists($userName, $vipNicks)) {
         if($vipNicks[$userName][0] === hash("xxh3", $userPassword)) {
-            return [true, $vipNicks[$userName][1], $vipNicks[$userName][2], $vipNicks[$userName][3]];
+            return [true, $vipNicks[$userName][1], $vipNicks[$userName][2],
+                    $vipNicks[$userName][3], $vipNicks[$userName][4]];
         } else {
-            return [false, -1, "", ""];
+            return [false, -1, "", "", 0];
         }
     } else {
-        return [false, -1, "", ""];
+        return [false, -1, "", "", 0];
     }
 }
 
@@ -61,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["comment"]) && isset($
         if ($vipInfo[0]) {
             $userRank = $vipInfo[1];
         } else { exit($exitmsg_wrongPassword); }
-    } else { $vipInfo = [false, 0, "", ""]; }
+    } else { $vipInfo = [false, 0, "", "", 0]; }
     $userComment = prepareString($_POST["comment"], $maxCommentLength, true, true, false);
     $userURL = prepareString($_POST["webpage"], 60, false, false, true);
     $userRank = $vipInfo[1];
@@ -78,6 +79,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["comment"]) && isset($
     $currentDateTime = date($timestamp);
 
     $postURL = $_POST["url"];
+    if (str_contains($postURL, "#")) {
+        $postURL = strstr($postURL, "#", true);
+    }
+    if (!str_ends_with($postURL, "index.php")) {
+        if (!str_ends_with($postURL, "/")) {
+            $postURL .= "/index.php";
+        } else {
+            $postURL .= "index.php";
+        }
+    }
+
     $pattern = "/(\d{4})\/(\d{2})\/(\d{2})\/(.*)\//";
     if (preg_match($pattern, $postURL, $matches)) {
         $year = $matches[1];      $month = $matches[2];
@@ -88,7 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["comment"]) && isset($
                 "/" . $day . "/" . $title . "/";
     $commentLine = $filePath . "<|>" .
                    $currentDateTime . "<|>" .
-                   $userName . "<|>" . $userURL . "<|>" .
+                   $userName . "<|>" . $userURL . "<|>" . $userEmail . "<|>" .
                    $userComment . "<|>" . $userRank . PHP_EOL;
     $fullFilePath = $commentsDir . "/" . $year . "-" . $month . "-" . $day . "-" . $title . '-COMMENTS.txt';
 
@@ -96,22 +108,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["comment"]) && isset($
 
     createNonexistentFile($fullFilePath);
 
-    $subAdded = 0;  // Result flag for registering email
-    $subsFilePath = "";
     if (!empty($userEmail)) {
-        if (!filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
-            $subAdded = -1;
-        }
-        else {
+        if (filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
             $subsFile = $year . "-" . $month . "-" . $day . "-" . $title . "-SUBS.txt";
             $subsFilePath = $subscribersDir.  "/" . $subsFile;
             createNonexistentFile($subsFilePath);
             if (stripos(file_get_contents($subsFilePath), $userEmail) === false) {
                 $password = mt_rand(1000000,9999999);
-                if (file_put_contents($subsFilePath, $userEmail . "<|>" . $password . PHP_EOL, FILE_APPEND | LOCK_EX) !== false) {
-                    $subAdded = 2;
-                } else { $subAdded = 3; }
-            } else { $subAdded = 1; }
+                file_put_contents($subsFilePath, $userEmail . "<|>" . $password . PHP_EOL, FILE_APPEND | LOCK_EX);
+            }
         }
     }
 
@@ -123,11 +128,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["comment"]) && isset($
                   time() + $commentEditTimeout - 5*60,
                   "/");
         unset($_POST);
-        //echo $exitmsg_success;
-        //subscriptionResult($subAdded, true);
-        //fastcgi_finish_request();
         header("Location: {{ site.url }}{$filePath}index.php#lastComment");
-        sendNotifications($year, $month, $day, $title, $userName, $userURL, $userComment, false);
+        sendNotifications($year, $month, $day, $title, $currentDateTime, $userName, $userURL, $userComment, false);
     } else { unset($_POST); echo $exitmsg_errorSavingComment; }
 }
 else { echo $exitmsg_errorRunningCommentScript; }

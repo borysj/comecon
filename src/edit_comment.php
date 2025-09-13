@@ -31,19 +31,20 @@ function findComment($postDate, $commentID, $adminAccess) {
 }
 
 function HTML2markdown($comment) {
-    $comment = str_replace("<br>", "\n", $comment);
+    $comment = str_replace("<br/>", "\n", $comment);
+    $comment = preg_replace('/<code>(.*?)<\/code>/', '`$1`', $comment);
     $comment = preg_replace('/<b>(.*?)<\/b>/', '**$1**', $comment);
     $comment = preg_replace('/<i>(.*?)<\/i>/', '*$1*', $comment);
     $comment = preg_replace('/<a href="(.*?)">(.*?)<\/a>/', '[$2]($1)', $comment);
-    $comment = preg_replace('/<code>(.*?)<\/code>/', '`$1`', $comment);
     return $comment;
 }
 
 function markdown2HTML($comment) {
+    global $maxCommentLength;
     $comment = htmlspecialchars($comment, ENT_QUOTES);
     $comment = trim($comment);
     $comment = substr($comment, 0, $maxCommentLength);
-    $comment = str_replace(array("\r\n", "\r", "\n"), "<br>", $comment);
+    $comment = str_replace(array("\r\n", "\r", "\n"), "<br/>", $comment);
     $comment = preg_replace('/`(.*?)`/', '<code>$1</code>', $comment);
     $comment = preg_replace('/\[(.*?)\]\((https?:\/\/)?(.*?)\)($|\s|\.|,)/', '<a href="http://$3">$1</a>$4', $comment);
     $comment = preg_replace('/\*\*(.*?)\*\*/', '<b>$1</b>', $comment);
@@ -73,7 +74,7 @@ function changeComment($commentElements, $newComment, $editAllCommentsFile) {
         $newCommentLine = "";
     } else {
         $newCommentLine = $commentElements[0] . "<|>" . $commentElements[1] . "<|>" . $commentElements[2] . "<|>" .
-            $commentElements[3] . "<|>" . $newComment . "<|>" . $commentElements[5];
+            $commentElements[3] . "<|>" . $commentElements[4] . "<|>" . $newComment . "<|>" . $commentElements[6];
     }
     $newCommentFileContent = [];
     foreach ($commentFileContent as $commentLine) {
@@ -98,7 +99,7 @@ if (isset($_GET['p'])) {
 $commentLine = findComment($_GET['d'], $_GET['c'], $adminAccess);
 if ($commentLine) {
     $commentElements = explode("<|>", $commentLine);
-    $comment = HTML2markdown($commentElements[4]);
+    $comment = HTML2markdown($commentElements[5]);
 } else { exit($exitmsg_wrongCommentID); }
 if (!earlyEnoughToEdit($commentElements[1]) && !$adminAccess) {
     exit($exitmsg_tooLateToEditComment);
