@@ -18,6 +18,7 @@ if (file_exists($commentFilePath)) {
     foreach ($comments as $key => $c) {
         if (!empty($c)) {
             $cc = explode("<|>", $c);
+            $commentAnchor = str_replace(array(" ", "-", ":"), "", $cc[1]);
             if (!empty($cc[3])) {
                 $nick = '<a href="' . $cc[3] . '">' . $cc[2] . '</a>';
             } else {
@@ -28,8 +29,15 @@ if (file_exists($commentFilePath)) {
             <a id="lastComment"></a>
 <?php
             }
+            $email = $cc[4];
+            $emailhash = md5(strtolower(trim($email ?: "default@example.com")));
 ?>
-            <span class="comm_author<?=$cc[5]?>"><p><b><?=$nick?></b> (<?=$cc[1]?>)</p></span>
+            <a id="<?=$commentAnchor?>"></a>
+            <p class="comm_author<?=$cc[6]?>">
+            <img class ="gravatar"
+                 src="https://www.gravatar.com/avatar/<?=$emailhash?>?s=40&d=retro"
+                 alt="Gravatar">
+            <b><?=$nick?></b>&nbsp;(<?=$cc[1]?>)</p>
 <?php
             $cookieName = $cc[0] . "<|>" . str_replace(array("-", " ", ":"), "", $cc[1]);
             if (isset($_COOKIE[$cookieName])) {
@@ -40,14 +48,14 @@ if (file_exists($commentFilePath)) {
                 }
                 $dateDashed = $year . "-" . $month . "-" . $day;
 ?>
-                <span class="comm_author<?=$cc[5]?>"><p>
+                <p class="comm_author_edit<?=$cc[6]?>">
                 <a href="{{ site.url }}/assets/edit_comment.php?d=<?=$dateDashed?>&c=<?=$_COOKIE[$cookieName]?>">
                 ..:: You have 20 minutes to edit your comment ::..
-                </a></p></span>
+                </a></p>
 <?php
             }
 ?>
-            <span class="comm_content<?=$cc[5]?>"><p><?=$cc[4]?></p></span>
+            <p class="comm_content<?=$cc[6]?>"><?=$cc[5]?></p>
 <?php
         }
     }
