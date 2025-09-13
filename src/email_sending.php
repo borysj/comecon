@@ -27,9 +27,13 @@ function createMail($title, $fullTitle) {
     return $mail;
 }
 
-function sendNotifications($year, $month, $day, $title, $userName, $userURL, $userComment, $fullTitle) {
+function sendNotifications($year, $month, $day, $title, $commentTimestamp, $userName, $userURL, $userComment, $fullTitle) {
     global $subscribersFile, $subscribersDir, $ownerPrivateMail, $blogContactMail;
     $link = "{{ site.url }}/" . $year . "/" . $month . "/" . $day . "/" . $title;
+    if ($commentTimestamp !== "") {
+        $commentTimestamp = str_replace(array(" ", "-", ":"), "", $commentTimestamp);
+        $link = $link . "/index.php#" . $commentTimestamp;
+    }
     if ($fullTitle) {
         $filename = $subscribersFile;
         $text1 = "new";
