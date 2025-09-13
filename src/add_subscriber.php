@@ -9,8 +9,6 @@ $subsFilePath = $homeDir . $subscribersDir . "/" . $subscribersFile;
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["email"])) {
 
-    $subAdded = 0;  // Result flag with several possible values
-
     $userEmail = $_POST["email"];
     $userEmail = htmlspecialchars($userEmail, ENT_QUOTES);
     $userEmail = trim($userEmail);
@@ -23,16 +21,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["email"])) {
         $userEmail = substr($userEmail, 0, -3);
     }
 
-    if (!filter_var($userEmail, FILTER_VALIDATE_EMAIL)) { $subAdded = -1; }
-    else {
+    if (filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
         if (stripos(file_get_contents($subsFilePath), $userEmail) === false) {
             $password = mt_rand(1000000,9999999);
-            if (file_put_contents($subsFilePath, $userEmail . "<|>" . $password . PHP_EOL, FILE_APPEND | LOCK_EX) !== false) {
-                $subAdded = 2;
-            }
-            else { $subAdded = 3; }
-        } else { $subAdded = 1; }
+            file_put_contents($subsFilePath, $userEmail . "<|>" . $password . PHP_EOL, FILE_APPEND | LOCK_EX)
+        }
     }
-    subscriptionResult($subAdded, false);
 }
-
