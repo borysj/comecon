@@ -1,14 +1,6 @@
-        <div class="credits">
-            <p>Blogrys powstał 5 października 2006 r. 
-{% if include.counter == "true" %}Liczba wpisów wynosi już {{ site.posts.size }}.{% endif %}<br>
-<a href="{{ site.url }}/silnik.html">Obecne wcielenie blogu</a> zostało wygenerowane statycznie w <a href="https://jekyllrb.com/" target="_blank" rel="noreferrer">Jekyllu</a>.<br />
-            Blogrys powstaje bez najmniejszego udziału AI/LLM.<br />
-            Design oparty jest o <a href="https://github.com/abhinavs/moonwalk" target="_blank" rel="noreferrer">Moonwalk</a> (&copy;&nbsp;Abhinav Saxena).</p>
-	</div>
-  
-	<div class="search-container">
-        <form name="searchForm" action="{{ site.url }}/assets/search.php" method="POST" target="_blank">
-			<input type="text" id="searchPhrase" name="searchPhrase" placeholder="Szukana fraza" required>
-			<input type="submit" value="Szukaj">
-		</form>
-	</div>
+<div class="search-container">
+    <form name="searchForm" action="{{ site.url }}/assets/search.php" method="POST" target="_blank">
+        <input type="text" id="searchPhrase" name="searchPhrase" placeholder="Searched phrase" required>
+        <input type="submit" value="Search">
+    </form>
+</div>
