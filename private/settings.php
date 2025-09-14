@@ -25,6 +25,14 @@ $blogContactMail = "john@myblog.com";
 // php -r "echo(hash('xxh3', 'unhashed_password'));"
 $notificationPassword = "hashed_password_for_sending_notifications";
 
+# email_storage
+// Use any random sequence of characters.
+// These salts will be used for email if the owner does not have gravatar.
+// Then the true email is irrelevant, and another layer of obfuscation
+// (on top of SHA-256) will be added.
+$emailSaltA = "45klk231";
+$emailSaltB = "xa56kj12";
+
 # save_comment
 // If you want to change the time zone and the timestamp format,
 // you can look up PHP functions date_default_timezone_set() and
