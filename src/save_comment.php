@@ -53,6 +53,16 @@ function checkVip($userName, $userPassword, $vipNicks) {
     }
 }
 
+function gravatarExists($email) {
+    $hashedEmail = md5(strtolover(trim($email)));
+    $url = "https://www.gravatar.com/avatar/" . $hashedEmail . "?d=404";
+    $headers = @get_headers($url);
+    if (!preg_match("|200|", $headers[0])) { $gravatar = false; }
+    else { $gravatar = true; }
+    return $gravatar;
+}
+
+
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["comment"]) && isset($_POST["name"]) && isset($_POST["captcha"]) && isset($_POST["url"])) {
 
     $userName = prepareString($_POST["name"], 40, false, false, false);
@@ -69,6 +79,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["comment"]) && isset($
     if (empty($userURL) && $vipInfo[0] === true) { $userURL = $vipInfo[2]; }
     $userEmail = prepareString($_POST["email"], 60, false, false, false);
     if (empty($userEmail) && $vipInfo[0] === true) { $userEmail = $vipInfo[3]; }
+    if (gravatarExists($userEmail)) { $hashedEmail = hash("sha256", $userEmail); }
+    else { $hashedEmail = hash("sha256", $emailSaltA . $userEmail . $emailSalt2); }
+    if (isset($_POST["email-comments"]) && $_POST["email-comments"] == "on") {
+        $wantsEmails = 1;
+    }
+    elseif ($vipInfo[0] == true) { $wantsEmails = $vipInfo[4]; }
+    else { $wantsEmails = 0; }
 
     if (!$vipInfo[0]) {
         $captcha = trim(htmlspecialchars($_POST["captcha"], ENT_QUOTES));
@@ -98,17 +115,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["comment"]) && isset($
 
     $filePath = "/" . $year . "/" . $month .
                 "/" . $day . "/" . $title . "/";
-    $commentLine = $filePath . "<|>" .
-                   $currentDateTime . "<|>" .
-                   $userName . "<|>" . $userURL . "<|>" . $userEmail . "<|>" .
-                   $userComment . "<|>" . $userRank . PHP_EOL;
+    $commentLineWithEmail = $filePath . "<|>" .
+                            $currentDateTime . "<|>" .
+                            $userName . "<|>" . $userURL . "<|>" . $hashedEmail . "<|>" .
+                            $userComment . "<|>" . $userRank . PHP_EOL;
+    $commentLineWithoutEmail = $filePath . "<|>" .
+                               $currentDateTime . "<|>" .
+                               $userName . "<|>" . $userURL . "<|>" . "<|>" .
+                               $userComment . "<|>" . $userRank . PHP_EOL;
     $fullFilePath = $commentsDir . "/" . $year . "-" . $month . "-" . $day . "-" . $title . '-COMMENTS.txt';
 
     if (checkIfDuplicate($fullFilePath, $userComment)) { exit($exitmsg_duplicate); }
 
     createNonexistentFile($fullFilePath);
 
-    if (!empty($userEmail)) {
+    if (!empty($userEmail) && $wantsEmails == 1) {
         if (filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
             $subsFile = $year . "-" . $month . "-" . $day . "-" . $title . "-SUBS.txt";
             $subsFilePath = $subscribersDir.  "/" . $subsFile;
@@ -120,8 +141,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["comment"]) && isset($
         }
     }
 
-    if (file_put_contents($fullFilePath, $commentLine, FILE_APPEND | LOCK_EX) !== false) {
-        file_put_contents($allCommentsFile, $commentLine, FILE_APPEND | LOCK_EX);
+    if (file_put_contents($fullFilePath, $commentLineWithEmail, FILE_APPEND | LOCK_EX) !== false) {
+        file_put_contents($allCommentsFile, $commentLineWithoutEmail, FILE_APPEND | LOCK_EX);
         $cookieDateTime = str_replace(array("-", " ", ":"), "", $currentDateTime);
         setcookie("{$filePath}<|>{$cookieDateTime}",
                   hash("xxh3", $currentDateTime . $userName . $commentSalt),
