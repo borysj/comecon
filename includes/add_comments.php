@@ -29,13 +29,12 @@ if (file_exists($commentFilePath)) {
             <a id="lastComment"></a>
 <?php
             }
-            $email = $cc[4];
-            $emailhash = md5(strtolower(trim($email ?: "default@example.com")));
+            $hashedEmail = $cc[4];
 ?>
             <a id="<?=$commentAnchor?>"></a>
             <p class="comm_author<?=$cc[6]?>">
             <img class ="gravatar"
-                 src="https://www.gravatar.com/avatar/<?=$emailhash?>?s=40&d=retro"
+                 src="https://www.gravatar.com/avatar/<?=$hashedEmail?>?s=40&d=retro"
                  alt="Gravatar">
             <b><?=$nick?></b>&nbsp;(<?=$cc[1]?>)</p>
 <?php
