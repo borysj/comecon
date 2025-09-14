@@ -54,7 +54,7 @@ function checkVip($userName, $userPassword, $vipNicks) {
 }
 
 function gravatarExists($email) {
-    $hashedEmail = md5(strtolover(trim($email)));
+    $hashedEmail = md5(strtolower(trim($email)));
     $url = "https://www.gravatar.com/avatar/" . $hashedEmail . "?d=404";
     $headers = @get_headers($url);
     if (!preg_match("|200|", $headers[0])) { $gravatar = false; }
