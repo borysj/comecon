@@ -53,8 +53,9 @@ function checkVip($userName, $userPassword, $vipNicks) {
     }
 }
 
-function gravatarExists($email) {
-    $hashedEmail = md5(strtolower(trim($email)));
+function gravatarExists($email, $notYetHashed) {
+    if ($notYetHashed) { $hashedEmail = md5(strtolower(trim($email))); }
+    else { $hashedEmail = $email; }
     $url = "https://www.gravatar.com/avatar/" . $hashedEmail . "?d=404";
     $headers = @get_headers($url);
     if (!preg_match("|200|", $headers[0])) { $gravatar = false; }
@@ -77,15 +78,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["comment"]) && isset($
     $userURL = prepareString($_POST["webpage"], 60, false, false, true);
     $userRank = $vipInfo[1];
     if (empty($userURL) && $vipInfo[0] === true) { $userURL = $vipInfo[2]; }
+
     $userEmail = prepareString($_POST["email"], 60, false, false, false);
-    if (empty($userEmail) && $vipInfo[0] === true) { $userEmail = $vipInfo[3]; }
-    if (gravatarExists($userEmail)) { $hashedEmail = hash("sha256", $userEmail); }
-    else { $hashedEmail = hash("sha256", $emailSaltA . $userEmail . $emailSalt2); }
-    if (isset($_POST["email-comments"]) && $_POST["email-comments"] == "on") {
-        $wantsEmails = 1;
+    if (!empty($userEmail)) {
+        if (gravatarExists($userEmail, true)) { $hashedEmail = hash("sha256", $userEmail); }
+        else { $hashedEmail = hash("sha256", $emailSaltA . $userEmail . $emailSaltB); }
+        if (isset($_POST["email-comments"]) && $_POST["email-comments"] == "on") { $wantsEmails = 1; }
+        else { $wantsEmails = 0; }
     }
-    elseif ($vipInfo[0] == true) { $wantsEmails = $vipInfo[4]; }
-    else { $wantsEmails = 0; }
+    elseif (!empty($vipInfo[3])) {
+        if($vipInfo[4] === 1) {
+            $wantsEmails = 1;
+            $userEmail = $vipInfo[3];
+            if (gravatarExists($userEmail, true)) { $hashedEmail = hash("sha256", $userEmail); }
+            else { $hashedEmail = hash("sha256", $emailSaltA . $userEmail . $emailSaltB); }
+        }
+        else {
+            $wantsEmails = 0;
+            $hashedEmail = $vipInfo[3];
+            if (!gravatarExists($hashedEmail, false)) { $hashedEmail = hash("sha256", $hashedMail); }
+        }
+    }
 
     if (!$vipInfo[0]) {
         $captcha = trim(htmlspecialchars($_POST["captcha"], ENT_QUOTES));
