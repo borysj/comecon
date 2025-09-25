@@ -39,19 +39,6 @@ function HTML2markdown($comment) {
     return $comment;
 }
 
-function markdown2HTML($comment) {
-    global $maxCommentLength;
-    $comment = htmlspecialchars($comment, ENT_QUOTES);
-    $comment = trim($comment);
-    $comment = substr($comment, 0, $maxCommentLength);
-    $comment = str_replace(array("\r\n", "\r", "\n"), "<br/>", $comment);
-    $comment = preg_replace('/`(.*?)`/', '<code>$1</code>', $comment);
-    $comment = preg_replace('/\[(.*?)\]\((https?:\/\/)?(.*?)\)($|\s|\.|,)/', '<a href="http://$3">$1</a>$4', $comment);
-    $comment = preg_replace('/\*\*(.*?)\*\*/', '<b>$1</b>', $comment);
-    $comment = preg_replace('/\*(.*?)\*/', '<i>$1</i>', $comment);
-    return $comment;
-}
-
 function earlyEnoughToEdit($commentDateTime) {
     global $commentEditTimeout;
     $commentTimestamp = strtotime($commentDateTime);
@@ -107,8 +94,8 @@ if (!earlyEnoughToEdit($commentElements[1]) && !$adminAccess) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (earlyEnoughToEdit($commentElements[1]) || $adminAccess) {
-        changeComment($commentElements, markdown2HTML($_POST["editedComment"]), false);
-        changeComment($commentElements, markdown2HTML($_POST["editedComment"]), true);
+        changeComment($commentElements, prepareString($_POST["editedComment"], $maxCommentLength, true, true, false), false);
+        changeComment($commentElements, prepareString($_POST["editedComment"], $maxCommentLength, true, true, false), true);
         header("Location: {{ site.url }}{$commentElements[0]}index.php");
     } else { exit($exitmsg_tooLateToEditComment); }
 }
