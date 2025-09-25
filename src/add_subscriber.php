@@ -4,16 +4,13 @@ layout: null
 <?php
 include "{{ site.dir_with_data }}/settings.php";
 include "messages.php";
+include "utilities.php";
 
 $subsFilePath = $homeDir . $subscribersDir . "/" . $subscribersFile;
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["email"])) {
 
-    $userEmail = $_POST["email"];
-    $userEmail = htmlspecialchars($userEmail, ENT_QUOTES);
-    $userEmail = trim($userEmail);
-    $userEmail = substr($userEmail, 0, 60);
-    $userEmail = str_replace(array("\r\n", "\r", "\n"), "", $userEmail);
+    $userEmail = prepareString($_POST["email"], 60, false, false, false);
 
     if (substr($userEmail, -3) !== "847") {
         exit($exitmsg_badCaptchaEmail); }

@@ -1,0 +1,22 @@
+---
+layout: null
+---
+<?php
+
+function prepareString($string, $length, $breaklines, $markdown, $http) {
+    if (empty($string)) { return ""; }
+    $string = htmlspecialchars($string, ENT_QUOTES);
+    $string = trim($string);
+    $string = substr($string, 0, $length);
+    if ($breaklines) { $string = str_replace(array("\r\n", "\r", "\n"), "<br/>", $string); }
+    else { $string = str_replace(array("\r\n", "\r", "\n"), "", $string); }
+    if ($markdown) {
+        $string = preg_replace('/`(.*?)`/', '<code>$1</code>', $string);
+        $string = preg_replace('/\[(.*?)\]\((https?:\/\/)?(.*?)\)/', '<a href="http://$3">$1</a>', $string);
+        $string = preg_replace('/\*\*(.*?)\*\*/', '<b>$1</b>', $string);
+        $string = preg_replace('/\*(.*?)\*/', '<i>$1</i>', $string);
+    }
+    if ($http && stripos($string, "http") !== 0) { $string = "http://" . $string; }
+    return $string;
+}
+
