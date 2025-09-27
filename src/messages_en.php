@@ -19,3 +19,6 @@ $exitmsg_wrongCommentID = "An error has occurred. I have not found the comment t
 $exitmsg_tooLateToEditComment = "This train has left. It is too late to edit this comment.";
 $exitmsg_wrongEmailNotificationPassword = "Are you trying to hack me?";
 $exitmsg_noSearchPhrase = "No search phrase has been provided";
+$label_editCommentTitle = "Edit comment";
+$label_editCommentField = "Edit your comment.<br>If you wish to remove it, delete everything and confirm using the button.";
+$label_editCommentButton = "Confirm changes";
