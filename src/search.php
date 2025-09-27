@@ -3,7 +3,7 @@ layout: null
 ---
 <?php
 require "{{ site.dir_with_data }}/settings.php";
-include "messages.php";
+include $messages;
 
 function searchThroughFiles($searchDir, $searchString, $pattern, $trailingChars) {
     $searchResults = [];

@@ -3,7 +3,7 @@ layout: null
 ---
 <?php
 include "{{ site.dir_with_data }}/settings.php";
-include "messages.php";
+include $messages;
 include "utilities.php";
 include "email_sending.php";
 $vipNicks = [];

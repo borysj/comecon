@@ -4,7 +4,7 @@ layout: null
 <?php
 require "{{ site.dir_with_data }}/settings.php";
 require "email_sending.php";
-include "messages.php";
+include $messages;
 
 if (($_SERVER["REQUEST_METHOD"] === "GET") &&
     (isset($_GET["p"])) && (hash("xxh3", $_GET["p"]) === $notificationPassword) &&
