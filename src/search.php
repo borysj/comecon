@@ -55,15 +55,15 @@ $m = count($searchResultsPosts);
 $n = count($searchResultsComments);
 
 echo "<html><body>\n";
-echo "<h1>Searched phrase: $searchString</h1>\n";
-echo "<h2>Number of posts with the phrase: $m</h2>\n";
+echo "<h1>$label_searchTitle: $searchString</h1>\n";
+echo "<h2>$label_searchResult: $m</h2>\n";
 echo "<p>\n";
 foreach ($searchResultsPosts as $searchResult) {
     echo $searchResult . "<br><br>\n";
 }
 echo "</p>";
 
-echo "<h2>Number of posts where the phrase is among the comments: $n</h2>\n";
+echo "<h2>$label_searchResultComments: $n</h2>\n";
 echo "<p>\n";
 foreach ($searchResultsComments as $searchResult) {
     echo $searchResult . "<br><br>\n";
