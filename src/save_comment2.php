@@ -37,6 +37,45 @@ function checkVip($userName, $userPassword, $vipNicks) {
     }
 }
 
+function updateFeed($dateOfPost, $postTitle, $postURL, $commentTimestamp, $commenter, $commenterURL, $comment, $newestComments) {
+    global $commentFeedsDir, $msg_commentFeedEntryTitle, $msg_commentInContext;
+    $feedFilename = "comments_blogpost" . $dateOfPost . ".xml";
+    $feedFilepath = $commentFeedsDir . "/" . $feedFilename;
+    if (!file_exists($feedFilepath)) { return false; }
+    $commentAnchor = str_replace(array(" ", "-", ":"), "", $commentTimestamp);
+    $commentURLWithAnchor = $postURL . "#" . $commentAnchor;
+    $commentTimestamp = date("c", strtotime($commentTimestamp));
+    $newEntry = <<<ENTRYENDS
+    <entry>
+    <title>$msg_commentFeedEntryTitle $postTitle</title>
+    <author><name>$commenter</name><uri>$commenterURL</uri></author>
+    <link rel="alternate" type="text/html" href="$commentURLWithAnchor" />
+    <id>$postTitle$commentTimestamp</id>
+    <published>$commentTimestamp</published>
+    <updated>$commentTimestamp</updated>
+    <summary>$msg_commentInContext</summary>
+    <content type="html"><![CDATA[$comment]]></content>
+    </entry>
+    </feed>
+    ENTRYENDS;
+    $feedContent = file_get_contents($feedFilepath);
+    $feedContent = preg_replace('/^\s*<updated>.*$/m', "<updated>$commentTimestamp</updated>", $feedContent, 1);
+    $feedContent = str_replace("</feed>", $newEntry, $feedContent);
+    file_put_contents($feedFilepath, $feedContent);
+    if ($newestComments) {
+        $feedFilepath = $commentFeedsDir . "/comments_newest.xml";
+        if (!file_exists($feedFilepath)) { return false; }
+        $feedContent = file_get_contents($feedFilepath);
+        if (substr_count($feedContent, "<entry>") > 10) {
+            $feedContent = preg_replace('/\R?<entry>[\s\S]+?<\/entry>\R?/m', "", $feedContent, 1);
+        }
+        $feedContent = preg_replace('/^\s*<updated>.*$/m', "<updated>$commentTimestamp</updated>", $feedContent, 1);
+        $feedContent = str_replace("</feed>", $newEntry, $feedContent);
+        file_put_contents($feedFilepath, $feedContent);
+    }
+    return true;
+}
+
 function gravatarExists($email, $notYetHashed) {
     if ($notYetHashed) { $hashedEmail = md5(strtolower(trim($email))); }
     else { $hashedEmail = $email; }
@@ -86,7 +125,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["comment"]) && isset($
 
     if (!$vipInfo[0]) {
         $captcha = trim(htmlspecialchars($_POST["captcha"], ENT_QUOTES));
-        if ($captcha !== "Captcha answer goes here") { exit($exitmsg_badCaptchaComment); }
+        if ($captcha !== $commentCaptcha) { exit($exitmsg_badCommentCaptcha); }
     }
 
     date_default_timezone_set($timezone);
@@ -147,6 +186,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["comment"]) && isset($
                   "/");
         unset($_POST);
         header("Location: {{ site.url }}{$filePath}index.php#lastComment");
+        if ($commentFeed) {
+            updateFeed($year.$month.$day, $title, $postURL, $currentDateTime, $userName, $userURL, $userComment, true);
+        }
         sendNotifications($year, $month, $day, $title, $currentDateTime, $userName, $userURL, $userComment, false);
     } else { unset($_POST); echo $exitmsg_errorSavingComment; }
 }

@@ -2,7 +2,7 @@
 layout: null
 ---
 <?php
-$exitmsg_badCaptchaComment = "I suspect you of being a robot.";
+$exitmsg_badCommentCaptcha = "I suspect you of being a robot.";
 $exitmsg_wrongPassword = "Your comment has not been added.<br>You have used a reserved nickname in a wrong way.";
 $exitmsg_errorURL = "An error occurred while reading the address of the page<br>where the comment was supposed to be added.";
 $exitmsg_duplicate = "This comment is a duplicate.<br>Probably you have clicked a button several times too quickly<br>or tried to refresh a webpage right after adding it.";

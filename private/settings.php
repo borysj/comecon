@@ -53,6 +53,13 @@ $maxCommentLength = 4000;
 // (on top of SHA-256) will be added.
 $emailSaltA = "45klk231";
 $emailSaltB = "xa56kj12";
+// Write here the answer to the captcha question for the comment form
+$commentCaptcha = "captcha for your comment form";
+// Set to true if you want to update comment feeds.
+// However, read the manual first:
+// You will need a feed file for the newest comments,
+// and a separate feed file for each blog post.
+$updateFeed = false;
 
 # search
 // Server subpath for where you keep searchable blog posts.
