@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["email"])) {
     $userEmail = prepareString($_POST["email"], 60, false, false, false);
 
     # Check for captcha, and remove it if present.
-    if (substr($userEmail, -3) !== "847") { exit($exitmsg_badCaptchaEmail); }
+    if (substr($userEmail, -3) !== $captchaEmail) { exit($exitmsg_badCaptchaEmail); }
     else { $userEmail = substr($userEmail, 0, -3); }
 
     # If the email is not yet present in the subscribers file,

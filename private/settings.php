@@ -19,6 +19,9 @@ $mailNotificationsPassword = "mypassword_unhashed";
 $ownerPrivateMail = "johndoe@gmail.com";
 // ...but users are encouraged to contact you through this one:
 $blogContactMail = "john@myblog.com";
+// When subscribing to the blog posts by email, the user has to add this captcha
+// at the end of his email address.
+$captchaEmail = "847";
 
 # email_notification
 // Use this command to calculate hash:
