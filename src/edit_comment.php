@@ -103,14 +103,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
-<head><title>Edit comment</title></head>
+<html lang="<?=$language?>">
+<head><title><?=$label_editCommentTitle?></title></head>
 <body>
 <form method="post">
-<label for="editedComment"><p>Edit your comment. <br>If you wish to remove it, delete everything and confirm with the button.</p></label>
+<label for="editedComment"><p><?=$label_editCommentField?></p></label>
 <textarea type="text" id="editedComment" name="editedComment" style="width: 500px; height: 500px;">
 <?php echo $comment ?></textarea><br><br>
-<input type="submit" value="Confirm edit">
+<input type="submit" value="<?=$label_editCommentButton?>">
 </form>
 </body>
 </html>
