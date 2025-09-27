@@ -1,5 +1,10 @@
+---
+layout: null
+---
 <?php
-$listOfPosts = file_get_contents("/home/johndoe/public_html/listings/allposts.txt");
+include "{{ site.dir_with_data }}/settings.php";
+
+$listOfPosts = file_get_contents($listOfAllPosts);
 if ($listOfPosts !== false) {
   $posts = explode("\n", $listOfPosts);
   $numberOfPosts = count($posts);

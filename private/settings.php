@@ -75,3 +75,7 @@ $adminCommentPassword = "hashed_password_for_editing_any_comment";
 // 25 minutes is the real deadline; but the user will be informed that they have
 // only 20 to give them some extra margin.
 $commentEditTimeout = 25*60;
+
+# random_post
+// The file with the listing of all blog posts
+$listOfAllPosts = $homeDir . "/public_html/lists/all.txt";
