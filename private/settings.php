@@ -7,6 +7,12 @@ $commentsDir = $homeDir . "/data/comments";
 $subscribersDir = $homeDir . "/data/subscribers";
 // Name of file with people subscribing to new blog posts through mail
 $subscribersFile = "subscribers.txt";
+// Server subpath for the directory with comment feeds
+$commentFeedsDir = $homeDir . "/public_html/commfeeds";
+// Language of the blog (for lang attribute of html) in edit_comment.php
+$language = "en";
+// Message file in proper language
+$messages = "messages_en.php";
 
 # email_sending
 // Server subpath for PHPMailer
@@ -28,14 +34,6 @@ $captchaEmail = "847";
 // php -r "echo(hash('xxh3', 'unhashed_password'));"
 $notificationPassword = "hashed_password_for_sending_notifications";
 
-# email_storage
-// Use any random sequence of characters.
-// These salts will be used for email if the owner does not have gravatar.
-// Then the true email is irrelevant, and another layer of obfuscation
-// (on top of SHA-256) will be added.
-$emailSaltA = "45klk231";
-$emailSaltB = "xa56kj12";
-
 # save_comment
 // If you want to change the time zone and the timestamp format,
 // you can look up PHP functions date_default_timezone_set() and
@@ -49,6 +47,12 @@ $allCommentsFile = "all_comments.txt";
 // Remember to set `maxlength` in `form-submit_comment.php` at slightly smaller
 // value for a safety margin for tags.
 $maxCommentLength = 4000;
+// Use any random sequence of characters.
+// These salts will be used for email if the owner does not have gravatar.
+// Then the true email is irrelevant, and another layer of obfuscation
+// (on top of SHA-256) will be added.
+$emailSaltA = "45klk231";
+$emailSaltB = "xa56kj12";
 
 # search
 // Server subpath for where you keep searchable blog posts.
