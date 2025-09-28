@@ -13,6 +13,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["email"])) {
     $userEmail = prepareString($_POST["email"], 60, false, false, false);
 
     # Check for captcha, and remove it if present.
+    # The captcha is a three characters long "secret code" at the end of the
+    # email, therefore -3.
     if (substr($userEmail, -3) !== $captchaEmail) { exit($exitmsg_badCaptchaEmail); }
     else { $userEmail = substr($userEmail, 0, -3); }
 
