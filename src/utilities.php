@@ -13,6 +13,7 @@ layout: null
  * @param int $markdown If false, do nothing. If 1, convert Markdown to HTML.
  * @param bool $http If true, add http:// to the beginning of the string if it
  * is not already present.
+ * @return string $string The prepared string
  */
 function prepareString($string, $length, $breaklines, $markdown, $http) {
     if (empty($string)) { return ""; }
