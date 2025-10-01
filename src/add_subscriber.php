@@ -6,7 +6,7 @@ include "{{ site.dir_with_data }}/settings.php";
 include $messages;
 include "utilities.php";
 
-$subsFilePath = $homeDir . $subscribersDir . "/" . $subscribersFile;
+$subsFilePath = $subscribersDir . "/" . $subscribersFile;
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["email"])) {
 
