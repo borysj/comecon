@@ -59,7 +59,7 @@ function checkIfDuplicate($commentFilePath, $comment) {
  */
 function checkVip($userName, $userPassword, $vipNicks) {
     if (array_key_exists($userName, $vipNicks)) {
-        if($vipNicks[$userName][0] === hash("xxh3", $userPassword)) {
+        if($vipNicks[$userName][0] === hash("sha256", $userPassword)) {
             return [true, $vipNicks[$userName][1], $vipNicks[$userName][2],
                     $vipNicks[$userName][3], $vipNicks[$userName][4]];
         } else {
@@ -288,7 +288,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["comment"]) && isset($
         file_put_contents($allCommentsFile, $commentLineWithoutEmail, FILE_APPEND | LOCK_EX);
         $cookieDateTime = str_replace(array("-", " ", ":"), "", $currentDateTime);
         setcookie("{$filePath}<|>{$cookieDateTime}",
-                  hash("xxh3", $currentDateTime . $userName . $commentSalt),
+                  hash("sha256", $currentDateTime . $userName . $commentSalt),
                   time() + $commentEditTimeout - 5*60,
                   "/");
         unset($_POST);

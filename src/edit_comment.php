@@ -42,7 +42,7 @@ function findComment($postDate, $commentID, $adminAccess) {
         // If it is not admin, then the comment ID is a hash of the timestamp,
         // the author's nickname and the salt.
         else {
-            if (hash("xxh3", $commentElements[1] . $commentElements[2] . $commentSalt) === $commentID) {
+            if (hash("sha256", $commentElements[1] . $commentElements[2] . $commentSalt) === $commentID) {
                 $commentLine = $line;
                 break;
             }
@@ -144,7 +144,7 @@ function changeComment($commentElements, $newComment, $editAllCommentsFile) {
 
 // Check if the admin is accessing. The POST key for the admin password is 'p'.
 if (isset($_GET['p'])) {
-    if ($adminCommentPassword === hash("xxh3", $_GET['p'])) {
+    if ($adminCommentPassword === hash("sha256", $_GET['p'])) {
         $adminAccess = true;
     } else { exit($exitmsg_wrongCommentAdminPassword); }
 } else { $adminAccess = false; }

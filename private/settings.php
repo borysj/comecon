@@ -31,7 +31,7 @@ $captchaEmail = "847";
 
 # email_notification
 // Use this command to calculate hash:
-// php -r "echo(hash('xxh3', 'unhashed_password'));"
+// php -r "echo(hash('sha256', 'unhashed_password'));"
 $notificationPassword = "hashed_password_for_sending_notifications";
 
 # save_comment
@@ -68,7 +68,7 @@ $updateFeed = false;
 $searchDataDirectory = $homeDir . "/public_html/assets/db_posts";
 // Server subpath for search queries (preferably non-public).
 // This is for the curios; you will see what keywords people are looking for on
-// your blog. 
+// your blog.
 $searchQueriesRecord = $homeDir . "/data/search_queries.txt";
 
 # edit_comment
@@ -76,7 +76,7 @@ $searchQueriesRecord = $homeDir . "/data/search_queries.txt";
 $commentSalt = "rk365-A";
 // This is your admin backdoor for editing comments.
 // Use this command to calculate hash:
-// php -r "echo(hash('xxh3', 'unhashed_password'));"
+// php -r "echo(hash('sha256', 'unhashed_password'));"
 $adminCommentPassword = "hashed_password_for_editing_any_comment";
 // User has 25 minutes to edit their password.
 // 25 minutes is the real deadline; but the user will be informed that they have
