@@ -16,15 +16,20 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["user"]) && isset($_GET[
                 list($email, $password) = explode("<|>", $line);
                 if ($_GET["pw"] === trim($password)) {
                     $lines = str_replace($email . "<|>" . trim($password) . PHP_EOL, "", $lines);
+                    // In case the user was in the last line
                     $lines = str_replace($email . "<|>" . trim($password), "", $lines);
                     file_put_contents($filePath, $lines);
                     echo $_GET['user'] . $exitmsg_removedSubscriber . $_GET['what'] . "<br>";
+                    // We can break immediately, because it is not possible for
+                    // the same email to be registered twice in the subscription
+                    // file. This has been checked when the email was being added
                     break;
                 } else { echo $exitmsg_cannotRemoveSubscriber . $_GET['user'] . "<br>"; }
             }
-        } 
+        }
         if (!$foundUser) { echo $exitmsg_emailNotFound; }
     } else { echo $exitmsg_subscriberListNotFound; }
+    // Delete the subscription file if this was the only email
     if (filesize($filePath) === 0 && $_GET["what"] !== $subscribersFile) {
         unlink($filePath);
     }
