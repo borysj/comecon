@@ -154,7 +154,7 @@ function gravatarExists($email, $notYetHashed) {
 }
 
 
-if ($_SERVER["REQUEST_METHOD"] !== "POST" || !isset($_POST["comment"]) !! !isset($_POST["name"]) || !isset($_POST["captcha"]) || !isset($_POST["url"])) {
+if ($_SERVER["REQUEST_METHOD"] !== "POST" || !isset($_POST["comment"]) || !isset($_POST["name"]) || !isset($_POST["captcha"]) || !isset($_POST["url"])) {
     exit(EXITMSG_ERRORRUNNINGCOMMENTSCRIPT);
 }
 
