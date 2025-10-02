@@ -22,7 +22,7 @@ function findComment($postDate, $commentID, $adminAccess) {
     // Notice: We expect at most one post with the given date.
     // This is a tenet of Comecon (no more than one blog post per day).
     // If there are several, only the first one will be examined.
-    $commentFilePath = glob("$settings['general']['commentsDir']/$postDate*");
+    $commentFilePath = glob("{$settings['general']['commentsDir']}/$postDate*");
     if ($commentFilePath) { $commentFile = fopen($commentFilePath[0], "r"); }
     else                  { return false; }
     // Scan through the relevant comment file
