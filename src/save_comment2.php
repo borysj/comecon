@@ -285,7 +285,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["comment"]) && isset($
     // Update the global comment file and the particular comment file. Set the
     // cookie in case the user wants to edit their comment
     if (file_put_contents($fullFilePath, $commentLineWithEmail, FILE_APPEND | LOCK_EX) !== false) {
-        file_put_contents($allCommentsFile, $commentLineWithoutEmail, FILE_APPEND | LOCK_EX);
+        if ($allCommentsFile) { file_put_contents($allCommentsFile, $commentLineWithoutEmail, FILE_APPEND | LOCK_EX); }
         $cookieDateTime = str_replace(array("-", " ", ":"), "", $currentDateTime);
         setcookie("{$filePath}<|>{$cookieDateTime}",
                   hash("sha256", $currentDateTime . $userName . $commentSalt),

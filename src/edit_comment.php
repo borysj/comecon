@@ -168,7 +168,9 @@ if (!earlyEnoughToEdit($commentElements[1]) && !$adminAccess) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (earlyEnoughToEdit($commentElements[1]) || $adminAccess) {
         changeComment($commentElements, prepareString($_POST["editedComment"], $maxCommentLength, true, true, false), false);
-        changeComment($commentElements, prepareString($_POST["editedComment"], $maxCommentLength, true, true, false), true);
+        if ($allCommentsFile) {
+            changeComment($commentElements, prepareString($_POST["editedComment"], $maxCommentLength, true, true, false), true);
+        }
         header("Location: {{ site.url }}{$commentElements[0]}index.php");
     } else { exit($exitmsg_tooLateToEditComment); }
 }
