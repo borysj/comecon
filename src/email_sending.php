@@ -27,8 +27,8 @@ function createMail($title, $fullTitle) {
     $mail->addReplyTo($settings['email']['blogContactMail']);
     $mail->isHTML(true);
     $mail->CharSet = "UTF-8";
-    if ($fullTitle) { $mail->Subject = "A new blog post on $blogName: $fullTitle"; }
-    else { $mail->Subject = "A new comment on $blogName ($title)"; }
+    if ($fullTitle) { $mail->Subject = "A new blog post on {$settings['general']['blogName']}: $fullTitle"; }
+    else { $mail->Subject = "A new comment on {$settings['general']['blogName']} ($title)"; }
     return $mail;
 }
 

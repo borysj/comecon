@@ -5,6 +5,8 @@
 $homeDir = "";
 $settings = [
     "general" => [
+        // The name of your blog
+        "blogName" => "My Blog",
         // Server subpath for your comments directory (preferably non-public)
         "commentsDir" => $homeDir . "/data/comments",
         // Server subpath for your subscribers directory (preferably non-public)
