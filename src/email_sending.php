@@ -6,9 +6,9 @@ layout: null
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
-$phpMailerException = $phpMailerDir . "/src/Exception.php";
-$phpMailerMain = $phpMailerDir . "/src/PHPMailer.php";
-$phpMailerSMTP = $phpMailerDir . "/src/SMTP.php";
+$phpMailerException = $settings['email']['phpMailerDir'] . "/src/Exception.php";
+$phpMailerMain = $settings['email']['phpMailerDir'] . "/src/PHPMailer.php";
+$phpMailerSMTP = $settings['email']['phpMailerDir'] . "/src/SMTP.php";
 require $phpMailerException;
 require $phpMailerMain;
 require $phpMailerSMTP;
@@ -16,11 +16,11 @@ require $phpMailerSMTP;
 function createMail($title, $fullTitle) {
     global $settings;
     $mail = new PHPMailer(true);                            $mail->isSMTP();
-    $mail->Host = $mailNotificationsHost;                   $mail->SMTPAuth = true;
-    $mail->Username = $mailNotificationsUsername;           $mail->Password = $mailNotificationsPassword;
+    $mail->Host = $settings['email']['mailNotificationsHost'];                   $mail->SMTPAuth = true;
+    $mail->Username = $settings['email']['mailNotificationsUsername'];           $mail->Password = $settings['email']['mailNotificationsPassword'];
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;        $mail->Port = 465;
-    $mail->setFrom($mailNotificationsUsername);
-    $mail->addReplyTo($blogContactMail);
+    $mail->setFrom($settings['email']['mailNotificationsUsername']);
+    $mail->addReplyTo($settings['email']['blogContactMail']);
     $mail->isHTML(true);                                    $mail->CharSet = "UTF-8";
     if ($fullTitle) { $mail->Subject = "A new blog post on $blogName: $fullTitle"; }
     else { $mail->Subject = "A new comment on $blogName ($title)"; }
@@ -35,7 +35,7 @@ function sendNotifications($year, $month, $day, $title, $commentTimestamp, $user
         $link = $link . "/index.php#" . $commentTimestamp;
     }
     if ($fullTitle) {
-        $filename = $subscribersFile;
+        $filename = $settings['general']['subscribersFile'];
         $text1 = "new";
         $text2 = "blog";
     }
@@ -44,7 +44,7 @@ function sendNotifications($year, $month, $day, $title, $commentTimestamp, $user
         $text1 = "commented";
         $text2 = "comments";
     }
-    $path = $subscribersDir . "/" . $filename;
+    $path = $settings['general']['subscribersDir'] . "/" . $filename;
     $body1 = "<html><body><p><a href=\"$link\">Link to the $text1 blog post</a></p>";
     if ($userName != "none") {
         if (!empty($userURL)) {
@@ -62,7 +62,7 @@ function sendNotifications($year, $month, $day, $title, $commentTimestamp, $user
     if (!$fullTitle) {
         $body1 = $body1 . "</body></html>";
         $mail = createMail($title, $fullTitle);
-        $mail->addAddress($ownerPrivateMail);
+        $mail->addAddress($settings['email']['ownerPrivateMail']);
         $mail->Body = $body1;
         $mail->send();
     }
@@ -75,7 +75,7 @@ function sendNotifications($year, $month, $day, $title, $commentTimestamp, $user
         list($subscriber, $password) = explode("<|>", $line);
         $unsubLink = "{{ site.url }}/assets/unsubscribe.php?user=$subscriber&pw=$password&what=$filename";
         $body2 = "<p style=\"font-size: small;\"><a href=\"$unsubLink\">Use this link to unsubscribe from the $text2</a></p>
-                  <p style=\"font-size: small;\">Do not reply to this email. If you encounter technical problems, contact me here: $blogContactMail</p></body></html>";
+                  <p style=\"font-size: small;\">Do not reply to this email. If you encounter technical problems, contact me here: $settings['email']['blogContactMail']</p></body></html>";
         $mail = createMail($title, $fullTitle);
         $mail->addAddress($subscriber);
         $mail->Body = $body1 . $body2;

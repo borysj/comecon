@@ -3,10 +3,10 @@ layout: null
 ---
 <?php
 include "{{ site.dir_with_data }}/settings.php";
-include $messages;
+include $settings['general']['messages'];
 include "utilities.php";
 
-$subsFilePath = $subscribersDir . "/" . $subscribersFile;
+$subsFilePath = $settings['general']['subscribersDir'] . "/" . $settings['general']['subscribersFile'];
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["email"])) {
 
@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["email"])) {
     // Check for captcha, and remove it if present.
     // The captcha is a three characters long "secret code" at the end of the
     // email, therefore -3.
-    if (substr($userEmail, -3) !== $captchaEmail) { exit($exitmsg_badCaptchaEmail); }
+    if (substr($userEmail, -3) !== $settings['email']['captchaEmail']) { exit($exitmsg_badCaptchaEmail); }
     else { $userEmail = substr($userEmail, 0, -3); }
 
     // If the email is not yet present in the subscribers file,

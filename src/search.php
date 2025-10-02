@@ -3,7 +3,7 @@ layout: null
 ---
 <?php
 require "{{ site.dir_with_data }}/settings.php";
-include $messages;
+include $settings['general']['messages'];
 
 /**
  * Search through files in a given directory looking for a phrase
@@ -50,9 +50,9 @@ function searchThroughFiles($searchDir, $searchString, $pattern, $trailingChars)
  */
 function saveSearchString($searchString) {
     global $settings;
-    date_default_timezone_set($timezone);
-    $currentDateTime = date($timestamp);
-    file_put_contents($searchQueriesRecord, $currentDateTime . "<|>" . $searchString . PHP_EOL, FILE_APPEND | LOCK_EX);
+    date_default_timezone_set($settings['save']['timezone']);
+    $currentDateTime = date($settings['save']['timestamp']);
+    file_put_contents($settings['search']['searchQueriesRecord'], $currentDateTime . "<|>" . $searchString . PHP_EOL, FILE_APPEND | LOCK_EX);
     return;
 }
 
@@ -75,8 +75,8 @@ $patternComment = "/(\d{4})-(\d{2})-(\d{2})-(.*)-COMMENTS.txt/";
 
 // -4 to cut the final .txt, -13 to cut the final -COMMENTS.txt from the
 // relevant filename
-$searchResultsPosts = searchThroughFiles($searchDataDirectory, $searchString, $patternPost, -4);
-$searchResultsComments = searchThroughFiles($commentsDir, $searchString, $patternComment, -13);
+$searchResultsPosts = searchThroughFiles($settings['search']['searchDataDirectory'], $searchString, $patternPost, -4);
+$searchResultsComments = searchThroughFiles($settings['general']['commentsDir'], $searchString, $patternComment, -13);
 rsort($searchResultsPosts);
 rsort($searchResultsComments);
 $m = count($searchResultsPosts);

@@ -3,10 +3,10 @@ layout: null
 ---
 <?php
 require "{{ site.dir_with_data }}/settings.php";
-include $messages;
+include $settings['general']['messages'];
 
 if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["user"]) && isset($_GET["pw"]) && isset($_GET["what"])) {
-    $filePath = $subscribersDir . "/" . $_GET["what"];
+    $filePath = $settings['general']['subscribersDir'] . "/" . $_GET["what"];
         if (file_exists($filePath)) {
         $lines = file($filePath);
         $foundUser = false;
@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["user"]) && isset($_GET[
         if (!$foundUser) { echo $exitmsg_emailNotFound; }
     } else { echo $exitmsg_subscriberListNotFound; }
     // Delete the subscription file if this was the only email
-    if (filesize($filePath) === 0 && $_GET["what"] !== $subscribersFile) {
+    if (filesize($filePath) === 0 && $_GET["what"] !== $settings['general']['subscribersFile']) {
         unlink($filePath);
     }
 } else { echo $exitmsg_errorRunningSubscriberScript; }

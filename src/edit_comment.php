@@ -3,7 +3,7 @@ layout: null
 ---
 <?php
 include "{{ site.dir_with_data }}/settings.php";
-include $messages;
+include $settings['general']['messages'];
 include "utilities.php";
 
 /**
@@ -22,7 +22,7 @@ function findComment($postDate, $commentID, $adminAccess) {
     // Notice: We expect at most one post with the given date.
     // This is a tenet of Comecon (no more than one blog post per day).
     // If there are several, only the first one will be examined.
-    $commentFilePath = glob("$commentsDir/$postDate*");
+    $commentFilePath = glob("$settings['general']['commentsDir']/$postDate*");
     if ($commentFilePath) { $commentFile = fopen($commentFilePath[0], "r"); }
     else                  { return false; }
     // Scan through the relevant comment file
@@ -42,7 +42,7 @@ function findComment($postDate, $commentID, $adminAccess) {
         // If it is not admin, then the comment ID is a hash of the timestamp,
         // the author's nickname and the salt.
         else {
-            if (hash("sha256", $commentElements[1] . $commentElements[2] . $commentSalt) === $commentID) {
+            if (hash("sha256", $commentElements[1] . $commentElements[2] . $settings['edit']['commentSalt']) === $commentID) {
                 $commentLine = $line;
                 break;
             }
@@ -80,7 +80,7 @@ function earlyEnoughToEdit($commentDateTime) {
     global $settings;
     $commentTimestamp = strtotime($commentDateTime);
     $currentTimestamp = time();
-    if ($currentTimestamp - $commentTimestamp < $commentEditTimeout) { return true; }
+    if ($currentTimestamp - $commentTimestamp < $settings['edit']['commentEditTimeout']) { return true; }
     else { return false; }
 }
 
@@ -104,10 +104,10 @@ function earlyEnoughToEdit($commentDateTime) {
 function changeComment($commentElements, $newComment, $editAllCommentsFile) {
     global $settings;
     if ($editAllCommentsFile) {
-        $commentFilepath = $allCommentsFile;
+        $commentFilepath = $settings['save']['allCommentsFile'];
     } else {
         $commentFilename = substr(str_replace("/", "-", $commentElements[0]), 1, -1) . "-COMMENTS.txt";
-        $commentFilepath = $commentsDir . "/" . $commentFilename;
+        $commentFilepath = $settings['general']['commentsDir'] . "/" . $commentFilename;
     }
     $commentFileContent = file($commentFilepath);
     // The relevant comment record is identified by the comment timestamp and
@@ -136,7 +136,7 @@ function changeComment($commentElements, $newComment, $editAllCommentsFile) {
     }
     file_put_contents($commentFilepath, $newCommentFileContent, LOCK_EX);
     // If we have deleted the only comment in the specific comment file, we remove the file.
-    if (filesize($commentFilepath) === 0 && $commentFilepath !== $allCommentsFile) {
+    if (filesize($commentFilepath) === 0 && $commentFilepath !== $settings['save']['allCommentsFile']) {
         unlink($commentFilepath);
     }
     return true;
@@ -144,7 +144,7 @@ function changeComment($commentElements, $newComment, $editAllCommentsFile) {
 
 // Check if the admin is accessing. The POST key for the admin password is 'p'.
 if (isset($_GET['p'])) {
-    if ($adminCommentPassword === hash("sha256", $_GET['p'])) {
+    if ($settings['edit']['adminCommentPassword'] === hash("sha256", $_GET['p'])) {
         $adminAccess = true;
     } else { exit($exitmsg_wrongCommentAdminPassword); }
 } else { $adminAccess = false; }
@@ -167,9 +167,9 @@ if (!earlyEnoughToEdit($commentElements[1]) && !$adminAccess) {
 // global comment file.
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (earlyEnoughToEdit($commentElements[1]) || $adminAccess) {
-        changeComment($commentElements, prepareString($_POST["editedComment"], $maxCommentLength, true, true, false), false);
-        if ($allCommentsFile) {
-            changeComment($commentElements, prepareString($_POST["editedComment"], $maxCommentLength, true, true, false), true);
+        changeComment($commentElements, prepareString($_POST["editedComment"], $settings['save']['maxCommentLength'], true, true, false), false);
+        if ($settings['save']['allCommentsFile']) {
+            changeComment($commentElements, prepareString($_POST["editedComment"], $settings['save']['maxCommentLength'], true, true, false), true);
         }
         header("Location: {{ site.url }}{$commentElements[0]}index.php");
     } else { exit($exitmsg_tooLateToEditComment); }
@@ -177,7 +177,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <!DOCTYPE html>
-<html lang="<?=$language?>">
+<html lang="<?=$settings['general']['language']?>">
 <head><title><?=$label_editCommentTitle?></title></head>
 <body>
 <form method="post">

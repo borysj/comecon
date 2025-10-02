@@ -3,7 +3,7 @@ layout: null
 ---
 <?php
 include "{{ site.dir_with_data }}/settings.php";
-include $messages;
+include $settings['general']['messages'];
 include "utilities.php";
 include "email_sending.php";
 $vipNicks = [];
@@ -76,7 +76,7 @@ function checkVip($userName, $userPassword, $vipNicks) {
  * @param string $dateOfPost The date of the commented blog post, YYYYMMDD
  * @param string $postTitle The title of the commented blog post
  * @param string $postURL The URL of the commented blog post
- * @param string $commentTimestamp The timestamp of the comment, from date($timestamp)
+ * @param string $commentTimestamp The timestamp of the comment, from date($settings['save']['timestamp'])
  * @param string $commenter The name of the commenter
  * @param string $commenterURL The URL of the commenter's website
  * @param string $comment The comment text (may contain HTML tags)
@@ -90,7 +90,7 @@ function checkVip($userName, $userPassword, $vipNicks) {
 function updateFeed($dateOfPost, $postTitle, $postURL, $commentTimestamp, $commenter, $commenterURL, $comment, $newestComments) {
     global $settings;
     $feedFilename = "comments_blogpost" . $dateOfPost . ".xml";
-    $feedFilepath = $commentFeedsDir . "/" . $feedFilename;
+    $feedFilepath = $settings['general']['commentFeedsDir'] . "/" . $feedFilename;
     if (!file_exists($feedFilepath)) { return false; }
     $commentAnchor = str_replace(array(" ", "-", ":"), "", $commentTimestamp);
     $commentURLWithAnchor = $postURL . "#" . $commentAnchor;
@@ -117,7 +117,7 @@ function updateFeed($dateOfPost, $postTitle, $postURL, $commentTimestamp, $comme
     file_put_contents($feedFilepath, $feedContent);
     // We will possibly also update the global feed with the newest comments
     if ($newestComments) {
-        $feedFilepath = $commentFeedsDir . "/comments_newest.xml";
+        $feedFilepath = $settings['general']['commentFeedsDir'] . "/comments_newest.xml";
         if (!file_exists($feedFilepath)) { return false; }
         $feedContent = file_get_contents($feedFilepath);
         // If there are more than 10 items in the feed, delete the first (i.e.
@@ -163,7 +163,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["comment"]) && isset($
         if ($vipInfo[0]) { $userRank = $vipInfo[1]; }
         else { exit($exitmsg_wrongPassword); }
     } else { $vipInfo = [false, 0, "", "", 0]; }
-    $userComment = prepareString($_POST["comment"], $maxCommentLength, true, true, false);
+    $userComment = prepareString($_POST["comment"], $settings['save']['maxCommentLength'], true, true, false);
     $userURL = prepareString($_POST["webpage"], 60, false, false, true);
     $userRank = $vipInfo[1];
     // If the user has not provided their website, but is recognized as a
@@ -184,7 +184,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["comment"]) && isset($
         // comments. The reason that we store anything at all is that we want to
         // ensure the same random gravatar for this user across all posts and
         // comments.
-        else { $hashedEmail = hash("sha256", $emailSaltA . $userEmail . $emailSaltB); }
+        else { $hashedEmail = hash("sha256", $settings['save']['emailSaltA'] . $userEmail . $settings['save']['emailSaltB']); }
         // Check if the user wants to subscribe to comments by email
         if (isset($_POST["email-comments"]) && $_POST["email-comments"] == "on") { $wantsEmails = 1; }
         else { $wantsEmails = 0; }
@@ -199,7 +199,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["comment"]) && isset($
             $wantsEmails = 1;
             $userEmail = $vipInfo[3];
             if (gravatarExists($userEmail, true)) { $hashedEmail = hash("sha256", $userEmail); }
-            else { $hashedEmail = hash("sha256", $emailSaltA . $userEmail . $emailSaltB); }
+            else { $hashedEmail = hash("sha256", $settings['save']['emailSaltA'] . $userEmail . $settings['save']['emailSaltB']); }
         }
         // If the user does not want to subscribe to comments by email, the
         // database stores the email hash only. But if the gravatar for this
@@ -216,11 +216,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["comment"]) && isset($
     // Check captcha if the user is not registered
     if (!$vipInfo[0]) {
         $captcha = trim(htmlspecialchars($_POST["captcha"], ENT_QUOTES));
-        if ($captcha !== $commentCaptcha) { exit($exitmsg_badCommentCaptcha); }
+        if ($captcha !== $settings['save']['commentCaptcha']) { exit($exitmsg_badCommentCaptcha); }
     }
 
-    date_default_timezone_set($timezone);
-    $currentDateTime = date($timestamp);
+    date_default_timezone_set($settings['save']['timezone']);
+    $currentDateTime = date($settings['save']['timestamp']);
 
     // We need the basic URL of the commented blog post. There could be a
     // fragment identified of an earlier comment. If so, we have to remove it.
@@ -260,7 +260,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["comment"]) && isset($
                                $currentDateTime . "<|>" .
                                $userName . "<|>" . $userURL . "<|>" . "<|>" .
                                $userComment . "<|>" . $userRank . PHP_EOL;
-    $fullFilePath = $commentsDir . "/" . $year . "-" . $month . "-" . $day . "-" . $title . '-COMMENTS.txt';
+    $fullFilePath = $settings['general']['commentsDir'] . "/" . $year . "-" . $month . "-" . $day . "-" . $title . '-COMMENTS.txt';
 
     if (checkIfDuplicate($fullFilePath, $userComment)) { exit($exitmsg_duplicate); }
 
@@ -271,7 +271,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["comment"]) && isset($
     if (!empty($userEmail) && $wantsEmails == 1) {
         if (filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
             $subsFile = $year . "-" . $month . "-" . $day . "-" . $title . "-SUBS.txt";
-            $subsFilePath = $subscribersDir.  "/" . $subsFile;
+            $subsFilePath = $settings['general']['subscribersDir'] .  "/" . $subsFile;
             createNonexistentFile($subsFilePath);
             // If the email is not already in the subscribers file, add it
             // together with the password (used for unsubscribing)
@@ -285,18 +285,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["comment"]) && isset($
     // Update the global comment file and the particular comment file. Set the
     // cookie in case the user wants to edit their comment
     if (file_put_contents($fullFilePath, $commentLineWithEmail, FILE_APPEND | LOCK_EX) !== false) {
-        if ($allCommentsFile) { file_put_contents($allCommentsFile, $commentLineWithoutEmail, FILE_APPEND | LOCK_EX); }
+        if ($settings['save']['allCommentsFile']) { file_put_contents($settings['save']['allCommentsFile'], $commentLineWithoutEmail, FILE_APPEND | LOCK_EX); }
         $cookieDateTime = str_replace(array("-", " ", ":"), "", $currentDateTime);
         setcookie("{$filePath}<|>{$cookieDateTime}",
-                  hash("sha256", $currentDateTime . $userName . $commentSalt),
-                  time() + $commentEditTimeout - 5*60,
+                  hash("sha256", $currentDateTime . $userName . $settings['edit']['commentSalt']),
+                  time() + $settings['edit']['commentEditTimeout'] - 5*60,
                   "/");
         unset($_POST);
         // First, send the user back to their comment...
         header("Location: {{ site.url }}{$filePath}index.php#lastComment");
         // ...and update the comment feeds in the background (from the user's
         // perspective).
-        if ($updateFeed) {
+        if ($settings['save']['updateFeed']) {
             updateFeed($year.$month.$day, $title, $postURL, $currentDateTime, $userName, $userURL, $userComment, true);
         }
         // Notify the email subscribers about the new comment
