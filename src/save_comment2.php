@@ -97,13 +97,13 @@ function updateFeed($dateOfPost, $postTitle, $postURL, $commentTimestamp, $comme
     $commentTimestamp = date("c", strtotime($commentTimestamp));
     $newEntry = <<<ENTRYENDS
     <entry>
-    <title>$msg_commentFeedEntryTitle $postTitle</title>
+    <title>$MSG_COMMENTFEEDENTRYTITLE $postTitle</title>
     <author><name>$commenter</name><uri>$commenterURL</uri></author>
     <link rel="alternate" type="text/html" href="$commentURLWithAnchor" />
     <id>$postTitle$commentTimestamp</id>
     <published>$commentTimestamp</published>
     <updated>$commentTimestamp</updated>
-    <summary>$msg_commentInContext</summary>
+    <summary>$MSG_COMMENTINCONTEXT</summary>
     <content type="html"><![CDATA[$comment]]></content>
     </entry>
     </feed>
@@ -161,7 +161,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["comment"]) && isset($
     if (!empty($userPassword)) {
         $vipInfo = checkVip($userName, $userPassword, $vipNicks);
         if ($vipInfo[0]) { $userRank = $vipInfo[1]; }
-        else { exit($exitmsg_wrongPassword); }
+        else { exit($EXITMSG_WRONGPASSWORD); }
     } else { $vipInfo = [false, 0, "", "", 0]; }
     $userComment = prepareString($_POST["comment"], $settings['save']['maxCommentLength'], true, true, false);
     $userURL = prepareString($_POST["webpage"], 60, false, false, true);
@@ -216,7 +216,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["comment"]) && isset($
     // Check captcha if the user is not registered
     if (!$vipInfo[0]) {
         $captcha = trim(htmlspecialchars($_POST["captcha"], ENT_QUOTES));
-        if ($captcha !== $settings['save']['commentCaptcha']) { exit($exitmsg_badCommentCaptcha); }
+        if ($captcha !== $settings['save']['commentCaptcha']) { exit($EXITMSG_BADCOMMENTCAPTCHA); }
     }
 
     date_default_timezone_set($settings['save']['timezone']);
@@ -245,7 +245,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["comment"]) && isset($
     if (preg_match($pattern, $postURL, $matches)) {
         $year = $matches[1];      $month = $matches[2];
         $day = $matches[3];       $title = $matches[4];
-    } else { exit($exitmsg_errorURL); }
+    } else { exit($EXITMSG_ERRORURL); }
 
     $filePath = "/" . $year . "/" . $month .
                 "/" . $day . "/" . $title . "/";
@@ -262,7 +262,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["comment"]) && isset($
                                $userComment . "<|>" . $userRank . PHP_EOL;
     $fullFilePath = $settings['general']['commentsDir'] . "/" . $year . "-" . $month . "-" . $day . "-" . $title . '-COMMENTS.txt';
 
-    if (checkIfDuplicate($fullFilePath, $userComment)) { exit($exitmsg_duplicate); }
+    if (checkIfDuplicate($fullFilePath, $userComment)) { exit($EXITMSG_DUPLICATE); }
 
     createNonexistentFile($fullFilePath);
 
@@ -301,6 +301,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["comment"]) && isset($
         }
         // Notify the email subscribers about the new comment
         sendNotifications($year, $month, $day, $title, $currentDateTime, $userName, $userURL, $userComment, false);
-    } else { unset($_POST); echo $exitmsg_errorSavingComment; }
+    } else { unset($_POST); echo $EXITMSG_ERRORSAVINGCOMMENT; }
 }
-else { echo $exitmsg_errorRunningCommentScript; }
+else { echo $EXITMSG_ERRORRUNNINGCOMMENTSCRIPT; }

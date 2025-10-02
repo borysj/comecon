@@ -58,7 +58,7 @@ function saveSearchString($searchString) {
 
 $searchString = htmlspecialchars($_POST["searchPhrase"], ENT_QUOTES);
 if (empty($searchString)) {
-    exit($exitmsg_noSearchPhrase);
+    exit($EXITMSG_NOSEARCHPHRASE);
 }
 
 // If the search string starts with "123", ignore it and do not save the search
@@ -83,15 +83,15 @@ $m = count($searchResultsPosts);
 $n = count($searchResultsComments);
 
 echo "<html><body>\n";
-echo "<h1>$label_searchTitle: $searchString</h1>\n";
-echo "<h2>$label_searchResult: $m</h2>\n";
+echo "<h1>$LABEL_SEARCHTITLE: $searchString</h1>\n";
+echo "<h2>$LABEL_SEARCHRESULT: $m</h2>\n";
 echo "<p>\n";
 foreach ($searchResultsPosts as $searchResult) {
     echo $searchResult . "<br><br>\n";
 }
 echo "</p>";
 
-echo "<h2>$label_searchResultComments: $n</h2>\n";
+echo "<h2>$LABEL_SEARCHRESULTCOMMENTS: $n</h2>\n";
 echo "<p>\n";
 foreach ($searchResultsComments as $searchResult) {
     echo $searchResult . "<br><br>\n";

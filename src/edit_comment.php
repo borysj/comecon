@@ -146,7 +146,7 @@ function changeComment($commentElements, $newComment, $editAllCommentsFile) {
 if (isset($_GET['p'])) {
     if ($settings['edit']['adminCommentPassword'] === hash("sha256", $_GET['p'])) {
         $adminAccess = true;
-    } else { exit($exitmsg_wrongCommentAdminPassword); }
+    } else { exit($EXITMSG_WRONGCOMMENTADMINPASSWORD); }
 } else { $adminAccess = false; }
 // Identify the comment record using the date of the commented blog post ('d')
 // and the comment ID ('c')
@@ -156,10 +156,10 @@ $commentLine = findComment($_GET['d'], $_GET['c'], $adminAccess);
 if ($commentLine) {
     $commentElements = explode("<|>", $commentLine);
     $comment = HTML2markdown($commentElements[5]);
-} else { exit($exitmsg_wrongCommentID); }
+} else { exit($EXITMSG_WRONGCOMMENTID); }
 // If it is too late to edit (and the editor is not an admin), abort
 if (!earlyEnoughToEdit($commentElements[1]) && !$adminAccess) {
-    exit($exitmsg_tooLateToEditComment);
+    exit($EXITMSG_TOOLATETOEDITCOMMENT);
 }
 
 // After editing, check again that it is early enough or that the editor is an
@@ -172,19 +172,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             changeComment($commentElements, prepareString($_POST["editedComment"], $settings['save']['maxCommentLength'], true, true, false), true);
         }
         header("Location: {{ site.url }}{$commentElements[0]}index.php");
-    } else { exit($exitmsg_tooLateToEditComment); }
+    } else { exit($EXITMSG_TOOLATETOEDITCOMMENT); }
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="<?=$settings['general']['language']?>">
-<head><title><?=$label_editCommentTitle?></title></head>
+<head><title><?=$LABEL_EDITCOMMENTTITLE?></title></head>
 <body>
 <form method="post">
-<label for="editedComment"><p><?=$label_editCommentField?></p></label>
+<label for="editedComment"><p><?=$LABEL_EDITCOMMENTFIELD?></p></label>
 <textarea type="text" id="editedComment" name="editedComment" style="width: 500px; height: 500px;">
 <?php echo $comment ?></textarea><br><br>
-<input type="submit" value="<?=$label_editCommentButton?>">
+<input type="submit" value="<?=$LABEL_EDITCOMMENTBUTTON?>">
 </form>
 </body>
 </html>
