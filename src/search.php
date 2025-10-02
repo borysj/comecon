@@ -49,7 +49,7 @@ function searchThroughFiles($searchDir, $searchString, $pattern, $trailingChars)
  * @return void
  */
 function saveSearchString($searchString) {
-    global $timezone, $timestamp, $searchQueriesRecord;
+    global $settings;
     date_default_timezone_set($timezone);
     $currentDateTime = date($timestamp);
     file_put_contents($searchQueriesRecord, $currentDateTime . "<|>" . $searchString . PHP_EOL, FILE_APPEND | LOCK_EX);

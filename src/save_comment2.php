@@ -88,7 +88,7 @@ function checkVip($userName, $userPassword, $vipNicks) {
  * exist, returns true after successfully updating the feed
  */
 function updateFeed($dateOfPost, $postTitle, $postURL, $commentTimestamp, $commenter, $commenterURL, $comment, $newestComments) {
-    global $commentFeedsDir, $msg_commentFeedEntryTitle, $msg_commentInContext;
+    global $settings;
     $feedFilename = "comments_blogpost" . $dateOfPost . ".xml";
     $feedFilepath = $commentFeedsDir . "/" . $feedFilename;
     if (!file_exists($feedFilepath)) { return false; }

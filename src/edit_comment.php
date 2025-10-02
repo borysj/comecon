@@ -18,7 +18,7 @@ include "utilities.php";
  * comment together with its descriptors)
  */
 function findComment($postDate, $commentID, $adminAccess) {
-    global $commentsDir, $commentSalt;
+    global $settings;
     // Notice: We expect at most one post with the given date.
     // This is a tenet of Comecon (no more than one blog post per day).
     // If there are several, only the first one will be examined.
@@ -77,7 +77,7 @@ function HTML2markdown($comment) {
  * @return bool
  */
 function earlyEnoughToEdit($commentDateTime) {
-    global $commentEditTimeout;
+    global $settings;
     $commentTimestamp = strtotime($commentDateTime);
     $currentTimestamp = time();
     if ($currentTimestamp - $commentTimestamp < $commentEditTimeout) { return true; }
@@ -102,7 +102,7 @@ function earlyEnoughToEdit($commentDateTime) {
  * contianing only the comments for the relevant blog post
  */
 function changeComment($commentElements, $newComment, $editAllCommentsFile) {
-    global $commentsDir, $allCommentsFile;
+    global $settings;
     if ($editAllCommentsFile) {
         $commentFilepath = $allCommentsFile;
     } else {

@@ -14,7 +14,7 @@ require $phpMailerMain;
 require $phpMailerSMTP;
 
 function createMail($title, $fullTitle) {
-    global $mailNotificationsHost, $mailNotificationsUsername, $mailNotificationsPassword, $blogContactMail;
+    global $settings;
     $mail = new PHPMailer(true);                            $mail->isSMTP();
     $mail->Host = $mailNotificationsHost;                   $mail->SMTPAuth = true;
     $mail->Username = $mailNotificationsUsername;           $mail->Password = $mailNotificationsPassword;
@@ -28,7 +28,7 @@ function createMail($title, $fullTitle) {
 }
 
 function sendNotifications($year, $month, $day, $title, $commentTimestamp, $userName, $userURL, $userComment, $fullTitle) {
-    global $subscribersFile, $subscribersDir, $ownerPrivateMail, $blogContactMail;
+    global $settings;
     $link = "{{ site.url }}/" . $year . "/" . $month . "/" . $day . "/" . $title;
     if ($commentTimestamp !== "") {
         $commentTimestamp = str_replace(array(" ", "-", ":"), "", $commentTimestamp);
