@@ -95,15 +95,17 @@ function updateFeed($dateOfPost, $postTitle, $postURL, $commentTimestamp, $comme
     $commentAnchor = str_replace(array(" ", "-", ":"), "", $commentTimestamp);
     $commentURLWithAnchor = $postURL . "#" . $commentAnchor;
     $commentTimestamp = date("c", strtotime($commentTimestamp));
+    $entryTitle = MSG_COMMENTFEEDENTRYTITLE;
+    $commentInContext = MSG_COMMENTINCONTEXT;
     $newEntry = <<<ENTRYENDS
     <entry>
-    <title>$MSG_COMMENTFEEDENTRYTITLE $postTitle</title>
+    <title>$entryTitle $postTitle</title>
     <author><name>$commenter</name><uri>$commenterURL</uri></author>
     <link rel="alternate" type="text/html" href="$commentURLWithAnchor" />
     <id>$postTitle$commentTimestamp</id>
     <published>$commentTimestamp</published>
     <updated>$commentTimestamp</updated>
-    <summary>$MSG_COMMENTINCONTEXT</summary>
+    <summary>$commentInContext</summary>
     <content type="html"><![CDATA[$comment]]></content>
     </entry>
     </feed>
@@ -153,7 +155,7 @@ function gravatarExists($email, $notYetHashed) {
 
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST" || !isset($_POST["comment"]) !! !isset($_POST["name"]) || !isset($_POST["captcha"]) || !isset($_POST["url"])) {
-    exit($EXITMSG_ERRORRUNNINGCOMMENTSCRIPT);
+    exit(EXITMSG_ERRORRUNNINGCOMMENTSCRIPT);
 }
 
 // We check if the user is registered. They could be registered if they have
@@ -163,7 +165,7 @@ $userPassword = prepareString($_POST["password"], 40, false, false, false);
 if (!empty($userPassword)) {
     $vipInfo = checkVip($userName, $userPassword, $vipNicks);
     if ($vipInfo[0]) { $userRank = $vipInfo[1]; }
-    else { exit($EXITMSG_WRONGPASSWORD); }
+    else { exit(EXITMSG_WRONGPASSWORD); }
 } else { $vipInfo = [false, 0, "", "", 0]; }
 $userComment = prepareString($_POST["comment"], $settings['save']['maxCommentLength'], true, true, false);
 $userURL = prepareString($_POST["webpage"], 60, false, false, true);
@@ -218,7 +220,7 @@ elseif (!empty($vipInfo[3])) {
 // Check captcha if the user is not registered
 if (!$vipInfo[0]) {
     $captcha = trim(htmlspecialchars($_POST["captcha"], ENT_QUOTES));
-    if ($captcha !== $settings['save']['commentCaptcha']) { exit($EXITMSG_BADCOMMENTCAPTCHA); }
+    if ($captcha !== $settings['save']['commentCaptcha']) { exit(EXITMSG_BADCOMMENTCAPTCHA); }
 }
 
 date_default_timezone_set($settings['save']['timezone']);
@@ -247,7 +249,7 @@ $pattern = "/(\d{4})\/(\d{2})\/(\d{2})\/(.*)\//";
 if (preg_match($pattern, $postURL, $matches)) {
     $year = $matches[1];      $month = $matches[2];
     $day = $matches[3];       $title = $matches[4];
-} else { exit($EXITMSG_ERRORURL); }
+} else { exit(EXITMSG_ERRORURL); }
 
 $filePath = "/" . $year . "/" . $month .
             "/" . $day . "/" . $title . "/";
@@ -264,7 +266,7 @@ $commentLineWithoutEmail = $filePath . "<|>" .
                            $userComment . "<|>" . $userRank . PHP_EOL;
 $fullFilePath = $settings['general']['commentsDir'] . "/" . $year . "-" . $month . "-" . $day . "-" . $title . '-COMMENTS.txt';
 
-if (checkIfDuplicate($fullFilePath, $userComment)) { exit($EXITMSG_DUPLICATE); }
+if (checkIfDuplicate($fullFilePath, $userComment)) { exit(EXITMSG_DUPLICATE); }
 
 createNonexistentFile($fullFilePath);
 
@@ -303,4 +305,4 @@ if (file_put_contents($fullFilePath, $commentLineWithEmail, FILE_APPEND | LOCK_E
     }
     // Notify the email subscribers about the new comment
     sendNotifications($year, $month, $day, $title, $currentDateTime, $userName, $userURL, $userComment, false);
-} else { unset($_POST); exit($EXITMSG_ERRORSAVINGCOMMENT); }
+} else { unset($_POST); exit(EXITMSG_ERRORSAVINGCOMMENT); }
