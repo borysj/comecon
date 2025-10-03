@@ -15,8 +15,12 @@ include "{{ site.dir_with_data }}/vip.php";
  * @param string $path The filepath to check and possibly create
  * @return void
  */
-function createNonexistentFile($path) {
-    if (!file_exists($path)) { touch($path); chmod($path, 0644); }
+function createNonexistentFile($path)
+{
+    if (!file_exists($path)) {
+        touch($path);
+        chmod($path, 0644);
+    }
 }
 
 /**
@@ -27,17 +31,24 @@ function createNonexistentFile($path) {
  * @param string $comment The comment to check
  * @return bool True if duplicate, false if not or if the comment file not found
  */
-function checkIfDuplicate($commentFilePath, $comment) {
-    if (!file_exists($commentFilePath)) { return false; }
+function checkIfDuplicate($commentFilePath, $comment)
+{
+    if (!file_exists($commentFilePath)) {
+        return false;
+    }
     $commentFile = file($commentFilePath);
-    if (!$commentFile) { return false; }
+    if (!$commentFile) {
+        return false;
+    }
     // Get the last saved comment record from the comment file
-    $lastCommentLine = $commentFile[count($commentFile)-1];
+    $lastCommentLine = $commentFile[count($commentFile) - 1];
     $lastComment = explode("<|>", $lastCommentLine);
     // The field with the comment text is indexed as 5
     if (trim($lastComment[5]) === $comment) {
         return true;
-    } else { return false; }
+    } else {
+        return false;
+    }
 }
 
 /**
@@ -58,9 +69,10 @@ function checkIfDuplicate($commentFilePath, $comment) {
  *
  * @return array<mixed>
  */
-function checkVip($userName, $userPassword, $vipNicks) {
+function checkVip($userName, $userPassword, $vipNicks)
+{
     if (array_key_exists($userName, $vipNicks)) {
-        if($vipNicks[$userName][0] === hash("sha256", $userPassword)) {
+        if ($vipNicks[$userName][0] === hash("sha256", $userPassword)) {
             return [true, $vipNicks[$userName][1], $vipNicks[$userName][2],
                     $vipNicks[$userName][3], $vipNicks[$userName][4]];
         } else {
@@ -90,15 +102,20 @@ function checkVip($userName, $userPassword, $vipNicks) {
  * unreadeable or if the preg_replace returned null somehow,
  * returns true after successfully updating the feed
  */
-function updateFeed($dateOfPost, $postTitle, $postURL, $commentTimestamp, $commenter, $commenterURL, $comment, $newestComments) {
+function updateFeed($dateOfPost, $postTitle, $postURL, $commentTimestamp, $commenter, $commenterURL, $comment, $newestComments)
+{
     global $settings;
     $feedFilename = "comments_blogpost" . $dateOfPost . ".xml";
     $feedFilepath = $settings['general']['commentFeedsDir'] . "/" . $feedFilename;
-    if (!file_exists($feedFilepath)) { return false; }
+    if (!file_exists($feedFilepath)) {
+        return false;
+    }
     $commentAnchor = str_replace(array(" ", "-", ":"), "", $commentTimestamp);
     $commentURLWithAnchor = $postURL . "#" . $commentAnchor;
     $timestamp = strtotime($commentTimestamp);
-    if (!$timestamp) { return false; }
+    if (!$timestamp) {
+        return false;
+    }
     $formattedTimestamp = date("c", $timestamp);
     $entryTitle = MSG_COMMENTFEEDENTRYTITLE;
     $commentInContext = MSG_COMMENTINCONTEXT;
@@ -116,28 +133,40 @@ function updateFeed($dateOfPost, $postTitle, $postURL, $commentTimestamp, $comme
     </feed>
     ENTRYENDS;
     $feedContent = file_get_contents($feedFilepath);
-    if (!$feedContent) { return false; }
+    if (!$feedContent) {
+        return false;
+    }
     // We use regex to change the <updated>-tag of the feed with the date of the
     // update (which is the timestamp of the comment just added)
     $feedContent = preg_replace('/^\s*<updated>.*$/m', "<updated>$formattedTimestamp</updated>", $feedContent, 1);
-    if ($feedContent === null) { return false; }
+    if ($feedContent === null) {
+        return false;
+    }
     // We replace the closing tag of the feed with the new item
     $feedContent = str_replace("</feed>", $newEntry, $feedContent);
     file_put_contents($feedFilepath, $feedContent);
     // We will possibly also update the global feed with the newest comments
     if ($newestComments) {
         $feedFilepath = $settings['general']['commentFeedsDir'] . "/comments_newest.xml";
-        if (!file_exists($feedFilepath)) { return false; }
+        if (!file_exists($feedFilepath)) {
+            return false;
+        }
         $feedContent = file_get_contents($feedFilepath);
-        if (!$feedContent) { return false; }
+        if (!$feedContent) {
+            return false;
+        }
         // If there are more than 10 items in the feed, delete the first (i.e.
         // the oldest) item
         if (substr_count($feedContent, "<entry>") > 10) {
             $feedContent = preg_replace('/\R?<entry>[\s\S]+?<\/entry>\R?/m', "", $feedContent, 1);
         }
-        if ($feedContent === null) { return false; }
+        if ($feedContent === null) {
+            return false;
+        }
         $feedContent = preg_replace('/^\s*<updated>.*$/m', "<updated>$formattedTimestamp</updated>", $feedContent, 1);
-        if ($feedContent === null) { return false; }
+        if ($feedContent === null) {
+            return false;
+        }
         $feedContent = str_replace("</feed>", $newEntry, $feedContent);
         file_put_contents($feedFilepath, $feedContent);
     }
@@ -155,14 +184,23 @@ function updateFeed($dateOfPost, $postTitle, $postURL, $commentTimestamp, $comme
  * @return bool True if the gravatar is registered, false if it is not or if the
  * gravatar database gave unexpected response
  */
-function gravatarExists($email, $notYetHashed) {
-    if ($notYetHashed) { $hashedEmail = md5(strtolower(trim($email))); }
-    else { $hashedEmail = $email; }
+function gravatarExists($email, $notYetHashed)
+{
+    if ($notYetHashed) {
+        $hashedEmail = md5(strtolower(trim($email)));
+    } else {
+        $hashedEmail = $email;
+    }
     $url = "https://www.gravatar.com/avatar/" . $hashedEmail . "?d=404";
     $headers = @get_headers($url);
-    if (!$headers) { return false; }
-    if (!preg_match("|200|", $headers[0])) { return false; }
-    else { return true; }
+    if (!$headers) {
+        return false;
+    }
+    if (!preg_match("|200|", $headers[0])) {
+        return false;
+    } else {
+        return true;
+    }
 }
 
 
@@ -172,17 +210,30 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST" || !isset($_POST["comment"]) || !isset
 
 // We check if the user is registered. They could be registered if they have
 // provided a password together with their name.
-if (!is_string($_POST["name"])) { exit(1); }
-if (!is_string($_POST["password"])) { exit(1); }
-if (!is_string($_POST["comment"])) { exit(1); }
-if (!is_string($_POST["webpage"])) { exit(1); }
+if (!is_string($_POST["name"])) {
+    exit(1);
+}
+if (!is_string($_POST["password"])) {
+    exit(1);
+}
+if (!is_string($_POST["comment"])) {
+    exit(1);
+}
+if (!is_string($_POST["webpage"])) {
+    exit(1);
+}
 $userName = prepareString($_POST["name"], 40, false, false, false);
 $userPassword = prepareString($_POST["password"], 40, false, false, false);
 if (!empty($userPassword)) {
     $vipInfo = checkVip($userName, $userPassword, $vipNicks);
-    if ($vipInfo[0]) { $userRank = $vipInfo[1]; }
-    else { exit(EXITMSG_WRONGPASSWORD); }
-} else { $vipInfo = [false, 0, "", "", 0]; }
+    if ($vipInfo[0]) {
+        $userRank = $vipInfo[1];
+    } else {
+        exit(EXITMSG_WRONGPASSWORD);
+    }
+} else {
+    $vipInfo = [false, 0, "", "", 0];
+}
 $userComment = prepareString($_POST["comment"], $settings['save']['maxCommentLength'], true, true, false);
 $userURL = prepareString($_POST["webpage"], 60, false, false, true);
 $userRank = $vipInfo[1];
@@ -191,23 +242,32 @@ $userRank = $vipInfo[1];
 // website from the database could be an empty string; it is not mandatory.
 // Notice also that if the registered user has provided their website
 // directly, this website will have priority over the registered website.
-if (empty($userURL) && $vipInfo[0] === true) { $userURL = $vipInfo[2]; }
+if (empty($userURL) && $vipInfo[0] === true) {
+    $userURL = $vipInfo[2];
+}
 
 // Process the user email. Here, there are several cases.
 $userEmail = prepareString($_POST["email"], 60, false, false, false);
 // The user has provided email directly (in the comment form)
 if (!empty($userEmail)) {
     // If the gravatar for this email exists, hash the email directly
-    if (gravatarExists($userEmail, true)) { $hashedEmail = hash("sha256", $userEmail); }
+    if (gravatarExists($userEmail, true)) {
+        $hashedEmail = hash("sha256", $userEmail);
+    }
     // If the gravatar does not exist, salt the hash for increased security
     // as it will be later accessible through gravatar links in the
     // comments. The reason that we store anything at all is that we want to
     // ensure the same random gravatar for this user across all posts and
     // comments.
-    else { $hashedEmail = hash("sha256", $settings['save']['emailSaltA'] . $userEmail . $settings['save']['emailSaltB']); }
+    else {
+        $hashedEmail = hash("sha256", $settings['save']['emailSaltA'] . $userEmail . $settings['save']['emailSaltB']);
+    }
     // Check if the user wants to subscribe to comments by email
-    if (isset($_POST["email-comments"]) && $_POST["email-comments"] == "on") { $wantsEmails = 1; }
-    else { $wantsEmails = 0; }
+    if (isset($_POST["email-comments"]) && $_POST["email-comments"] == "on") {
+        $wantsEmails = 1;
+    } else {
+        $wantsEmails = 0;
+    }
 }
 // The user has not provided email directly, but has registered it before
 elseif (!empty($vipInfo[3])) {
@@ -215,11 +275,14 @@ elseif (!empty($vipInfo[3])) {
     // email, get their email. If the gravatar does not exist, salt the hash
     // for increased security (the hash will be accessible through gravatar
     // links in the comments, see the remark above)
-    if($vipInfo[4] === 1) {
+    if ($vipInfo[4] === 1) {
         $wantsEmails = 1;
         $userEmail = $vipInfo[3];
-        if (gravatarExists($userEmail, true)) { $hashedEmail = hash("sha256", $userEmail); }
-        else { $hashedEmail = hash("sha256", $settings['save']['emailSaltA'] . $userEmail . $settings['save']['emailSaltB']); }
+        if (gravatarExists($userEmail, true)) {
+            $hashedEmail = hash("sha256", $userEmail);
+        } else {
+            $hashedEmail = hash("sha256", $settings['save']['emailSaltA'] . $userEmail . $settings['save']['emailSaltB']);
+        }
     }
     // If the user does not want to subscribe to comments by email, the
     // database stores the email hash only. But if the gravatar for this
@@ -229,14 +292,18 @@ elseif (!empty($vipInfo[3])) {
     else {
         $wantsEmails = 0;
         $hashedEmail = $vipInfo[3];
-        if (!gravatarExists($hashedEmail, false)) { $hashedEmail = hash("sha256", $hashedMail); }
+        if (!gravatarExists($hashedEmail, false)) {
+            $hashedEmail = hash("sha256", $hashedMail);
+        }
     }
 }
 
 // Check captcha if the user is not registered
 if (!$vipInfo[0]) {
     $captcha = trim(htmlspecialchars($_POST["captcha"], ENT_QUOTES));
-    if ($captcha !== $settings['save']['commentCaptcha']) { exit(EXITMSG_BADCOMMENTCAPTCHA); }
+    if ($captcha !== $settings['save']['commentCaptcha']) {
+        exit(EXITMSG_BADCOMMENTCAPTCHA);
+    }
 }
 
 date_default_timezone_set($settings['save']['timezone']);
@@ -263,9 +330,13 @@ if (!str_ends_with($postURL, "index.php")) {
 
 $pattern = "/(\d{4})\/(\d{2})\/(\d{2})\/(.*)\//";
 if (preg_match($pattern, $postURL, $matches)) {
-    $year = $matches[1];      $month = $matches[2];
-    $day = $matches[3];       $title = $matches[4];
-} else { exit(EXITMSG_ERRORURL); }
+    $year = $matches[1];
+    $month = $matches[2];
+    $day = $matches[3];
+    $title = $matches[4];
+} else {
+    exit(EXITMSG_ERRORURL);
+}
 
 $filePath = "/" . $year . "/" . $month .
             "/" . $day . "/" . $title . "/";
@@ -282,7 +353,9 @@ $commentLineWithoutEmail = $filePath . "<|>" .
                            $userComment . "<|>" . $userRank . PHP_EOL;
 $fullFilePath = $settings['general']['commentsDir'] . "/" . $year . "-" . $month . "-" . $day . "-" . $title . '-COMMENTS.txt';
 
-if (checkIfDuplicate($fullFilePath, $userComment)) { exit(EXITMSG_DUPLICATE); }
+if (checkIfDuplicate($fullFilePath, $userComment)) {
+    exit(EXITMSG_DUPLICATE);
+}
 
 createNonexistentFile($fullFilePath);
 
@@ -294,11 +367,13 @@ if (!empty($userEmail) && $wantsEmails == 1) {
         $subsFilePath = $settings['general']['subscribersDir'] .  "/" . $subsFile;
         createNonexistentFile($subsFilePath);
         $fileContents = file_get_contents($subsFilePath);
-        if (!$fileContents) { exit(1); }
+        if (!$fileContents) {
+            exit(1);
+        }
         // If the email is not already in the subscribers file, add it
         // together with the password (used for unsubscribing)
         if (stripos($fileContents, $userEmail) === false) {
-            $password = mt_rand(1000000,9999999);
+            $password = mt_rand(1000000, 9999999);
             file_put_contents($subsFilePath, $userEmail . "<|>" . $password . PHP_EOL, FILE_APPEND | LOCK_EX);
         }
     }
@@ -307,20 +382,27 @@ if (!empty($userEmail) && $wantsEmails == 1) {
 // Update the global comment file and the particular comment file. Set the
 // cookie in case the user wants to edit their comment
 if (file_put_contents($fullFilePath, $commentLineWithEmail, FILE_APPEND | LOCK_EX) !== false) {
-    if ($settings['save']['allCommentsFile']) { file_put_contents($settings['save']['allCommentsFile'], $commentLineWithoutEmail, FILE_APPEND | LOCK_EX); }
+    if ($settings['save']['allCommentsFile']) {
+        file_put_contents($settings['save']['allCommentsFile'], $commentLineWithoutEmail, FILE_APPEND | LOCK_EX);
+    }
     $cookieDateTime = str_replace(array("-", " ", ":"), "", $currentDateTime);
-    setcookie("{$filePath}<|>{$cookieDateTime}",
-              hash("sha256", $currentDateTime . $userName . $settings['edit']['commentSalt']),
-              time() + $settings['edit']['commentEditTimeout'] - 5*60,
-              "/");
+    setcookie(
+        "{$filePath}<|>{$cookieDateTime}",
+        hash("sha256", $currentDateTime . $userName . $settings['edit']['commentSalt']),
+        time() + $settings['edit']['commentEditTimeout'] - 5 * 60,
+        "/"
+    );
     unset($_POST);
     // First, send the user back to their comment...
     header("Location: {{ site.url }}{$filePath}index.php#lastComment");
     // ...and update the comment feeds in the background (from the user's
     // perspective).
     if ($settings['save']['updateFeed']) {
-        updateFeed($year.$month.$day, $title, $postURL, $currentDateTime, $userName, $userURL, $userComment, true);
+        updateFeed($year . $month . $day, $title, $postURL, $currentDateTime, $userName, $userURL, $userComment, true);
     }
     // Notify the email subscribers about the new comment
     sendNotifications($year, $month, $day, $title, $currentDateTime, $userName, $userURL, $userComment, false);
-} else { unset($_POST); exit(EXITMSG_ERRORSAVINGCOMMENT); }
+} else {
+    unset($_POST);
+    exit(EXITMSG_ERRORSAVINGCOMMENT);
+}

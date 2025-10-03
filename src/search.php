@@ -17,18 +17,21 @@ include $settings['general']['messages'];
  * @return array<string> $searchResults An array of strings with date, link and title,
  * one element for each file where the phrase has been found
  */
-function searchThroughFiles($searchDir, $searchString, $pattern, $trailingChars) {
+function searchThroughFiles($searchDir, $searchString, $pattern, $trailingChars)
+{
     $searchResults = [];
     // Try to open the directory
     if ($handle = opendir($searchDir)) {
         // Iterate through all files in the directory
-        while(false !== ($filename = readdir($handle))) {
+        while (false !== ($filename = readdir($handle))) {
             if ($filename != "." && $filename != "..") {
                 $filePath = $searchDir . '/' . $filename;
                 // Extra check: Confirm that the filepath is real
                 if (is_file($filePath)) {
                     $fileContent = file_get_contents($filePath);
-                    if (!$fileContent) { exit(1); }
+                    if (!$fileContent) {
+                        exit(1);
+                    }
                     // Look for the phrase in the file
                     if (stripos($fileContent, $searchString) !== false) {
                         // If found, extract the link, the date and the title
@@ -38,7 +41,11 @@ function searchThroughFiles($searchDir, $searchString, $pattern, $trailingChars)
                             $date = $matches[1] . "/" . $matches[2] . "/" . $matches[3];
                             $title = substr($filename, 11, $trailingChars);  // 11 because the leading YYYY-MM-DD is 10 characters long
                             $searchResults[] = "<b>$date:</b> <a href=\"$link\">$title</a>";
-                        } } } } }
+                        }
+                    }
+                }
+            }
+        }
         closedir($handle);
     }
     return $searchResults;
@@ -49,7 +56,8 @@ function searchThroughFiles($searchDir, $searchString, $pattern, $trailingChars)
  * @param string $searchString The phrase that we look for
  * @return void
  */
-function saveSearchString($searchString) {
+function saveSearchString($searchString)
+{
     global $settings;
     date_default_timezone_set($settings['save']['timezone']);
     $currentDateTime = date($settings['save']['timestamp']);
@@ -57,7 +65,9 @@ function saveSearchString($searchString) {
     return;
 }
 
-if (!is_string($_POST["searchPhrase"])) { exit(1); }
+if (!is_string($_POST["searchPhrase"])) {
+    exit(1);
+}
 $searchString = htmlspecialchars($_POST["searchPhrase"], ENT_QUOTES);
 if (empty($searchString)) {
     exit(EXITMSG_NOSEARCHPHRASE);

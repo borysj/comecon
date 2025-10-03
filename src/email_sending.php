@@ -6,6 +6,7 @@ layout: null
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
+
 $phpMailerException = $settings['email']['phpMailerDir'] . "/src/Exception.php";
 $phpMailerMain = $settings['email']['phpMailerDir'] . "/src/PHPMailer.php";
 $phpMailerSMTP = $settings['email']['phpMailerDir'] . "/src/SMTP.php";
@@ -13,7 +14,8 @@ require $phpMailerException;
 require $phpMailerMain;
 require $phpMailerSMTP;
 
-function createMail($title, $fullTitle) {
+function createMail($title, $fullTitle)
+{
     global $settings;
     $mail = new PHPMailer(true);
     $mail->isSMTP();
@@ -27,12 +29,16 @@ function createMail($title, $fullTitle) {
     $mail->addReplyTo($settings['email']['blogContactMail']);
     $mail->isHTML(true);
     $mail->CharSet = "UTF-8";
-    if ($fullTitle) { $mail->Subject = "A new blog post on {$settings['general']['blogName']}: $fullTitle"; }
-    else { $mail->Subject = "A new comment on {$settings['general']['blogName']} ($title)"; }
+    if ($fullTitle) {
+        $mail->Subject = "A new blog post on {$settings['general']['blogName']}: $fullTitle";
+    } else {
+        $mail->Subject = "A new comment on {$settings['general']['blogName']} ($title)";
+    }
     return $mail;
 }
 
-function sendNotifications($year, $month, $day, $title, $commentTimestamp, $userName, $userURL, $userComment, $fullTitle) {
+function sendNotifications($year, $month, $day, $title, $commentTimestamp, $userName, $userURL, $userComment, $fullTitle)
+{
     global $settings;
     $link = "{{ site.url }}/" . $year . "/" . $month . "/" . $day . "/" . $title;
     if ($commentTimestamp !== "") {
@@ -43,8 +49,7 @@ function sendNotifications($year, $month, $day, $title, $commentTimestamp, $user
         $filename = $settings['general']['subscribersFile'];
         $text1 = "new";
         $text2 = "blog";
-    }
-    else {
+    } else {
         $filename = $year . "-" . $month . "-" . $day . "-" . $title . "-SUBS.txt";
         $text1 = "commented";
         $text2 = "comments";
@@ -72,11 +77,15 @@ function sendNotifications($year, $month, $day, $title, $commentTimestamp, $user
         $mail->send();
     }
 
-    if (!file_exists($path)) { return; }
+    if (!file_exists($path)) {
+        return;
+    }
     $subscribers = fopen($path, "r");
     while (!feof($subscribers)) {
         $line = fgets($subscribers);
-        if (empty($line)) { break; }
+        if (empty($line)) {
+            break;
+        }
         list($subscriber, $password) = explode("<|>", $line);
         $unsubLink = "{{ site.url }}/assets/unsubscribe.php?user=$subscriber&pw=$password&what=$filename";
         $body2 = "<p style=\"font-size: small;\"><a href=\"$unsubLink\">Use this link to unsubscribe from the $text2</a></p>
@@ -90,7 +99,8 @@ function sendNotifications($year, $month, $day, $title, $commentTimestamp, $user
     return;
 }
 
-function sendTestEmail($recipient) {
+function sendTestEmail($recipient)
+{
     $mail = createMail("Test message", false);
     $mail->addAddress($recipient);
     $mail->Body = "This is test.";

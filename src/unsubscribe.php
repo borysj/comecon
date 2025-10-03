@@ -8,7 +8,9 @@ include $settings['general']['messages'];
 if ($_SERVER["REQUEST_METHOD"] !== "GET" || !isset($_GET["user"]) || !isset($_GET["pw"]) || !isset($_GET["what"])) {
     exit(EXITMSG_ERRORRUNNINGSUBSCRIBERSCRIPT);
 }
-if (!is_string($_GET["user"])) { exit(1); }
+if (!is_string($_GET["user"])) {
+    exit(1);
+}
 
 $filePath = $settings['general']['subscribersDir'] . "/" . $_GET["what"];
 if (file_exists($filePath)) {
@@ -16,7 +18,9 @@ if (file_exists($filePath)) {
     // Be careful here, it might happen that the subscriber file is empty
     // (it is the subscription file for the entire blog, but there are no
     // subscribers yet). Thus, if (!$lines) would be erroneous.
-    if ($lines === false) { exit(1); }
+    if ($lines === false) {
+        exit(1);
+    }
     $foundUser = false;
     foreach ($lines as $line) {
         if (strpos($line, $_GET["user"]) !== false) {
@@ -32,11 +36,17 @@ if (file_exists($filePath)) {
                 // the same email to be registered twice in the subscription
                 // file. This has been checked when the email was being added
                 break;
-            } else { exit(EXITMSG_CANNOTREMOVESUBSCRIBER . $_GET['user']); }
+            } else {
+                exit(EXITMSG_CANNOTREMOVESUBSCRIBER . $_GET['user']);
+            }
         }
     }
-    if (!$foundUser) { exit(EXITMSG_EMAILNOTFOUND); }
-} else { exit(EXITMSG_SUBSCRIBERLISTNOTFOUND); }
+    if (!$foundUser) {
+        exit(EXITMSG_EMAILNOTFOUND);
+    }
+} else {
+    exit(EXITMSG_SUBSCRIBERLISTNOTFOUND);
+}
 // Delete the particular subscription file if this was the only email
 if (filesize($filePath) === 0 && $_GET["what"] !== $settings['general']['subscribersFile']) {
     unlink($filePath);
