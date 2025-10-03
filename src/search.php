@@ -12,7 +12,7 @@ include $settings['general']['messages'];
  * @param string $searchString The phrase that we are searching for
  * @param string $pattern The regex name pattern of every relevant file in the
  * directory, used to extract the date and the title
- * @param string $trailingCharacters The number of trailing characters to be
+ * @param string $trailingChars The number of trailing characters to be
  * removed from the title
  * @return array $searchResults An array of strings with date, link and title,
  * one element for each file where the phrase has been found
