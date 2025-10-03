@@ -13,6 +13,7 @@ include "{{ site.dir_with_data }}/vip.php";
  * Check whether a file with given path exists. If not, create it.
  *
  * @param string $path The filepath to check and possibly create
+ * @return void
  */
 function createNonexistentFile($path) {
     if (!file_exists($path)) { touch($path); chmod($path, 0644); }
@@ -53,9 +54,9 @@ function checkIfDuplicate($commentFilePath, $comment) {
  *
  * @param string $userName The name provided by the commenter
  * @param string $userPassword The password provided by the commenter
- * @param array $vipNicks The associative array with the registered users
+ * @param array<string, mixed> $vipNicks The associative array with the registered users
  *
- * @return array
+ * @return array<mixed>
  */
 function checkVip($userName, $userPassword, $vipNicks) {
     if (array_key_exists($userName, $vipNicks)) {
