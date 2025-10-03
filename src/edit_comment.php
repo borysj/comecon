@@ -95,20 +95,25 @@ function earlyEnoughToEdit($commentDateTime) {
  * [5] (string): The comment itself (with HTML tags)
  * [6] (int): The author's rank (see vip.php)
  *
- * @param array $commentElements The fields of the comment record
+ * @param array<mixed> $commentElements The fields of the comment record
  * @param string $newComment The edited comment
  * @param bool $editAllCommentsFile If true, edit the main comment file
  * containing all the comments. If false, edit the specific comment file
  * contianing only the comments for the relevant blog post
+ * @return bool $commentChanged True if the comment has been changed, false if
+ * the comment file has not been found or the comment record in the comment file
+ * has not been found
  */
 function changeComment($commentElements, $newComment, $editAllCommentsFile) {
     global $settings;
+    $commentChanged = false;
     if ($editAllCommentsFile) {
         $commentFilepath = $settings['save']['allCommentsFile'];
     } else {
         $commentFilename = substr(str_replace("/", "-", $commentElements[0]), 1, -1) . "-COMMENTS.txt";
         $commentFilepath = $settings['general']['commentsDir'] . "/" . $commentFilename;
     }
+    if (!file_exists($commentFilepath)) { return $commentChanged; }
     $commentFileContent = file($commentFilepath);
     // The relevant comment record is identified by the comment timestamp and
     // the comment's author. Notice the tacit assumption that no two comments share
@@ -130,6 +135,7 @@ function changeComment($commentElements, $newComment, $editAllCommentsFile) {
     foreach ($commentFileContent as $commentLine) {
         if (stristr($commentLine, $relevantCommentLine)) {
             $newCommentFileContent[] = $newCommentLine;
+            $commentChanged = true;
         } else {
             $newCommentFileContent[] = $commentLine;
         }
@@ -139,7 +145,7 @@ function changeComment($commentElements, $newComment, $editAllCommentsFile) {
     if (filesize($commentFilepath) === 0 && $commentFilepath !== $settings['save']['allCommentsFile']) {
         unlink($commentFilepath);
     }
-    return true;
+    return $commentChanged;
 }
 
 // Check if the admin is accessing. The POST key for the admin password is 'p'.
