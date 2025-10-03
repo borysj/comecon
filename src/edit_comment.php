@@ -12,7 +12,7 @@ include "utilities.php";
  * @param string $postDate The date of the commented post, YYYY-MM-DD
  * @param string $commentID Either YYYYMMDDHHMMSS if the admin is accessing,
  * or a hashed value from a cookie set for the author of the comment
- * @param string $adminAccess If true, the admin is accessing. If false, the
+ * @param bool $adminAccess If true, the admin is accessing. If false, the
  * author of the comment is accessing.
  * @return string $commentLine The comment record from the database (the actual
  * comment together with its descriptors)
@@ -24,7 +24,7 @@ function findComment($postDate, $commentID, $adminAccess) {
     // If there are several, only the first one will be examined.
     $commentFilePath = glob("{$settings['general']['commentsDir']}/$postDate*");
     if ($commentFilePath) { $commentFile = fopen($commentFilePath[0], "r"); }
-    else                  { return false; }
+    else                  { return ""; }
     // Scan through the relevant comment file
     while (($line = fgets($commentFile)) !== false) {
         $commentElements = explode("<|>", $line);
@@ -96,7 +96,7 @@ function earlyEnoughToEdit($commentDateTime) {
  * [6] (int): The author's rank (see vip.php)
  *
  * @param array $commentElements The fields of the comment record
- * @param array $newComment The edited comment
+ * @param string $newComment The edited comment
  * @param bool $editAllCommentsFile If true, edit the main comment file
  * containing all the comments. If false, edit the specific comment file
  * contianing only the comments for the relevant blog post
