@@ -172,6 +172,10 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST" || !isset($_POST["comment"]) || !isset
 
 // We check if the user is registered. They could be registered if they have
 // provided a password together with their name.
+if (!is_string($_POST["name"])) { exit(1); }
+if (!is_string($_POST["password"])) { exit(1); }
+if (!is_string($_POST["comment"])) { exit(1); }
+if (!is_string($_POST["webpage"])) { exit(1); }
 $userName = prepareString($_POST["name"], 40, false, false, false);
 $userPassword = prepareString($_POST["password"], 40, false, false, false);
 if (!empty($userPassword)) {

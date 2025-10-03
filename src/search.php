@@ -57,6 +57,7 @@ function saveSearchString($searchString) {
     return;
 }
 
+if (!is_string($_POST["searchPhrase"])) { exit(1); }
 $searchString = htmlspecialchars($_POST["searchPhrase"], ENT_QUOTES);
 if (empty($searchString)) {
     exit(EXITMSG_NOSEARCHPHRASE);

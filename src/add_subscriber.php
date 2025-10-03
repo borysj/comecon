@@ -10,7 +10,9 @@ $subsFilePath = $settings['general']['subscribersDir'] . "/" . $settings['genera
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST" || !isset($_POST["email"])) { exit(1); }
 
-$userEmail = prepareString($_POST["email"], 60, false, false, false);
+$userEmail = $_POST["email"];
+if (!is_string($userEmail)) { exit(1); }
+$userEmail = prepareString($userEmail, 60, false, false, false);
 
 // Check for captcha, and remove it if present.
 // The captcha is a three characters long "secret code" at the end of the

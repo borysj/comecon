@@ -8,6 +8,7 @@ include $settings['general']['messages'];
 if ($_SERVER["REQUEST_METHOD"] !== "GET" || !isset($_GET["user"]) || !isset($_GET["pw"]) || !isset($_GET["what"])) {
     exit(EXITMSG_ERRORRUNNINGSUBSCRIBERSCRIPT);
 }
+if (!is_string($_GET["user"])) { exit(1); }
 
 $filePath = $settings['general']['subscribersDir'] . "/" . $_GET["what"];
 if (file_exists($filePath)) {

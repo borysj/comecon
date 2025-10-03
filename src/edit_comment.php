@@ -94,9 +94,9 @@ function earlyEnoughToEdit($commentDateTime) {
  * [3] (string): The author's website (can be empty)
  * [4] (string): The author's email (can be empty)
  * [5] (string): The comment itself (with HTML tags)
- * [6] (int): The author's rank (see vip.php)
+ * [6] (string): The author's rank (see vip.php)
  *
- * @param array<mixed> $commentElements The fields of the comment record
+ * @param array<string> $commentElements The fields of the comment record
  * @param string $newComment The edited comment
  * @param bool $editAllCommentsFile If true, edit the main comment file
  * containing all the comments. If false, edit the specific comment file
@@ -151,13 +151,14 @@ function changeComment($commentElements, $newComment, $editAllCommentsFile) {
 }
 
 // Check if the admin is accessing. The POST key for the admin password is 'p'.
-if (isset($_GET['p'])) {
-    if ($settings['edit']['adminCommentPassword'] === hash("sha256", $_GET['p'])) {
-        $adminAccess = true;
-    } else { exit(EXITMSG_WRONGCOMMENTADMINPASSWORD); }
+if (!isset($_GET['p']) || !is_string($_GET['p'])) { exit(EXITMSG_WRONGCOMMENTADMINPASSWORD); }
+if ($settings['edit']['adminCommentPassword'] === hash("sha256", $_GET['p'])) {
+    $adminAccess = true;
 } else { $adminAccess = false; }
 // Identify the comment record using the date of the commented blog post ('d')
 // and the comment ID ('c')
+if (!isset($_GET['d']) || !is_string($_GET['d'])) { exit(1); }
+if (!isset($_GET['c']) || !is_string($_GET['c'])) { exit(1); }
 $commentLine = findComment($_GET['d'], $_GET['c'], $adminAccess);
 // If the comment record exists, get the comment and convert it to Markdown for
 // display
@@ -173,15 +174,14 @@ if (!earlyEnoughToEdit($commentElements[1]) && !$adminAccess) {
 // After editing, check again that it is early enough or that the editor is an
 // admin. If OK, change the comment both in the particular comment file and the
 // global comment file.
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (earlyEnoughToEdit($commentElements[1]) || $adminAccess) {
-        changeComment($commentElements, prepareString($_POST["editedComment"], $settings['save']['maxCommentLength'], true, true, false), false);
-        if ($settings['save']['allCommentsFile']) {
-            changeComment($commentElements, prepareString($_POST["editedComment"], $settings['save']['maxCommentLength'], true, true, false), true);
-        }
-        header("Location: {{ site.url }}{$commentElements[0]}index.php");
-    } else { exit(EXITMSG_TOOLATETOEDITCOMMENT); }
-}
+if ($_SERVER["REQUEST_METHOD"] !== "POST" || !isset($_POST["editedComment"]) || !is_string($_POST["editedComment"])) { exit(1); }
+if (earlyEnoughToEdit($commentElements[1]) || $adminAccess) {
+    changeComment($commentElements, prepareString($_POST["editedComment"], $settings['save']['maxCommentLength'], true, true, false), false);
+    if ($settings['save']['allCommentsFile']) {
+        changeComment($commentElements, prepareString($_POST["editedComment"], $settings['save']['maxCommentLength'], true, true, false), true);
+    }
+    header("Location: {{ site.url }}{$commentElements[0]}index.php");
+} else { exit(EXITMSG_TOOLATETOEDITCOMMENT); }
 ?>
 
 <!DOCTYPE html>

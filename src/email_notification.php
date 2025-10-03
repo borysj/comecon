@@ -14,7 +14,9 @@ include $settings['general']['messages'];
 // For instance:
 // https://myblog.example.com/email_notification.php?p=secretpassword&y=2025&m=08&d=12&t=about-birds&f=About%20birds
 if (($_SERVER["REQUEST_METHOD"] === "GET") &&
-    (isset($_GET["p"])) && (hash("sha256", $_GET["p"]) === $settings['email']['notificationPassword']) &&
+    (isset($_GET["p"])) && 
+    (is_string($_GET["p"])) &&
+    (hash("sha256", $_GET["p"]) === $settings['email']['notificationPassword']) &&
     (isset($_GET["y"])) &&
     (isset($_GET["m"])) &&
     (isset($_GET["d"])) &&
