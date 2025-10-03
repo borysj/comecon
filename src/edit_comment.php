@@ -63,10 +63,10 @@ function findComment($postDate, $commentID, $adminAccess) {
  */
 function HTML2markdown($comment) {
     $comment = str_replace("<br/>", "\n", $comment);
-    $comment = preg_replace('/<code>(.*?)<\/code>/', '`$1`', $comment);
-    $comment = preg_replace('/<b>(.*?)<\/b>/', '**$1**', $comment);
-    $comment = preg_replace('/<i>(.*?)<\/i>/', '*$1*', $comment);
-    $comment = preg_replace('/<a href="(.*?)">(.*?)<\/a>/', '[$2]($1)', $comment);
+    $comment = preg_replace('/<code>(.*?)<\/code>/', '`$1`', $comment) ?? $comment;
+    $comment = preg_replace('/<b>(.*?)<\/b>/', '**$1**', $comment) ?? $comment;
+    $comment = preg_replace('/<i>(.*?)<\/i>/', '*$1*', $comment) ?? $comment;
+    $comment = preg_replace('/<a href="(.*?)">(.*?)<\/a>/', '[$2]($1)', $comment) ?? $comment;
     return $comment;
 }
 

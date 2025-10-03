@@ -86,7 +86,8 @@ function checkVip($userName, $userPassword, $vipNicks) {
  * post
  *
  * @return bool Returns false if the filepath for the feed does not
- * exist or if the feed content is unreadable or if the comment timestamp is unreadeable,
+ * exist or if the feed content is unreadable or if the comment timestamp is
+ * unreadeable or if the preg_replace returned null somehow,
  * returns true after successfully updating the feed
  */
 function updateFeed($dateOfPost, $postTitle, $postURL, $commentTimestamp, $commenter, $commenterURL, $comment, $newestComments) {
@@ -119,6 +120,7 @@ function updateFeed($dateOfPost, $postTitle, $postURL, $commentTimestamp, $comme
     // We use regex to change the <updated>-tag of the feed with the date of the
     // update (which is the timestamp of the comment just added)
     $feedContent = preg_replace('/^\s*<updated>.*$/m', "<updated>$formattedTimestamp</updated>", $feedContent, 1);
+    if ($feedContent === null) { return false; }
     // We replace the closing tag of the feed with the new item
     $feedContent = str_replace("</feed>", $newEntry, $feedContent);
     file_put_contents($feedFilepath, $feedContent);
@@ -133,7 +135,9 @@ function updateFeed($dateOfPost, $postTitle, $postURL, $commentTimestamp, $comme
         if (substr_count($feedContent, "<entry>") > 10) {
             $feedContent = preg_replace('/\R?<entry>[\s\S]+?<\/entry>\R?/m', "", $feedContent, 1);
         }
+        if ($feedContent === null) { return false; }
         $feedContent = preg_replace('/^\s*<updated>.*$/m', "<updated>$formattedTimestamp</updated>", $feedContent, 1);
+        if ($feedContent === null) { return false; }
         $feedContent = str_replace("</feed>", $newEntry, $feedContent);
         file_put_contents($feedFilepath, $feedContent);
     }
