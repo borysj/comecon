@@ -23,7 +23,9 @@ else { $userEmail = substr($userEmail, 0, -3); }
 // This password will be necessary to remove the subscriber from the file,
 // and it will be provided in the link to cancel the subscription.
 if (filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
-    if (stripos(file_get_contents($subsFilePath), $userEmail) === false) {
+    $fileContents = file_get_contents($subsFilePath);
+    if (!$fileContents) { exit(1); }
+    if (stripos($fileContents, $userEmail) === false) {
         $password = mt_rand(1000000,9999999);
         file_put_contents($subsFilePath, $userEmail . "<|>" . $password . PHP_EOL, FILE_APPEND | LOCK_EX);
     }

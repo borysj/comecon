@@ -28,6 +28,7 @@ function searchThroughFiles($searchDir, $searchString, $pattern, $trailingChars)
                 // Extra check: Confirm that the filepath is real
                 if (is_file($filePath)) {
                     $fileContent = file_get_contents($filePath);
+                    if (!$fileContent) { exit(1); }
                     // Look for the phrase in the file
                     if (stripos($fileContent, $searchString) !== false) {
                         // If found, extract the link, the date and the title

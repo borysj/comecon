@@ -25,18 +25,18 @@ function createNonexistentFile($path) {
  *
  * @param string $commentFilePath The comment file to look up
  * @param string $comment The comment to check
- * @return bool
+ * @return bool True if duplicate, false if not or if the comment file not found
  */
 function checkIfDuplicate($commentFilePath, $comment) {
-    if (file_exists($commentFilePath)) {
-        $commentFile = file($commentFilePath);
-        // Get the last saved comment record from the comment file
-        $lastCommentLine = $commentFile[count($commentFile)-1];
-        $lastComment = explode("<|>", $lastCommentLine);
-        // The field with the comment text is indexed as 5
-        if (trim($lastComment[5]) === $comment) {
-            return true;
-        } else { return false; }
+    if (!file_exists($commentFilePath)) { return false; }
+    $commentFile = file($commentFilePath);
+    if (!$commentFile) { return false; }
+    // Get the last saved comment record from the comment file
+    $lastCommentLine = $commentFile[count($commentFile)-1];
+    $lastComment = explode("<|>", $lastCommentLine);
+    // The field with the comment text is indexed as 5
+    if (trim($lastComment[5]) === $comment) {
+        return true;
     } else { return false; }
 }
 
@@ -86,7 +86,8 @@ function checkVip($userName, $userPassword, $vipNicks) {
  * post
  *
  * @return bool Returns false if the filepath for the feed does not
- * exist, returns true after successfully updating the feed
+ * exist or if the feed content is unreadable or if the comment timestamp is unreadeable,
+ * returns true after successfully updating the feed
  */
 function updateFeed($dateOfPost, $postTitle, $postURL, $commentTimestamp, $commenter, $commenterURL, $comment, $newestComments) {
     global $settings;
@@ -95,7 +96,9 @@ function updateFeed($dateOfPost, $postTitle, $postURL, $commentTimestamp, $comme
     if (!file_exists($feedFilepath)) { return false; }
     $commentAnchor = str_replace(array(" ", "-", ":"), "", $commentTimestamp);
     $commentURLWithAnchor = $postURL . "#" . $commentAnchor;
-    $commentTimestamp = date("c", strtotime($commentTimestamp));
+    $timestamp = strtotime($commentTimestamp);
+    if (!$timestamp) { return false; }
+    $formattedTimestamp = date("c", $timestamp);
     $entryTitle = MSG_COMMENTFEEDENTRYTITLE;
     $commentInContext = MSG_COMMENTINCONTEXT;
     $newEntry = <<<ENTRYENDS
@@ -103,18 +106,19 @@ function updateFeed($dateOfPost, $postTitle, $postURL, $commentTimestamp, $comme
     <title>$entryTitle $postTitle</title>
     <author><name>$commenter</name><uri>$commenterURL</uri></author>
     <link rel="alternate" type="text/html" href="$commentURLWithAnchor" />
-    <id>$postTitle$commentTimestamp</id>
-    <published>$commentTimestamp</published>
-    <updated>$commentTimestamp</updated>
+    <id>$postTitle$formattedTimestamp</id>
+    <published>$formattedTimestamp</published>
+    <updated>$formattedTimestamp</updated>
     <summary>$commentInContext</summary>
     <content type="html"><![CDATA[$comment]]></content>
     </entry>
     </feed>
     ENTRYENDS;
     $feedContent = file_get_contents($feedFilepath);
+    if (!$feedContent) { return false; }
     // We use regex to change the <updated>-tag of the feed with the date of the
     // update (which is the timestamp of the comment just added)
-    $feedContent = preg_replace('/^\s*<updated>.*$/m', "<updated>$commentTimestamp</updated>", $feedContent, 1);
+    $feedContent = preg_replace('/^\s*<updated>.*$/m', "<updated>$formattedTimestamp</updated>", $feedContent, 1);
     // We replace the closing tag of the feed with the new item
     $feedContent = str_replace("</feed>", $newEntry, $feedContent);
     file_put_contents($feedFilepath, $feedContent);
@@ -123,12 +127,13 @@ function updateFeed($dateOfPost, $postTitle, $postURL, $commentTimestamp, $comme
         $feedFilepath = $settings['general']['commentFeedsDir'] . "/comments_newest.xml";
         if (!file_exists($feedFilepath)) { return false; }
         $feedContent = file_get_contents($feedFilepath);
+        if (!$feedContent) { return false; }
         // If there are more than 10 items in the feed, delete the first (i.e.
         // the oldest) item
         if (substr_count($feedContent, "<entry>") > 10) {
             $feedContent = preg_replace('/\R?<entry>[\s\S]+?<\/entry>\R?/m', "", $feedContent, 1);
         }
-        $feedContent = preg_replace('/^\s*<updated>.*$/m', "<updated>$commentTimestamp</updated>", $feedContent, 1);
+        $feedContent = preg_replace('/^\s*<updated>.*$/m', "<updated>$formattedTimestamp</updated>", $feedContent, 1);
         $feedContent = str_replace("</feed>", $newEntry, $feedContent);
         file_put_contents($feedFilepath, $feedContent);
     }
@@ -143,13 +148,15 @@ function updateFeed($dateOfPost, $postTitle, $postURL, $commentTimestamp, $comme
  * @param bool $notYetHashed If true, the email is a normal email, if false, the
  * email has already been hashed (for the security purposes; sometimes we do not
  * need the email itself, but only the hash)
- * @return bool True if the gravatar is registered, false if it is not
+ * @return bool True if the gravatar is registered, false if it is not or if the
+ * gravatar database gave unexpected response
  */
 function gravatarExists($email, $notYetHashed) {
     if ($notYetHashed) { $hashedEmail = md5(strtolower(trim($email))); }
     else { $hashedEmail = $email; }
     $url = "https://www.gravatar.com/avatar/" . $hashedEmail . "?d=404";
     $headers = @get_headers($url);
+    if (!$headers) { return false; }
     if (!preg_match("|200|", $headers[0])) { return false; }
     else { return true; }
 }
@@ -278,9 +285,11 @@ if (!empty($userEmail) && $wantsEmails == 1) {
         $subsFile = $year . "-" . $month . "-" . $day . "-" . $title . "-SUBS.txt";
         $subsFilePath = $settings['general']['subscribersDir'] .  "/" . $subsFile;
         createNonexistentFile($subsFilePath);
+        $fileContents = file_get_contents($subsFilePath);
+        if (!$fileContents) { exit(1); }
         // If the email is not already in the subscribers file, add it
         // together with the password (used for unsubscribing)
-        if (stripos(file_get_contents($subsFilePath), $userEmail) === false) {
+        if (stripos($fileContents, $userEmail) === false) {
             $password = mt_rand(1000000,9999999);
             file_put_contents($subsFilePath, $userEmail . "<|>" . $password . PHP_EOL, FILE_APPEND | LOCK_EX);
         }

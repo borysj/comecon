@@ -23,8 +23,9 @@ function findComment($postDate, $commentID, $adminAccess) {
     // This is a tenet of Comecon (no more than one blog post per day).
     // If there are several, only the first one will be examined.
     $commentFilePath = glob("{$settings['general']['commentsDir']}/$postDate*");
-    if ($commentFilePath) { $commentFile = fopen($commentFilePath[0], "r"); }
-    else                  { return ""; }
+    if (!$commentFilePath) { return ""; }
+    $commentFile = fopen($commentFilePath[0], "r");
+    if (!$commentFile) { return ""; }
     // Scan through the relevant comment file
     while (($line = fgets($commentFile)) !== false) {
         $commentElements = explode("<|>", $line);
@@ -49,7 +50,7 @@ function findComment($postDate, $commentID, $adminAccess) {
         }
     }
     fclose($commentFile);
-    return isset($commentLine) ? $commentLine : false;
+    return isset($commentLine) ? $commentLine : "";
 }
 
 /**
@@ -115,6 +116,7 @@ function changeComment($commentElements, $newComment, $editAllCommentsFile) {
     }
     if (!file_exists($commentFilepath)) { return $commentChanged; }
     $commentFileContent = file($commentFilepath);
+    if (!$commentFileContent) { return $commentChanged; }
     // The relevant comment record is identified by the comment timestamp and
     // the comment's author. Notice the tacit assumption that no two comments share
     // the timestamp AND the author.
