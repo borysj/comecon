@@ -10,7 +10,7 @@ layout: null
  * @param int $length The string will be trimmed to this length
  * @param bool $breaklines If true, replace the newlines and breaklines with
  * <br />. If false, remove them altogether.
- * @param int $markdown If false, do nothing. If 1, convert Markdown to HTML.
+ * @param bool $markdown If false, do nothing. If true, convert Markdown to HTML.
  * @param bool $http If true, add http:// to the beginning of the string if it
  * is not already present.
  * @return string $string The prepared string
