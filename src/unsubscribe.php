@@ -1,9 +1,7 @@
----
-layout: null
----
 <?php
-require "{{ site.dir_with_data }}/settings.php";
-include $settings['general']['messages'];
+
+require "../comecon/private/settings.php";
+include "../comecon/src/" . $settings['general']['messages'];
 
 if ($_SERVER["REQUEST_METHOD"] !== "GET" || !isset($_GET["user"]) || !isset($_GET["pw"]) || !isset($_GET["what"])) {
     exit(EXITMSG_ERRORRUNNINGSUBSCRIBERSCRIPT);

@@ -1,15 +1,12 @@
----
-layout: null
----
 <?php
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
 
-$phpMailerException = $settings['email']['phpMailerDir'] . "/src/Exception.php";
-$phpMailerMain = $settings['email']['phpMailerDir'] . "/src/PHPMailer.php";
-$phpMailerSMTP = $settings['email']['phpMailerDir'] . "/src/SMTP.php";
+$phpMailerException = "../comecon/vendor/" . $settings['email']['phpMailerDir'] . "/src/Exception.php";
+$phpMailerMain = "../comecon/vendor/" . $settings['email']['phpMailerDir'] . "/src/PHPMailer.php";
+$phpMailerSMTP = "../comecon/vendor/" . $settings['email']['phpMailerDir'] . "/src/SMTP.php";
 require $phpMailerException;
 require $phpMailerMain;
 require $phpMailerSMTP;
@@ -37,10 +34,19 @@ function createMail($title, $fullTitle)
     return $mail;
 }
 
-function sendNotifications($year, $month, $day, $title, $commentTimestamp, $userName, $userURL, $userComment, $fullTitle)
-{
+function sendNotifications(
+    $year,
+    $month,
+    $day,
+    $title,
+    $commentTimestamp,
+    $userName,
+    $userURL,
+    $userComment,
+    $fullTitle
+) {
     global $settings;
-    $link = "{{ site.url }}/" . $year . "/" . $month . "/" . $day . "/" . $title;
+    $link = $settings['general']['siteURL'] . "/" . $year . "/" . $month . "/" . $day . "/" . $title;
     if ($commentTimestamp !== "") {
         $commentTimestamp = str_replace(array(" ", "-", ":"), "", $commentTimestamp);
         $link = $link . "/index.php#" . $commentTimestamp;
@@ -87,9 +93,13 @@ function sendNotifications($year, $month, $day, $title, $commentTimestamp, $user
             break;
         }
         list($subscriber, $password) = explode("<|>", $line);
-        $unsubLink = "{{ site.url }}/assets/unsubscribe.php?user=$subscriber&pw=$password&what=$filename";
-        $body2 = "<p style=\"font-size: small;\"><a href=\"$unsubLink\">Use this link to unsubscribe from the $text2</a></p>
-                  <p style=\"font-size: small;\">Do not reply to this email. If you encounter technical problems, contact me here: {$settings['email']['blogContactMail']}</p></body></html>";
+        $unsubLink = $settings['general']['siteURL'] .
+                     "/assets/unsubscribe.php?user=$subscriber&pw=$password&what=$filename";
+        $body2 = "<p style=\"font-size: small;\"><a href=\"$unsubLink\">
+                  Use this link to unsubscribe from the $text2</a></p>
+                  <p style=\"font-size: small;\">Do not reply to this email.
+                  If you encounter technical problems, contact me here:
+                  {$settings['email']['blogContactMail']}</p></body></html>";
         $mail = createMail($title, $fullTitle);
         $mail->addAddress($subscriber);
         $mail->Body = $body1 . $body2;

@@ -1,10 +1,8 @@
----
-layout: null
----
 <?php
-require "{{ site.dir_with_data }}/settings.php";
-require "email_sending.php";
-include $settings['general']['messages'];
+
+include "../comecon/private/settings.php";
+include "../comecon/src/" . $settings['general']['messages'];
+require "../comecon/src/email_sending.php";
 
 // This is a script to notify the blog subscribers about a new post by email.
 // p is the admin password.

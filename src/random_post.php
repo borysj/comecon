@@ -1,8 +1,6 @@
----
-layout: null
----
 <?php
-include "{{ site.dir_with_data }}/settings.php";
+
+include "../comecon/src/" . $settings['general']['messages'];
 
 $listOfPosts = file_get_contents($settings['random']['listOfAllPosts']);
 if ($listOfPosts !== false) {

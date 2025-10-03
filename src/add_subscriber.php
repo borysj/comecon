@@ -1,10 +1,8 @@
----
-layout: null
----
 <?php
-include "{{ site.dir_with_data }}/settings.php";
-include $settings['general']['messages'];
-include "utilities.php";
+
+include "../comecon/private/settings.php";
+include "../comecon/src/" . $settings['general']['messages'];
+include "../comecon/src/utilities.php";
 
 $subsFilePath = $settings['general']['subscribersDir'] . "/" . $settings['general']['subscribersFile'];
 

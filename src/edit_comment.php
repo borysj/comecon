@@ -1,10 +1,8 @@
----
-layout: null
----
 <?php
-include "{{ site.dir_with_data }}/settings.php";
-include $settings['general']['messages'];
-include "utilities.php";
+
+include "../comecon/private/settings.php";
+include "../comecon/src/" . $settings['general']['messages'];
+include "../comecon/src/utilities.php";
 
 /**
  * Finds the relevant comment in the database.
@@ -44,11 +42,16 @@ function findComment($postDate, $commentID, $adminAccess)
                 // given timestamp
                 break;
             }
-        }
+        } else {
         // If it is not admin, then the comment ID is a hash of the timestamp,
         // the author's nickname and the salt.
-        else {
-            if (hash("sha256", $commentElements[1] . $commentElements[2] . $settings['edit']['commentSalt']) === $commentID) {
+            if (
+                hash(
+                    "sha256",
+                    $commentElements[1] . $commentElements[2] . $settings['edit']['commentSalt']
+                )
+                === $commentID
+            ) {
                 $commentLine = $line;
                 break;
             }
@@ -139,10 +142,9 @@ function changeComment($commentElements, $newComment, $editAllCommentsFile)
     // If the comment has been deleted, we will be removing the record.
     if ($newComment === "") {
         $newCommentLine = "";
-    }
+    } else {
     // Otherwise, we have to create a new record by merging the old descriptors
     // with the new (edited) comment
-    else {
         $newCommentLine = $commentElements[0] . "<|>" . $commentElements[1] . "<|>" . $commentElements[2] . "<|>" .
             $commentElements[3] . "<|>" . $commentElements[4] . "<|>" . $newComment . "<|>" . $commentElements[6];
     }
@@ -203,11 +205,19 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST" || !isset($_POST["editedComment"]) || 
     exit(1);
 }
 if (earlyEnoughToEdit($commentElements[1]) || $adminAccess) {
-    changeComment($commentElements, prepareString($_POST["editedComment"], $settings['save']['maxCommentLength'], true, true, false), false);
+    changeComment(
+        $commentElements,
+        prepareString($_POST["editedComment"], $settings['save']['maxCommentLength'], true, true, false),
+        false
+    );
     if ($settings['save']['allCommentsFile']) {
-        changeComment($commentElements, prepareString($_POST["editedComment"], $settings['save']['maxCommentLength'], true, true, false), true);
+        changeComment(
+            $commentElements,
+            prepareString($_POST["editedComment"], $settings['save']['maxCommentLength'], true, true, false),
+            true
+        );
     }
-    header("Location: {{ site.url }}{$commentElements[0]}index.php");
+    header("Location: {$settings['general']['siteURL']}{$commentElements[0]}index.php");
 } else {
     exit(EXITMSG_TOOLATETOEDITCOMMENT);
 }

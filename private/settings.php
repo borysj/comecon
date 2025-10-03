@@ -1,4 +1,5 @@
 <?php
+
 // Server path for your home directory, one level above where your site is.
 // On shared hosting it can be something like /home/johndoe
 // On a VPS it is up to you, but usually you want /var/www
@@ -7,6 +8,8 @@ $settings = [
     "general" => [
         // The name of your blog
         "blogName" => "My Blog",
+        // The URL of your blog without the trailing slash
+        "siteURL" => "https://myblog.example.com",
         // Server subpath for your comments directory (preferably non-public)
         "commentsDir" => $homeDir . "/data/comments",
         // Server subpath for your subscribers directory (preferably non-public)
@@ -82,7 +85,7 @@ $settings = [
         // User has 25 minutes to edit their comment.
         // 25 minutes is the real deadline; but the user will be informed that they have
         // only 20 to give them some extra margin.
-        "commentEditTimeout" => 25*60,
+        "commentEditTimeout" => 25 * 60,
     ],
     "search" => [
         // Server subpath (public) for where you keep searchable blog posts.

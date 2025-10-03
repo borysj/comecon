@@ -1,9 +1,7 @@
----
-layout: null
----
 <?php
-require "{{ site.dir_with_data }}/settings.php";
-include $settings['general']['messages'];
+
+require "../comecon/private/settings.php";
+include "../comecon/src/" . $settings['general']['messages'];
 
 /**
  * Search through files in a given directory looking for a phrase
@@ -37,9 +35,11 @@ function searchThroughFiles($searchDir, $searchString, $pattern, $trailingChars)
                         // If found, extract the link, the date and the title
                         // from the filename using the regex pattern
                         if (preg_match($pattern, $filename, $matches)) {
-                            $link = "{{ site.url }}/" . $matches[1] . "/" . $matches[2] . "/" . $matches[3] . "/" . $matches[4];
+                            $link = $settings['general']['siteURL'] . "/" .
+                                $matches[1] . "/" . $matches[2] . "/" . $matches[3] . "/" . $matches[4];
                             $date = $matches[1] . "/" . $matches[2] . "/" . $matches[3];
-                            $title = substr($filename, 11, $trailingChars);  // 11 because the leading YYYY-MM-DD is 10 characters long
+                            // 11 because the leading YYYY-MM-DD is 10 characters long
+                            $title = substr($filename, 11, $trailingChars);
                             $searchResults[] = "<b>$date:</b> <a href=\"$link\">$title</a>";
                         }
                     }
@@ -61,7 +61,11 @@ function saveSearchString($searchString)
     global $settings;
     date_default_timezone_set($settings['save']['timezone']);
     $currentDateTime = date($settings['save']['timestamp']);
-    file_put_contents($settings['search']['searchQueriesRecord'], $currentDateTime . "<|>" . $searchString . PHP_EOL, FILE_APPEND | LOCK_EX);
+    file_put_contents(
+        $settings['search']['searchQueriesRecord'],
+        $currentDateTime . "<|>" . $searchString . PHP_EOL,
+        FILE_APPEND | LOCK_EX
+    );
     return;
 }
 

@@ -1,13 +1,11 @@
----
-layout: null
----
 <?php
-include "{{ site.dir_with_data }}/settings.php";
-include $settings['general']['messages'];
-include "utilities.php";
-include "email_sending.php";
+
+include "../comecon/private/settings.php";
+include "../comecon/src/" . $settings['general']['messages'];
+require "../comecon/src/email_sending.php";
+include "../comecon/src/utilities.php";
 $vipNicks = [];
-include "{{ site.dir_with_data }}/vip.php";
+include "../comecon/private/vip.php";
 
 /**
  * Check whether a file with given path exists. If not, create it.
@@ -102,8 +100,16 @@ function checkVip($userName, $userPassword, $vipNicks)
  * unreadeable or if the preg_replace returned null somehow,
  * returns true after successfully updating the feed
  */
-function updateFeed($dateOfPost, $postTitle, $postURL, $commentTimestamp, $commenter, $commenterURL, $comment, $newestComments)
-{
+function updateFeed(
+    $dateOfPost,
+    $postTitle,
+    $postURL,
+    $commentTimestamp,
+    $commenter,
+    $commenterURL,
+    $comment,
+    $newestComments
+) {
     global $settings;
     $feedFilename = "comments_blogpost" . $dateOfPost . ".xml";
     $feedFilepath = $settings['general']['commentFeedsDir'] . "/" . $feedFilename;
@@ -204,7 +210,13 @@ function gravatarExists($email, $notYetHashed)
 }
 
 
-if ($_SERVER["REQUEST_METHOD"] !== "POST" || !isset($_POST["comment"]) || !isset($_POST["name"]) || !isset($_POST["captcha"]) || !isset($_POST["url"])) {
+if (
+    $_SERVER["REQUEST_METHOD"] !== "POST" ||
+    !isset($_POST["comment"]) ||
+    !isset($_POST["name"]) ||
+    !isset($_POST["captcha"]) ||
+    !isset($_POST["url"])
+) {
     exit(EXITMSG_ERRORRUNNINGCOMMENTSCRIPT);
 }
 
@@ -253,13 +265,12 @@ if (!empty($userEmail)) {
     // If the gravatar for this email exists, hash the email directly
     if (gravatarExists($userEmail, true)) {
         $hashedEmail = hash("sha256", $userEmail);
-    }
+    } else {
     // If the gravatar does not exist, salt the hash for increased security
     // as it will be later accessible through gravatar links in the
     // comments. The reason that we store anything at all is that we want to
     // ensure the same random gravatar for this user across all posts and
     // comments.
-    else {
         $hashedEmail = hash("sha256", $settings['save']['emailSaltA'] . $userEmail . $settings['save']['emailSaltB']);
     }
     // Check if the user wants to subscribe to comments by email
@@ -268,9 +279,8 @@ if (!empty($userEmail)) {
     } else {
         $wantsEmails = 0;
     }
-}
+} elseif (!empty($vipInfo[3])) {
 // The user has not provided email directly, but has registered it before
-elseif (!empty($vipInfo[3])) {
     // If the user said earlier that they want to subscribe to comments by
     // email, get their email. If the gravatar does not exist, salt the hash
     // for increased security (the hash will be accessible through gravatar
@@ -281,15 +291,17 @@ elseif (!empty($vipInfo[3])) {
         if (gravatarExists($userEmail, true)) {
             $hashedEmail = hash("sha256", $userEmail);
         } else {
-            $hashedEmail = hash("sha256", $settings['save']['emailSaltA'] . $userEmail . $settings['save']['emailSaltB']);
+            $hashedEmail = hash(
+                "sha256",
+                $settings['save']['emailSaltA'] . $userEmail . $settings['save']['emailSaltB']
+            );
         }
-    }
+    } else {
     // If the user does not want to subscribe to comments by email, the
     // database stores the email hash only. But if the gravatar for this
     // hash does not exist, we mangle it (hash it again) for increased
     // security (the hash will be accessible through gravatar links in the
     // comments, see the remark above)
-    else {
         $wantsEmails = 0;
         $hashedEmail = $vipInfo[3];
         if (!gravatarExists($hashedEmail, false)) {
@@ -351,7 +363,8 @@ $commentLineWithoutEmail = $filePath . "<|>" .
                            $currentDateTime . "<|>" .
                            $userName . "<|>" . $userURL . "<|>" . "<|>" .
                            $userComment . "<|>" . $userRank . PHP_EOL;
-$fullFilePath = $settings['general']['commentsDir'] . "/" . $year . "-" . $month . "-" . $day . "-" . $title . '-COMMENTS.txt';
+$fullFilePath = $settings['general']['commentsDir'] . "/" .
+    $year . "-" . $month . "-" . $day . "-" . $title . '-COMMENTS.txt';
 
 if (checkIfDuplicate($fullFilePath, $userComment)) {
     exit(EXITMSG_DUPLICATE);
@@ -394,7 +407,7 @@ if (file_put_contents($fullFilePath, $commentLineWithEmail, FILE_APPEND | LOCK_E
     );
     unset($_POST);
     // First, send the user back to their comment...
-    header("Location: {{ site.url }}{$filePath}index.php#lastComment");
+    header("Location: {$settings['general']['siteURL']}{$filePath}index.php#lastComment");
     // ...and update the comment feeds in the background (from the user's
     // perspective).
     if ($settings['save']['updateFeed']) {
