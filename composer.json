@@ -1,0 +1,8 @@
+{
+    "name": "borysj/comecon",
+    "description": "A comment system for a static blog, written in vanilla PHP with flat text files for database",
+    "type": "project",
+    "require": {
+        "phpmailer/phpmailer": "^6.9"
+    }
+}

@@ -4,12 +4,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
 
-$phpMailerException = __DIR__ . "/../vendor/" . $settings['email']['phpMailerDir'] . "/src/Exception.php";
-$phpMailerMain = __DIR__ . "/../vendor/" . $settings['email']['phpMailerDir'] . "/src/PHPMailer.php";
-$phpMailerSMTP = __DIR__ . "/../vendor/" . $settings['email']['phpMailerDir'] . "/src/SMTP.php";
-require $phpMailerException;
-require $phpMailerMain;
-require $phpMailerSMTP;
+require __DIR__ . '/../vendor/autoload.php';
 
 function createMail($title, $fullTitle)
 {
