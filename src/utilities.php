@@ -36,3 +36,25 @@ function prepareString($string, $length, $breaklines, $markdown, $http)
     }
     return $string;
 }
+
+/**
+ * Validates the request method and the presence and type of required keys.
+ *
+ * @param string $expectedMethod The expected request method ('GET' or 'POST')
+ * @param array<string> $requiredKeys An array of keys that must be present in the request
+ * @return void
+ */
+function validate_request($expectedMethod, $requiredKeys)
+{
+    if ($_SERVER['REQUEST_METHOD'] !== $expectedMethod) {
+        exit(1);
+    }
+
+    $requestData = ($expectedMethod === 'POST') ? $_POST : $_GET;
+
+    foreach ($requiredKeys as $key) {
+        if (!isset($requestData[$key]) || !is_string($requestData[$key])) {
+            exit(1);
+        }
+    }
+}

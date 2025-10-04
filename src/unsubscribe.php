@@ -3,35 +3,46 @@
 $filePath = $settings['general']['subscribersDir'] . "/" . $what;
 if (file_exists($filePath)) {
     $lines = file($filePath);
-    // Be careful here, it might happen that the subscriber file is empty
-    // (it is the subscription file for the entire blog, but there are no
-    // subscribers yet). Thus, if (!$lines) would be erroneous.
     if ($lines === false) {
+        // This can happen if the file is unreadable.
         exit(1);
     }
+
     $foundUser = false;
+    $userRemoved = false;
+    $outputLines = [];
+
     foreach ($lines as $line) {
-        if (strpos($line, $user) !== false) {
-            $foundUser = true;
+        // Check if the line is not empty and contains the separator to avoid errors with explode
+        if (trim($line) !== '' && strpos($line, '<|>') !== false) {
             list($email, $password) = explode("<|>", $line);
-            if ($pw === trim($password)) {
-                $lines = str_replace($email . "<|>" . trim($password) . PHP_EOL, "", $lines);
-                // In case the user was in the last line
-                $lines = str_replace($email . "<|>" . trim($password), "", $lines);
-                file_put_contents($filePath, $lines);
-                echo $user . EXITMSG_REMOVEDSUBSCRIBER . $what;
-                // We can break immediately, because it is not possible for
-                // the same email to be registered twice in the subscription
-                // file. This has been checked when the email was being added
-                break;
+            if ($email === $user) {
+                $foundUser = true;
+                if (trim($password) === $pw) {
+                    // User found and password matches, so we skip adding this line to output, effectively deleting it.
+                    $userRemoved = true;
+                } else {
+                    // User found but password doesn't match. Keep the line.
+                    $outputLines[] = $line;
+                }
             } else {
-                exit(EXITMSG_CANNOTREMOVESUBSCRIBER . $user);
+                // Not the user we are looking for, keep the line.
+                $outputLines[] = $line;
             }
         }
     }
-    if (!$foundUser) {
+
+    if ($userRemoved) {
+        file_put_contents($filePath, $outputLines);
+        echo $user . EXITMSG_REMOVEDSUBSCRIBER . $what;
+    } elseif ($foundUser) {
+        // User was found, but password was wrong
+        exit(EXITMSG_CANNOTREMOVESUBSCRIBER . $user);
+    } else {
+        // User was not found in the file
         exit(EXITMSG_EMAILNOTFOUND);
     }
+
 } else {
     exit(EXITMSG_SUBSCRIBERLISTNOTFOUND);
 }
