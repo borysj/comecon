@@ -169,8 +169,13 @@ function changeComment($commentElements, $newComment, $editAllCommentsFile)
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     validate_request("POST", ["editedComment"]);
     if (earlyEnoughToEdit($commentElements[1]) || $adminAccess) {
-        $editedComment = prepareString($_POST["editedComment"],
-            $settings['save']['maxCommentLength'], true, true, false);
+        $editedComment = prepareString(
+            $_POST["editedComment"],
+            $settings['save']['maxCommentLength'],
+            true,
+            true,
+            false
+        );
         changeComment(
             $commentElements,
             $editedComment,

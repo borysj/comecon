@@ -45,7 +45,6 @@ if (file_exists($filePath)) {
         // User was not found in the file
         exit(EXITMSG_EMAILNOTFOUND);
     }
-
 } else {
     exit(EXITMSG_SUBSCRIBERLISTNOTFOUND);
 }
