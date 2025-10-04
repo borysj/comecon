@@ -163,6 +163,33 @@ function changeComment($commentElements, $newComment, $editAllCommentsFile)
     return $commentChanged;
 }
 
+// After editing, check again that it is early enough or that the editor is an
+// admin. If OK, change the comment both in the particular comment file and the
+// global comment file.
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    validate_request("POST", ["editedComment"]);
+    if (earlyEnoughToEdit($commentElements[1]) || $adminAccess) {
+        $editedComment = prepareString($_POST["editedComment"],
+            $settings['save']['maxCommentLength'], true, true, false);
+        changeComment(
+            $commentElements,
+            $editedComment,
+            false
+        );
+        if ($settings['save']['allCommentsFile']) {
+            changeComment(
+                $commentElements,
+                $editedComment,
+                true
+            );
+        }
+        header("Location: {$settings['general']['siteURL']}{$commentElements[0]}index.php");
+    } else {
+        exit(EXITMSG_TOOLATETOEDITCOMMENT);
+    }
+    exit(0);
+}
+
 // Check if the admin is accessing. The POST key for the admin password is 'p'.
 if ($settings['edit']['adminCommentPassword'] === hash("sha256", $p)) {
     $adminAccess = true;
@@ -185,28 +212,6 @@ if (!earlyEnoughToEdit($commentElements[1]) && !$adminAccess) {
     exit(EXITMSG_TOOLATETOEDITCOMMENT);
 }
 
-// After editing, check again that it is early enough or that the editor is an
-// admin. If OK, change the comment both in the particular comment file and the
-// global comment file.
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    if (earlyEnoughToEdit($commentElements[1]) || $adminAccess) {
-        changeComment(
-            $commentElements,
-            $editedComment,
-            false
-        );
-        if ($settings['save']['allCommentsFile']) {
-            changeComment(
-                $commentElements,
-                $editedComment,
-                true
-            );
-        }
-        header("Location: {$settings['general']['siteURL']}{$commentElements[0]}index.php");
-    } else {
-        exit(EXITMSG_TOOLATETOEDITCOMMENT);
-    }
-}
 ?>
 
 <!DOCTYPE html>

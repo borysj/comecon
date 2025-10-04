@@ -215,6 +215,15 @@ if (!empty($userPassword)) {
 } else {
     $vipInfo = [false, 0, "", "", 0];
 }
+
+// Check captcha if the user is not registered
+$captcha = trim(htmlspecialchars($_POST["captcha"], ENT_QUOTES));
+if (!$vipInfo[0]) {
+    if ($captcha !== $settings['save']['commentCaptcha']) {
+        exit(EXITMSG_BADCOMMENTCAPTCHA);
+    }
+}
+
 $userRank = $vipInfo[1];
 // If the user has not provided their website, but is recognized as a
 // registered user, get the website from the user database. Notice that the
@@ -276,18 +285,12 @@ if (!empty($userEmail)) {
     }
 }
 
-// Check captcha if the user is not registered
-if (!$vipInfo[0]) {
-    if ($captcha !== $settings['save']['commentCaptcha']) {
-        exit(EXITMSG_BADCOMMENTCAPTCHA);
-    }
-}
-
 date_default_timezone_set($settings['save']['timezone']);
 $currentDateTime = date($settings['save']['timestamp']);
 
 // We need the basic URL of the commented blog post. There could be a
 // fragment identified of an earlier comment. If so, we have to remove it.
+$postURL = $_POST["url"];
 if (str_contains($postURL, "#")) {
     $postURL = strstr($postURL, "#", true);
 }

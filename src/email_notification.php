@@ -1,6 +1,6 @@
 <?php
 
-// This is a script to notify the blog subscribers about a new post by email.
+// This is a GET script to notify the blog subscribers about a new post by email.
 // p is the admin password.
 // y, m, d is the date in the format yyyy-mm-dd
 // t is the slugified title of the new blog post

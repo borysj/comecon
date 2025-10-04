@@ -3,8 +3,10 @@
 $filePath = $settings['general']['subscribersDir'] . "/" . $what;
 if (file_exists($filePath)) {
     $lines = file($filePath);
-    if ($lines === false) {
-        // This can happen if the file is unreadable.
+    // $lines can be empty or false. If empty, there are no subscribers
+    // registered, so there is no point in proceeding. If false, there is some
+    // error, because the file is unreadable.
+    if ($lines) {
         exit(1);
     }
 
@@ -19,7 +21,8 @@ if (file_exists($filePath)) {
             if ($email === $user) {
                 $foundUser = true;
                 if (trim($password) === $pw) {
-                    // User found and password matches, so we skip adding this line to output, effectively deleting it.
+                    // User found and password matches,
+                    // so we skip adding this line to output, effectively deleting it.
                     $userRemoved = true;
                 } else {
                     // User found but password doesn't match. Keep the line.

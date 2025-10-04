@@ -27,6 +27,7 @@ define('EXITMSG_WRONGCOMMENTID', "An error has occurred. I have not found the co
 define('EXITMSG_TOOLATETOEDITCOMMENT', "This train has left. It is too late to edit this comment.");
 define('EXITMSG_WRONGEMAILNOTIFICATIONPASSWORD', "Are you trying to hack me?");
 define('EXITMSG_NOSEARCHPHRASE', "No search phrase has been provided");
+define('EXITMSG_INVALIDACTION', "Invalid Comecon action");
 define('MSG_COMMENTINCONTEXT', "The comments could have been changed or deleted in the meanwhile.
         Follow the link to the blog to find the most recent version.");
 define('MSG_COMMENTFEEDENTRYTITLE', "Comment for the blog post");

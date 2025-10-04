@@ -49,9 +49,7 @@ function validate_request($expectedMethod, $requiredKeys)
     if ($_SERVER['REQUEST_METHOD'] !== $expectedMethod) {
         exit(1);
     }
-
     $requestData = ($expectedMethod === 'POST') ? $_POST : $_GET;
-
     foreach ($requiredKeys as $key) {
         if (!isset($requestData[$key]) || !is_string($requestData[$key])) {
             exit(1);
