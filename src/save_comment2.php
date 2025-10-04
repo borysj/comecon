@@ -1,11 +1,11 @@
 <?php
 
-include "../comecon/private/settings.php";
-include "../comecon/src/" . $settings['general']['messages'];
-require "../comecon/src/email_sending.php";
-include "../comecon/src/utilities.php";
+include __DIR__ . "/../private/settings.php";
+include __DIR__ . "/" . $settings['general']['messages'];
+require __DIR__ . "/email_sending.php";
+include __DIR__ . "/utilities.php";
 $vipNicks = [];
-include "../comecon/private/vip.php";
+include __DIR__ . "/../private/vip.php";
 
 /**
  * Check whether a file with given path exists. If not, create it.

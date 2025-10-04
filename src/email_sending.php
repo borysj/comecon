@@ -4,9 +4,9 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
 
-$phpMailerException = "../comecon/vendor/" . $settings['email']['phpMailerDir'] . "/src/Exception.php";
-$phpMailerMain = "../comecon/vendor/" . $settings['email']['phpMailerDir'] . "/src/PHPMailer.php";
-$phpMailerSMTP = "../comecon/vendor/" . $settings['email']['phpMailerDir'] . "/src/SMTP.php";
+$phpMailerException = __DIR__ . "/../vendor/" . $settings['email']['phpMailerDir'] . "/src/Exception.php";
+$phpMailerMain = __DIR__ . "/../vendor/" . $settings['email']['phpMailerDir'] . "/src/PHPMailer.php";
+$phpMailerSMTP = __DIR__ . "/../vendor/" . $settings['email']['phpMailerDir'] . "/src/SMTP.php";
 require $phpMailerException;
 require $phpMailerMain;
 require $phpMailerSMTP;

@@ -1,8 +1,8 @@
 <?php
 
-include "../comecon/private/settings.php";
-include "../comecon/src/" . $settings['general']['messages'];
-include "../comecon/src/utilities.php";
+include __DIR__ . "/../private/settings.php";
+include __DIR__ . "/" . $settings['general']['messages'];
+include __DIR__ . "/utilities.php";
 
 $subsFilePath = $settings['general']['subscribersDir'] . "/" . $settings['general']['subscribersFile'];
 
