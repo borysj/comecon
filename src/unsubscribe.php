@@ -7,7 +7,7 @@ if (file_exists($filePath)) {
     // registered, so there is no point in proceeding. If false, there is some
     // error, because the file is unreadable.
     if ($lines) {
-        exit(1);
+        exit(EXITMSG_FILEUNREADABLE);
     }
 
     $foundUser = false;

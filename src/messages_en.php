@@ -28,6 +28,10 @@ define('EXITMSG_TOOLATETOEDITCOMMENT', "This train has left. It is too late to e
 define('EXITMSG_WRONGEMAILNOTIFICATIONPASSWORD', "Are you trying to hack me?");
 define('EXITMSG_NOSEARCHPHRASE', "No search phrase has been provided");
 define('EXITMSG_INVALIDACTION', "Invalid Comecon action");
+define('EXITMSG_FILEUNREADABLE', "The file is unreadable");
+define('EXITMSG_NOTSTRING', "A string was expected");
+define('EXITMSG_WRONGREQUESTMETHOD', "The request method (GET or POST) is wrong");
+define('EXITMSG_KEYISWRONG', "A key is not set or not a string");
 define('MSG_COMMENTINCONTEXT', "The comments could have been changed or deleted in the meanwhile.
         Follow the link to the blog to find the most recent version.");
 define('MSG_COMMENTFEEDENTRYTITLE', "Comment for the blog post");

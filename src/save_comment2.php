@@ -348,7 +348,7 @@ if (!empty($userEmail) && $wantsEmails == 1) {
         createNonexistentFile($subsFilePath);
         $fileContents = file_get_contents($subsFilePath);
         if (!$fileContents) {
-            exit(1);
+            exit(EXITMSG_FILEUNREADABLE);
         }
         // If the email is not already in the subscribers file, add it
         // together with the password (used for unsubscribing)

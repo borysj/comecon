@@ -1,7 +1,7 @@
 <?php
 $postURI = $_SERVER["REQUEST_URI"];
 if (!is_string($postURI)) {
-    exit(1);
+    exit("The post URL is unreadable");
 }
 if (str_contains($postURI, "index.php")) {
     $a = -10;
@@ -21,7 +21,7 @@ if (file_exists($commentFilePath)) {
     <?php
     $fileContents = file_get_contents($commentFilepath);
     if (!is_string($fileContents)) {
-        exit(1);
+        exit("The comment file is unreadable");
     }
     $comments = explode(PHP_EOL, $fileContents);
     foreach ($comments as $key => $c) {
@@ -56,7 +56,7 @@ if (file_exists($commentFilePath)) {
                     $day = $matches[3];
                     $title = $matches[4];
                 } else {
-                    exit(1);
+                    exit("I cannot parse the URL");
                 }
                 $dateDashed = $year . "-" . $month . "-" . $day;
                 ?>

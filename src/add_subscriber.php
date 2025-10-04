@@ -18,7 +18,7 @@ if (substr($userEmail, -3) !== $settings['email']['captchaEmail']) {
 if (filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
     $fileContents = file_get_contents($subsFilePath);
     if (!$fileContents) {
-        exit(1);
+        exit(EXITMSG_FILEUNREADABLE);
     }
     if (stripos($fileContents, $userEmail) === false) {
         $password = mt_rand(1000000, 9999999);

@@ -28,7 +28,7 @@ function searchThroughFiles($searchDir, $searchString, $pattern, $trailingChars)
                 if (is_file($filePath)) {
                     $fileContent = file_get_contents($filePath);
                     if (!$fileContent) {
-                        exit(1);
+                        exit(EXITMSG_FILEUNREADABLE);
                     }
                     // Look for the phrase in the file
                     if (stripos($fileContent, $searchString) !== false) {
@@ -70,7 +70,7 @@ function saveSearchString($searchString)
 }
 
 if (!is_string($_POST["searchPhrase"])) {
-    exit(1);
+    exit(EXITMSG_NOTSTRING);
 }
 $searchString = htmlspecialchars($_POST["searchPhrase"], ENT_QUOTES);
 if (empty($searchString)) {
