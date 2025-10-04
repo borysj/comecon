@@ -1,12 +1,5 @@
 <?php
 
-include __DIR__ . "/../private/settings.php";
-include __DIR__ . "/" . $settings['general']['messages'];
-require __DIR__ . "/email_sending.php";
-include __DIR__ . "/utilities.php";
-$vipNicks = [];
-include __DIR__ . "/../private/vip.php";
-
 /**
  * Check whether a file with given path exists. If not, create it.
  *
@@ -210,32 +203,8 @@ function gravatarExists($email, $notYetHashed)
 }
 
 
-if (
-    $_SERVER["REQUEST_METHOD"] !== "POST" ||
-    !isset($_POST["comment"]) ||
-    !isset($_POST["name"]) ||
-    !isset($_POST["captcha"]) ||
-    !isset($_POST["url"])
-) {
-    exit(EXITMSG_ERRORRUNNINGCOMMENTSCRIPT);
-}
-
 // We check if the user is registered. They could be registered if they have
 // provided a password together with their name.
-if (!is_string($_POST["name"])) {
-    exit(1);
-}
-if (!is_string($_POST["password"])) {
-    exit(1);
-}
-if (!is_string($_POST["comment"])) {
-    exit(1);
-}
-if (!is_string($_POST["webpage"])) {
-    exit(1);
-}
-$userName = prepareString($_POST["name"], 40, false, false, false);
-$userPassword = prepareString($_POST["password"], 40, false, false, false);
 if (!empty($userPassword)) {
     $vipInfo = checkVip($userName, $userPassword, $vipNicks);
     if ($vipInfo[0]) {
@@ -246,8 +215,6 @@ if (!empty($userPassword)) {
 } else {
     $vipInfo = [false, 0, "", "", 0];
 }
-$userComment = prepareString($_POST["comment"], $settings['save']['maxCommentLength'], true, true, false);
-$userURL = prepareString($_POST["webpage"], 60, false, false, true);
 $userRank = $vipInfo[1];
 // If the user has not provided their website, but is recognized as a
 // registered user, get the website from the user database. Notice that the
@@ -259,7 +226,6 @@ if (empty($userURL) && $vipInfo[0] === true) {
 }
 
 // Process the user email. Here, there are several cases.
-$userEmail = prepareString($_POST["email"], 60, false, false, false);
 // The user has provided email directly (in the comment form)
 if (!empty($userEmail)) {
     // If the gravatar for this email exists, hash the email directly
@@ -312,7 +278,6 @@ if (!empty($userEmail)) {
 
 // Check captcha if the user is not registered
 if (!$vipInfo[0]) {
-    $captcha = trim(htmlspecialchars($_POST["captcha"], ENT_QUOTES));
     if ($captcha !== $settings['save']['commentCaptcha']) {
         exit(EXITMSG_BADCOMMENTCAPTCHA);
     }
@@ -323,7 +288,6 @@ $currentDateTime = date($settings['save']['timestamp']);
 
 // We need the basic URL of the commented blog post. There could be a
 // fragment identified of an earlier comment. If so, we have to remove it.
-$postURL = $_POST["url"];
 if (str_contains($postURL, "#")) {
     $postURL = strstr($postURL, "#", true);
 }

@@ -1,20 +1,6 @@
 <?php
 
-include __DIR__ . "/../private/settings.php";
-include __DIR__ . "/" . $settings['general']['messages'];
-include __DIR__ . "/utilities.php";
-
 $subsFilePath = $settings['general']['subscribersDir'] . "/" . $settings['general']['subscribersFile'];
-
-if ($_SERVER["REQUEST_METHOD"] !== "POST" || !isset($_POST["email"])) {
-    exit(1);
-}
-
-$userEmail = $_POST["email"];
-if (!is_string($userEmail)) {
-    exit(1);
-}
-$userEmail = prepareString($userEmail, 60, false, false, false);
 
 // Check for captcha, and remove it if present.
 // The captcha is a three characters long "secret code" at the end of the

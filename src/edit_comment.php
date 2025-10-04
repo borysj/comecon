@@ -1,9 +1,5 @@
 <?php
 
-include __DIR__ . "/../private/settings.php";
-include __DIR__ . "/" . $settings['general']['messages'];
-include __DIR__ . "/utilities.php";
-
 /**
  * Finds the relevant comment in the database.
  *
@@ -168,23 +164,14 @@ function changeComment($commentElements, $newComment, $editAllCommentsFile)
 }
 
 // Check if the admin is accessing. The POST key for the admin password is 'p'.
-if (!isset($_GET['p']) || !is_string($_GET['p'])) {
-    exit(EXITMSG_WRONGCOMMENTADMINPASSWORD);
-}
-if ($settings['edit']['adminCommentPassword'] === hash("sha256", $_GET['p'])) {
+if ($settings['edit']['adminCommentPassword'] === hash("sha256", $p)) {
     $adminAccess = true;
 } else {
     $adminAccess = false;
 }
 // Identify the comment record using the date of the commented blog post ('d')
 // and the comment ID ('c')
-if (!isset($_GET['d']) || !is_string($_GET['d'])) {
-    exit(1);
-}
-if (!isset($_GET['c']) || !is_string($_GET['c'])) {
-    exit(1);
-}
-$commentLine = findComment($_GET['d'], $_GET['c'], $adminAccess);
+$commentLine = findComment($d, $c, $adminAccess);
 // If the comment record exists, get the comment and convert it to Markdown for
 // display
 if ($commentLine) {
@@ -201,25 +188,24 @@ if (!earlyEnoughToEdit($commentElements[1]) && !$adminAccess) {
 // After editing, check again that it is early enough or that the editor is an
 // admin. If OK, change the comment both in the particular comment file and the
 // global comment file.
-if ($_SERVER["REQUEST_METHOD"] !== "POST" || !isset($_POST["editedComment"]) || !is_string($_POST["editedComment"])) {
-    exit(1);
-}
-if (earlyEnoughToEdit($commentElements[1]) || $adminAccess) {
-    changeComment(
-        $commentElements,
-        prepareString($_POST["editedComment"], $settings['save']['maxCommentLength'], true, true, false),
-        false
-    );
-    if ($settings['save']['allCommentsFile']) {
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    if (earlyEnoughToEdit($commentElements[1]) || $adminAccess) {
         changeComment(
             $commentElements,
-            prepareString($_POST["editedComment"], $settings['save']['maxCommentLength'], true, true, false),
-            true
+            $editedComment,
+            false
         );
+        if ($settings['save']['allCommentsFile']) {
+            changeComment(
+                $commentElements,
+                $editedComment,
+                true
+            );
+        }
+        header("Location: {$settings['general']['siteURL']}{$commentElements[0]}index.php");
+    } else {
+        exit(EXITMSG_TOOLATETOEDITCOMMENT);
     }
-    header("Location: {$settings['general']['siteURL']}{$commentElements[0]}index.php");
-} else {
-    exit(EXITMSG_TOOLATETOEDITCOMMENT);
 }
 ?>
 

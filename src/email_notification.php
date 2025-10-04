@@ -1,9 +1,5 @@
 <?php
 
-include __DIR__ . "/../private/settings.php";
-include __DIR__ . "/" . $settings['general']['messages'];
-require __DIR__ . "/email_sending.php";
-
 // This is a script to notify the blog subscribers about a new post by email.
 // p is the admin password.
 // y, m, d is the date in the format yyyy-mm-dd
@@ -11,18 +7,4 @@ require __DIR__ . "/email_sending.php";
 // f is the full title of the new blog post (use %20 for spaces and so on).
 // For instance:
 // https://myblog.example.com/email_notification.php?p=secretpassword&y=2025&m=08&d=12&t=about-birds&f=About%20birds
-if (
-    ($_SERVER["REQUEST_METHOD"] === "GET") &&
-    (isset($_GET["p"])) &&
-    (is_string($_GET["p"])) &&
-    (hash("sha256", $_GET["p"]) === $settings['email']['notificationPassword']) &&
-    (isset($_GET["y"])) &&
-    (isset($_GET["m"])) &&
-    (isset($_GET["d"])) &&
-    (isset($_GET["t"])) &&
-    (isset($_GET["f"]))
-) {
-    sendNotifications($_GET["y"], $_GET["m"], $_GET["d"], $_GET["t"], "", "none", "", "", $_GET["f"]);
-} else {
-    exit(EXITMSG_WRONGEMAILNOTIFICATIONPASSWORD);
-}
+sendNotifications($y, $m, $d, $t, "", "none", "", "", $f);
