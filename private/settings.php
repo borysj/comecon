@@ -24,8 +24,6 @@ $settings = [
         "messages" => "messages_en.php",
     ],
     "email" => [
-        // Server subpath for PHPMailer
-        "phpMailerDir" => $homeDir . "/html/modules/PHPMailer-master",
         // Email server parameters for sending notifications
         "mailNotificationsHost" => "smtp.myblog.com",
         "mailNotificationsUsername" => "notifications@myblog.com",
@@ -96,9 +94,5 @@ $settings = [
         // This is for the curios; you will see what keywords people are looking for on
         // your blog.
         "searchQueriesRecord" => $homeDir . "/data/search_queries.txt",
-    ],
-    "random" => [
-        // The public file with the listing of all blog posts, one URL per line
-        "listOfAllPosts" => $homeDir . "/html/contents/all_posts.txt",
     ],
 ];
