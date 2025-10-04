@@ -1,8 +1,6 @@
 <?php
 
-include "../comecon/src/" . $settings['general']['messages'];
-
-$listOfPosts = file_get_contents($settings['random']['listOfAllPosts']);
+$listOfPosts = file_get_contents("../www/allposts.txt");
 if ($listOfPosts !== false) {
     $posts = explode("\n", $listOfPosts);
     $numberOfPosts = count($posts);

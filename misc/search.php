@@ -1,7 +1,7 @@
 <?php
 
-require "../comecon/private/settings.php";
-include "../comecon/src/" . $settings['general']['messages'];
+require_once __DIR__ . "/../private/settings.php";
+require_once __DIR__ . "/../src/" . $settings['general']['messages'];
 
 /**
  * Search through files in a given directory looking for a phrase

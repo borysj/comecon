@@ -1,8 +1,8 @@
 <?php
 
-include "private/settings.php";
-include "src/" . $settings['general']['messages'];
-include "src/utilities.php";
+require_once __DIR__ . "/private/settings.php";
+require_once __DIR__ . "/src/" . $settings['general']['messages'];
+require_once __DIR__ . "/src/utilities.php";
 
 if (isset($_GET["action"])) {
     $action = $_GET["action"];
@@ -11,14 +11,14 @@ if (isset($_GET["action"])) {
         case "add_subscriber":
             validate_request("POST", ["email"]);
             $userEmail = prepareString($_POST["email"], 60, false, false, false);
-            require "src/add_subscriber.phpr";
+            require __DIR__ . "/src/add_subscriber.php";
             break;
         case "edit_comment":
             validate_request("GET", ["p", "d", "c"]);
             $p = $_GET["p"];
             $d = $_GET["d"];
             $c = $_GET["c"];
-            require 'src/edit_comment.php';
+            require __DIR__ . '/src/edit_comment.php';
             break;
         case "save_comment":
             validate_request("POST", ["comment", "name", "captcha", "url", "password", "webpage", "email"]);
@@ -29,15 +29,15 @@ if (isset($_GET["action"])) {
             $userEmail = prepareString($_POST["email"], 60, false, false, false);
             $vipNicks = [];
             include "private/vip.php";
-            require "src/email_sending.php";
-            require "src/save_comment2.php";
+            require __DIR__ . "/src/email_sending.php";
+            require __DIR__ . "/src/save_comment2.php";
             break;
         case "unsubscribe":
             validate_request("GET", ["user", "pw", "what"]);
             $user = $_GET["user"];
             $pw = $_GET["pw"];
             $what = $_GET["what"];
-            require "src/unsubscribe.php";
+            require __DIR__ . "/src/unsubscribe.php";
             break;
         case "notify":
             validate_request("GET", ["p", "y", "m", "d", "t", "f"]);
@@ -49,8 +49,8 @@ if (isset($_GET["action"])) {
             $d = $_GET["d"]; // day
             $t = $_GET["t"]; // slugified title
             $f = $_GET["f"]; // full title (with %20 for spaces)
-            require "src/email_sending.php";
-            require "src/email_notification.php";
+            require __DIR__ . "/src/email_sending.php";
+            require __DIR__ . "/src/email_notification.php";
             break;
         default:
             http_response_code(400);
