@@ -6,6 +6,17 @@ use PHPMailer\PHPMailer\SMTP;
 
 require __DIR__ . '/../vendor/autoload.php';
 
+/**
+ * Create an email using PHPMailer
+ *
+ * @param string $title The slugified title of the commented blog post (use for
+ * comment notification)
+ * @param string $fullTitle The full title of the new blog post (use for post
+ * notification)
+ * @param array<string> $sEmail Email settings (host, username, password, contact/reply-to email)
+ * @param string $sBlogName The name of the blog
+ * @return PHPMailer $mail The mail object
+ */
 function createMail($title, $fullTitle, $sEmail, $sBlogName)
 {
     $mail = new PHPMailer(true);
@@ -28,6 +39,28 @@ function createMail($title, $fullTitle, $sEmail, $sBlogName)
     return $mail;
 }
 
+/**
+ * Send an email using PHPMailer
+ *
+ * @param string $year The year of the relevant blog post, YYYY
+ * @param string $month The month of the relevant blog post, MM
+ * @param string $day The day of the relevant blog post, DD
+ * @param string $title The slugified title of the relevant blog post, if
+ * non-empty the notification is about a comment
+ * @param string $commentTimestamp The comment timestamp (YYYY-MM-DD HH:MM:SS),
+ * leave empty if it is a notification about a new blog post
+ * @param string $userName The author of the comment, pass null if it is not a
+ * comment
+ * @param string $userURL The website of the author of the comment, can be empty
+ * @param string $userComment The comment, can be empty
+ * @param string $fullTitle The full title of the relevant blog post, if
+ * non-empty the notificiation is about a new blog post
+ * @param array<mixed> $sGeneral General settings (the blog URL, the blog name,
+ * the filepath for the blog subscribers, the directory with the comment subscribers)
+ * @param array<string> $sEmail Email settings (host, username, password, contact/reply-to email,
+ * owner's private email for receiving a copy of notification)
+ * @return void
+ */
 function sendNotifications(
     $year,
     $month,
@@ -104,6 +137,14 @@ function sendNotifications(
     return;
 }
 
+/*
+ * Send a test email using PHPMailer
+ *
+ * @param string $recipient The email of the recipient
+ * @param array<string> $sEmail Email settings (host, username, password, contact/reply-to email)
+ * @param string $sBlogName The name of the blog
+ * @return void
+ */
 function sendTestEmail($recipient, $sEmail, $sBlogName)
 {
     $mail = createMail("Test message", false, $sEmail, $sBlogName);
