@@ -9,4 +9,4 @@ require_once __DIR__ . "/private/settings.php";
 // f is the full title of the new blog post (use %20 for spaces and so on).
 // For instance:
 // https://myblog.example.com/email_notification.php?p=secretpassword&y=2025&m=08&d=12&t=about-birds&f=About%20birds
-sendNotifications($y, $m, $d, $t, "", "none", "", "", $f, $settings['general'], $settings['email']);
+sendNotifications($y, $m, $d, $t, null, null, null, null, $f, $settings['general'], $settings['email']);

@@ -402,7 +402,7 @@ if (file_put_contents($fullFilePath, $commentLineWithEmail, FILE_APPEND | LOCK_E
         $userName,
         $userURL,
         $userComment,
-        false,
+        null,
         $settings['general'],
         $settings['email']
     );

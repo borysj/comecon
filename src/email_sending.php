@@ -7,7 +7,9 @@ use PHPMailer\PHPMailer\SMTP;
 require __DIR__ . '/../vendor/autoload.php';
 
 /**
- * Create an email using PHPMailer
+ * Create an email using PHPMailer. If it is a notification about a new blog
+ * post, set $title to null and use $fullTitle. Vice versa if it is a
+ * notification about a new comment.
  *
  * @param string $title The slugified title of the commented blog post (use for
  * comment notification)
@@ -34,27 +36,31 @@ function createMail($title, $fullTitle, $sEmail, $sBlogName)
     if ($fullTitle) {
         $mail->Subject = "A new blog post on $sBlogName: $fullTitle";
     } else {
+        if ($title === null || $title === "") {
+            exit(EXITMSG_NOTIFICATIONERROR);
+        }
         $mail->Subject = "A new comment on $sBlogName ($title)";
     }
     return $mail;
 }
 
 /**
- * Send an email using PHPMailer
+ * Send an email using PHPMailer. If it is a notification about a new blog
+ * post, set $title to null and use $fullTitle. Vice versa if it is a
+ * notification about a new comment.
  *
  * @param string $year The year of the relevant blog post, YYYY
  * @param string $month The month of the relevant blog post, MM
  * @param string $day The day of the relevant blog post, DD
- * @param string $title The slugified title of the relevant blog post, if
- * non-empty the notification is about a comment
+ * @param string $title The slugified title of the relevant blog post
  * @param string $commentTimestamp The comment timestamp (YYYY-MM-DD HH:MM:SS),
- * leave empty if it is a notification about a new blog post
+ * pass null if it is a notification about a new blog post
  * @param string $userName The author of the comment, pass null if it is not a
  * comment
- * @param string $userURL The website of the author of the comment, can be empty
- * @param string $userComment The comment, can be empty
- * @param string $fullTitle The full title of the relevant blog post, if
- * non-empty the notificiation is about a new blog post
+ * @param string $userURL The website of the author of the comment, can be null/empty
+ * @param string $userComment The comment, can be null/empty
+ * @param string $fullTitle The full title of the relevant blog post, pass null
+ * if this is a notification only about a comment
  * @param array<mixed> $sGeneral General settings (the blog URL, the blog name,
  * the filepath for the blog subscribers, the directory with the comment subscribers)
  * @param array<string> $sEmail Email settings (host, username, password, contact/reply-to email,
@@ -74,8 +80,33 @@ function sendNotifications(
     $sGeneral,
     $sEmail
 ) {
+    // Validate parameters necessary to create a proper URL
+    if ($title === "" || $fullTitle === "") {
+        exit(EXITMSG_NOTIFICATIONERROR);
+    }
+    if (!preg_match('/^\d{4}$/', $year)) {
+        exit(EXITMSG_NOTIFICATIONERROR);
+    }
+    if (!preg_match('/^\d{2}$/', $month)) {
+        exit(EXITMSG_NOTIFICATIONERROR);
+    }
+    if (!preg_match('/^\d{2}$/', $day)) {
+        exit(EXITMSG_NOTIFICATIONERROR);
+    }
+    if (!preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $title)) {
+        exit(EXITMSG_NOTIFICATIONERROR);
+    }
     $link = $sGeneral['siteURL'] . "/" . $year . "/" . $month . "/" . $day . "/" . $title;
     if ($commentTimestamp !== "") {
+        // If $commentTimestamp is set, we expect this to be a comment notification,
+        // so $fullTitle should be null
+        if ($fullTitle !== null) {
+            exit(EXITMSG_NOTIFICATIONERROR);
+        }
+        // If $commentTimestamp is set, the comment author should be set
+        if ($userName === null || $userName === "") {
+            exit(EXITMSG_NOTIFICATIONERROR);
+        }
         $commentTimestamp = str_replace(array(" ", "-", ":"), "", $commentTimestamp);
         $link = $link . "/index.php#" . $commentTimestamp;
     }
@@ -90,7 +121,7 @@ function sendNotifications(
     }
     $path = $sGeneral['subscribersDir'] . "/" . $filename;
     $body1 = "<html><body><p><a href=\"$link\">Link to the $text1 blog post</a></p>";
-    if ($userName != "none") {
+    if ($userName !== null) {
         if (!empty($userURL)) {
             $nick = "<a href=\"$userURL\">$userName</a>";
         } else {
