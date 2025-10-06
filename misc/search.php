@@ -56,16 +56,11 @@ function searchThroughFiles($searchDir, $searchString, $pattern, $trailingChars)
  * @param string $searchString The phrase that we look for
  * @return void
  */
-function saveSearchString($searchString)
+function saveSearchString($searchString, $sTimezone, $sTimestamp, $sRecord)
 {
-    global $settings;
-    date_default_timezone_set($settings['save']['timezone']);
-    $currentDateTime = date($settings['save']['timestamp']);
-    file_put_contents(
-        $settings['search']['searchQueriesRecord'],
-        $currentDateTime . "<|>" . $searchString . PHP_EOL,
-        FILE_APPEND | LOCK_EX
-    );
+    date_default_timezone_set($sTimezone);
+    $currentDateTime = date($sTimestamp);
+    file_put_contents($sRecord, $currentDateTime . "<|>" . $searchString . PHP_EOL, FILE_APPEND | LOCK_EX);
     return;
 }
 
@@ -83,7 +78,12 @@ if (empty($searchString)) {
 if (str_starts_with($searchString, '123')) {
     $searchString = substr($searchString, 3);
 } else {
-    saveSearchString($searchString);
+    saveSearchString(
+        $searchString,
+        $settings['save']['timezone'],
+        $settings['save']['timestamp'],
+        $settings['search']['searchQueriesRecord']
+    );
 }
 
 $patternPost = "/(\d{4})-(\d{2})-(\d{2})-([^.]*)/";

@@ -8,16 +8,17 @@
  * or a hashed value from a cookie set for the author of the comment
  * @param bool $adminAccess If true, the admin is accessing. If false, the
  * author of the comment is accessing.
+ * @param string $sCommentsDir The filepath for the comment directory
+ * @param string $sCommentSalt The comment salt for recognizing the comment ID
  * @return string $commentLine The comment record from the database (the actual
  * comment together with its descriptors)
  */
-function findComment($postDate, $commentID, $adminAccess)
+function findComment($postDate, $commentID, $adminAccess, $sCommentsDir, $sCommentSalt)
 {
-    global $settings;
     // Notice: We expect at most one post with the given date.
     // This is a tenet of Comecon (no more than one blog post per day).
     // If there are several, only the first one will be examined.
-    $commentFilePath = glob("{$settings['general']['commentsDir']}/$postDate*");
+    $commentFilePath = glob("$sCommentsDir/$postDate*");
     if (!$commentFilePath) {
         return "";
     }
@@ -41,13 +42,7 @@ function findComment($postDate, $commentID, $adminAccess)
         } else {
         // If it is not admin, then the comment ID is a hash of the timestamp,
         // the author's nickname and the salt.
-            if (
-                hash(
-                    "sha256",
-                    $commentElements[1] . $commentElements[2] . $settings['edit']['commentSalt']
-                )
-                === $commentID
-            ) {
+            if (hash("sha256", $commentElements[1] . $commentElements[2] . $sCommentSalt) === $commentID) {
                 $commentLine = $line;
                 break;
             }
@@ -80,14 +75,14 @@ function HTML2markdown($comment)
  * publication.
  *
  * @param string $commentDateTime The timestamp of the comment, YYYY-MM-DD HH:MM:SS
+ * @param int $sCommentEditTimeout The time limit (in seconds) for editing one's comment
  * @return bool
  */
-function earlyEnoughToEdit($commentDateTime)
+function earlyEnoughToEdit($commentDateTime, $sCommentEditTimeout)
 {
-    global $settings;
     $commentTimestamp = strtotime($commentDateTime);
     $currentTimestamp = time();
-    if ($currentTimestamp - $commentTimestamp < $settings['edit']['commentEditTimeout']) {
+    if ($currentTimestamp - $commentTimestamp < $sCommentEditTimeout) {
         return true;
     } else {
         return false;
@@ -107,19 +102,18 @@ function earlyEnoughToEdit($commentDateTime)
  *
  * @param array<string> $commentElements The fields of the comment record
  * @param string $newComment The edited comment
- * @param bool $editAllCommentsFile If true, edit the main comment file
- * containing all the comments. If false, edit the specific comment file
- * contianing only the comments for the relevant blog post
+ * @param string $sAllCommentsFile The filepath for the master comment file;
+ * pass an empty string if you want to edit the particular comment file instead
+ * @param string $sCommentsDir The filepath for the comment directory
  * @return bool $commentChanged True if the comment has been changed, false if
  * the comment file has not been found or the comment record in the comment file
  * has not been found
  */
-function changeComment($commentElements, $newComment, $editAllCommentsFile)
+function changeComment($commentElements, $newComment, $sAllCommentsFile, $sCommentsDir)
 {
-    global $settings;
     $commentChanged = false;
-    if ($editAllCommentsFile) {
-        $commentFilepath = $settings['save']['allCommentsFile'];
+    if ($sAllCommentsFile) {
+        $commentFilepath = $sAllCommentsFile;
     } else {
         $commentFilename = substr(str_replace("/", "-", $commentElements[0]), 1, -1) . "-COMMENTS.txt";
         $commentFilepath = $settings['general']['commentsDir'] . "/" . $commentFilename;
@@ -157,7 +151,7 @@ function changeComment($commentElements, $newComment, $editAllCommentsFile)
     }
     file_put_contents($commentFilepath, $newCommentFileContent, LOCK_EX);
     // If we have deleted the only comment in the specific comment file, we remove the file.
-    if (filesize($commentFilepath) === 0 && $commentFilepath !== $settings['save']['allCommentsFile']) {
+    if (filesize($commentFilepath) === 0 && $sAllCommentsFile) {
         unlink($commentFilepath);
     }
     return $commentChanged;
@@ -168,7 +162,7 @@ function changeComment($commentElements, $newComment, $editAllCommentsFile)
 // global comment file.
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     validate_request("POST", ["editedComment"]);
-    if (earlyEnoughToEdit($commentElements[1]) || $adminAccess) {
+    if (earlyEnoughToEdit($commentElements[1], $settings['edit']['commentEditTimeout']) || $adminAccess) {
         $editedComment = prepareString(
             $_POST["editedComment"],
             $settings['save']['maxCommentLength'],
@@ -179,13 +173,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         changeComment(
             $commentElements,
             $editedComment,
-            false
+            "",
+            $settings['general']['commentsDir']
         );
         if ($settings['save']['allCommentsFile']) {
             changeComment(
                 $commentElements,
                 $editedComment,
-                true
+                true,
+                $settings['general']['commentsDir']
             );
         }
         header("Location: {$settings['general']['siteURL']}{$commentElements[0]}index.php");
@@ -203,7 +199,13 @@ if ($settings['edit']['adminCommentPassword'] === hash("sha256", $p)) {
 }
 // Identify the comment record using the date of the commented blog post ('d')
 // and the comment ID ('c')
-$commentLine = findComment($d, $c, $adminAccess);
+$commentLine = findComment(
+    $d,
+    $c,
+    $adminAccess,
+    $settings['general']['commentsDir'],
+    $settings['edit']['commentSalt']
+);
 // If the comment record exists, get the comment and convert it to Markdown for
 // display
 if ($commentLine) {

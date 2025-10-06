@@ -87,6 +87,8 @@ function checkVip($userName, $userPassword, $vipNicks)
  * @param bool $newestComments If true, update also the global feed with the newest
  * comments. If false, update only the feed with the particular feed for this blog
  * post
+ * @param string $sCommentFeedsDir The filepath to the directory with comment
+ * feeds
  *
  * @return bool Returns false if the filepath for the feed does not
  * exist or if the feed content is unreadable or if the comment timestamp is
@@ -101,11 +103,11 @@ function updateFeed(
     $commenter,
     $commenterURL,
     $comment,
-    $newestComments
+    $newestComments,
+    $sCommentFeedsDir
 ) {
-    global $settings;
     $feedFilename = "comments_blogpost" . $dateOfPost . ".xml";
-    $feedFilepath = $settings['general']['commentFeedsDir'] . "/" . $feedFilename;
+    $feedFilepath = $sCommentFeedsDir . "/" . $feedFilename;
     if (!file_exists($feedFilepath)) {
         return false;
     }
@@ -146,7 +148,7 @@ function updateFeed(
     file_put_contents($feedFilepath, $feedContent);
     // We will possibly also update the global feed with the newest comments
     if ($newestComments) {
-        $feedFilepath = $settings['general']['commentFeedsDir'] . "/comments_newest.xml";
+        $feedFilepath = $sCommentFeedsDir . "/comments_newest.xml";
         if (!file_exists($feedFilepath)) {
             return false;
         }
@@ -378,10 +380,32 @@ if (file_put_contents($fullFilePath, $commentLineWithEmail, FILE_APPEND | LOCK_E
     // ...and update the comment feeds in the background (from the user's
     // perspective).
     if ($settings['save']['updateFeed']) {
-        updateFeed($year . $month . $day, $title, $postURL, $currentDateTime, $userName, $userURL, $userComment, true);
+        updateFeed(
+            $year . $month . $day,
+            $title,
+            $postURL,
+            $currentDateTime,
+            $userName,
+            $userURL,
+            $userComment,
+            true,
+            $settings['general']['commentFeedsDir']
+        );
     }
     // Notify the email subscribers about the new comment
-    sendNotifications($year, $month, $day, $title, $currentDateTime, $userName, $userURL, $userComment, false);
+    sendNotifications(
+        $year,
+        $month,
+        $day,
+        $title,
+        $currentDateTime,
+        $userName,
+        $userURL,
+        $userComment,
+        false,
+        $settings['general'],
+        $settings['email']
+    );
 } else {
     unset($_POST);
     exit(EXITMSG_ERRORSAVINGCOMMENT);

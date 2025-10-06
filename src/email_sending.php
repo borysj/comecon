@@ -6,25 +6,24 @@ use PHPMailer\PHPMailer\SMTP;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-function createMail($title, $fullTitle)
+function createMail($title, $fullTitle, $sEmail, $sBlogName)
 {
-    global $settings;
     $mail = new PHPMailer(true);
     $mail->isSMTP();
-    $mail->Host = $settings['email']['mailNotificationsHost'];
+    $mail->Host = $sEmail['mailNotificationsHost'];
     $mail->SMTPAuth = true;
-    $mail->Username = $settings['email']['mailNotificationsUsername'];
-    $mail->Password = $settings['email']['mailNotificationsPassword'];
+    $mail->Username = $sEmail['mailNotificationsUsername'];
+    $mail->Password = $sEmail['mailNotificationsPassword'];
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
     $mail->Port = 465;
-    $mail->setFrom($settings['email']['mailNotificationsUsername']);
-    $mail->addReplyTo($settings['email']['blogContactMail']);
+    $mail->setFrom($sEmail['mailNotificationsUsername']);
+    $mail->addReplyTo($sEmail['blogContactMail']);
     $mail->isHTML(true);
     $mail->CharSet = "UTF-8";
     if ($fullTitle) {
-        $mail->Subject = "A new blog post on {$settings['general']['blogName']}: $fullTitle";
+        $mail->Subject = "A new blog post on $sBlogName: $fullTitle";
     } else {
-        $mail->Subject = "A new comment on {$settings['general']['blogName']} ($title)";
+        $mail->Subject = "A new comment on $sBlogName ($title)";
     }
     return $mail;
 }
@@ -38,16 +37,17 @@ function sendNotifications(
     $userName,
     $userURL,
     $userComment,
-    $fullTitle
+    $fullTitle,
+    $sGeneral,
+    $sEmail
 ) {
-    global $settings;
-    $link = $settings['general']['siteURL'] . "/" . $year . "/" . $month . "/" . $day . "/" . $title;
+    $link = $sGeneral['siteURL'] . "/" . $year . "/" . $month . "/" . $day . "/" . $title;
     if ($commentTimestamp !== "") {
         $commentTimestamp = str_replace(array(" ", "-", ":"), "", $commentTimestamp);
         $link = $link . "/index.php#" . $commentTimestamp;
     }
     if ($fullTitle) {
-        $filename = $settings['general']['subscribersFile'];
+        $filename = $sGeneral['subscribersFile'];
         $text1 = "new";
         $text2 = "blog";
     } else {
@@ -55,7 +55,7 @@ function sendNotifications(
         $text1 = "commented";
         $text2 = "comments";
     }
-    $path = $settings['general']['subscribersDir'] . "/" . $filename;
+    $path = $sGeneral['subscribersDir'] . "/" . $filename;
     $body1 = "<html><body><p><a href=\"$link\">Link to the $text1 blog post</a></p>";
     if ($userName != "none") {
         if (!empty($userURL)) {
@@ -72,8 +72,8 @@ function sendNotifications(
 
     if (!$fullTitle) {
         $body1 = $body1 . "</body></html>";
-        $mail = createMail($title, $fullTitle);
-        $mail->addAddress($settings['email']['ownerPrivateMail']);
+        $mail = createMail($title, $fullTitle, $sEmail, $sGeneral['blogName']);
+        $mail->addAddress($sEmail['ownerPrivateMail']);
         $mail->Body = $body1;
         $mail->send();
     }
@@ -88,14 +88,14 @@ function sendNotifications(
             break;
         }
         list($subscriber, $password) = explode("<|>", $line);
-        $unsubLink = $settings['general']['siteURL'] .
+        $unsubLink = $sGeneral['siteURL'] .
                      "/assets/unsubscribe.php?user=$subscriber&pw=$password&what=$filename";
         $body2 = "<p style=\"font-size: small;\"><a href=\"$unsubLink\">
                   Use this link to unsubscribe from the $text2</a></p>
                   <p style=\"font-size: small;\">Do not reply to this email.
                   If you encounter technical problems, contact me here:
-                  {$settings['email']['blogContactMail']}</p></body></html>";
-        $mail = createMail($title, $fullTitle);
+                  {$sEmail['blogContactMail']}</p></body></html>";
+        $mail = createMail($title, $fullTitle, $sEmail, $sGeneral['blogName']);
         $mail->addAddress($subscriber);
         $mail->Body = $body1 . $body2;
         $mail->send();
@@ -104,9 +104,9 @@ function sendNotifications(
     return;
 }
 
-function sendTestEmail($recipient)
+function sendTestEmail($recipient, $sEmail, $sBlogName)
 {
-    $mail = createMail("Test message", false);
+    $mail = createMail("Test message", false, $sEmail, $sBlogName);
     $mail->addAddress($recipient);
     $mail->Body = "This is test.";
     $mail->send();
