@@ -10,7 +10,7 @@ server following the instructions in DEPLOYMENT.
 
 Furthermore, Comecon does not use any database.  There is no MySQL and the
 comments are written to and read from flat files (TXT with custom delimiter
-<|>).
+<|>). This decision is explained below in the FAQ.
 
 Comecon has two core limitations you should be aware of from the outset:
 
