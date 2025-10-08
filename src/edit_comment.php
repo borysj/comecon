@@ -102,17 +102,18 @@ function earlyEnoughToEdit($commentDateTime, $sCommentEditTimeout)
  *
  * @param array<string> $commentElements The fields of the comment record
  * @param string $newComment The edited comment
- * @param string $sAllCommentsFile The filepath for the master comment file;
- * pass an empty string if you want to edit the particular comment file instead
+ * @param bool $sAllComments True if we are editing the master comment file,
+ * false if we are editing the particular comment file
+ * @param string $sAllCommentsFile The filepath for the master comment file
  * @param string $sCommentsDir The filepath for the comment directory
  * @return bool $commentChanged True if the comment has been changed, false if
  * the comment file has not been found or the comment record in the comment file
  * has not been found
  */
-function changeComment($commentElements, $newComment, $sAllCommentsFile, $sCommentsDir)
+function changeComment($commentElements, $newComment, $sAllComments, $sAllCommentsFile, $sCommentsDir)
 {
     $commentChanged = false;
-    if ($sAllCommentsFile) {
+    if ($sAllComments) {
         $commentFilepath = $sAllCommentsFile;
     } else {
         $commentFilename = substr(str_replace("/", "-", $commentElements[0]), 1, -1) . "-COMMENTS.txt";
@@ -151,7 +152,7 @@ function changeComment($commentElements, $newComment, $sAllCommentsFile, $sComme
     }
     file_put_contents($commentFilepath, $newCommentFileContent, LOCK_EX);
     // If we have deleted the only comment in the specific comment file, we remove the file.
-    if (filesize($commentFilepath) === 0 && $sAllCommentsFile) {
+    if (filesize($commentFilepath) === 0 && !$sAllComments) {
         unlink($commentFilepath);
     }
     return $commentChanged;
@@ -173,14 +174,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         changeComment(
             $commentElements,
             $editedComment,
-            "",
+            false,
+            $settings['save']['allCommentsFile'],
             $settings['general']['commentsDir']
         );
-        if ($settings['save']['allCommentsFile']) {
+        if ($settings['save']['allComments']) {
             changeComment(
                 $commentElements,
                 $editedComment,
                 true,
+                $settings['save']['allCommentsFile'],
                 $settings['general']['commentsDir']
             );
         }

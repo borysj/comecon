@@ -4,6 +4,9 @@
 // On shared hosting it can be something like /home/johndoe
 // On a VPS it is up to you, but usually you want /var/www
 $homeDir = "";
+// Server path for your site directory. Typically /home/johndoe/public_html on a
+// shared hosting, or /var/www/html on a VPS
+$siteDir = "";
 $settings = [
     "general" => [
         // The name of your blog
@@ -50,9 +53,11 @@ $settings = [
         // There can be a master file with ALL comments in the blog's main folder.
         // There might be a reason why you need it; I was using it to generate
         // some comment statistics when generating the blog locally.
-        // Here you can choose the name for the file, but if you leave it empty,
-        // the master file won't be used at all.
-        "allCommentsFile" => "all_comments.txt",
+        // Here you can choose whether you want to use it, and set the name for
+        // the file. If you want to use it, remember to create an empty file
+        // with that name!
+        "allComments" => false,
+        "allCommentsFile" => $siteDir . "/all_comments.txt",
         // Maximal length of a comment, in characters.
         // Remember to set `maxlength` in `form-submit_comment.php` at slightly smaller
         // value for a safety margin for tags.
