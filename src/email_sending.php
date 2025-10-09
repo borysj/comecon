@@ -11,15 +11,15 @@ require __DIR__ . '/../vendor/autoload.php';
  * post, set $title to null and use $fullTitle. Vice versa if it is a
  * notification about a new comment.
  *
- * @param string $title The slugified title of the commented blog post (use for
- * comment notification)
- * @param string $fullTitle The full title of the new blog post (use for post
- * notification)
+ * @param bool $newBlogPost If true, it is a notification about a new blog post.
+ * If false, it is a notification about a comment.
+ * @param string $fullTitle The full title of the blog post that the
+ * notification is about (the blog post is either new or has been commented on)
  * @param array<string> $sEmail Email settings (host, username, password, contact/reply-to email)
  * @param string $sBlogName The name of the blog
  * @return PHPMailer $mail The mail object
  */
-function createMail($title, $fullTitle, $sEmail, $sBlogName)
+function createMail($newBlogPost, $fullTitle, $sEmail, $sBlogName)
 {
     $mail = new PHPMailer(true);
     $mail->isSMTP();
@@ -33,13 +33,10 @@ function createMail($title, $fullTitle, $sEmail, $sBlogName)
     $mail->addReplyTo($sEmail['blogContactMail']);
     $mail->isHTML(true);
     $mail->CharSet = "UTF-8";
-    if ($fullTitle) {
+    if ($newBlogPost) {
         $mail->Subject = "A new blog post on $sBlogName: $fullTitle";
     } else {
-        if ($title === null || $title === "") {
-            exit(EXITMSG_NOTIFICATIONERROR);
-        }
-        $mail->Subject = "A new comment on $sBlogName ($title)";
+        $mail->Subject = "A new comment on $sBlogName for post: $fullTitle)";
     }
     return $mail;
 }
@@ -59,8 +56,7 @@ function createMail($title, $fullTitle, $sEmail, $sBlogName)
  * comment
  * @param string $userURL The website of the author of the comment, can be null/empty
  * @param string $userComment The comment, can be null/empty
- * @param string $fullTitle The full title of the relevant blog post, pass null
- * if this is a notification only about a comment
+ * @param string $fullTitle The full title of the relevant blog post
  * @param array<mixed> $sGeneral General settings (the blog URL, the blog name,
  * the filepath for the blog subscribers, the directory with the comment subscribers)
  * @param array<string> $sEmail Email settings (host, username, password, contact/reply-to email,
@@ -80,8 +76,8 @@ function sendNotifications(
     $sGeneral,
     $sEmail
 ) {
-    // Validate parameters necessary to create a proper URL
-    if ($title === "" || $fullTitle === "") {
+    // Validate parameters
+    if ($commentTimestamp === "") {
         exit(EXITMSG_NOTIFICATIONERROR);
     }
     if (!preg_match('/^\d{4}$/', $year)) {
@@ -96,32 +92,34 @@ function sendNotifications(
     if (!preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $title)) {
         exit(EXITMSG_NOTIFICATIONERROR);
     }
+
+    // Create a link to the blog post (possibly to the specific comment),
+    // and get the proper subscriber file
     $link = $sGeneral['siteURL'] . "/" . $year . "/" . $month . "/" . $day . "/" . $title;
-    if ($commentTimestamp !== "") {
-        // If $commentTimestamp is set, we expect this to be a comment notification,
-        // so $fullTitle should be null
-        if ($fullTitle !== null) {
-            exit(EXITMSG_NOTIFICATIONERROR);
+    if ($commentTimestamp !== null) {
+        if ($userName === null || $userName === "" && $userComment === null || $userComment === "") {
+        exit(EXITMSG_NOTIFICATIONERROR);
+        } else {
+            $commentTimestamp = str_replace(array(" ", "-", ":"), "", $commentTimestamp);
+            $link = $link . "/index.php#" . $commentTimestamp;
+            $filename = $year . "-" . $month . "-" . $day . "-" . $title . "-SUBS.txt";
+            $text1 = "commented";
+            $text2 = "comments";
+            $newBlogPost = false;
         }
-        // If $commentTimestamp is set, the comment author should be set
-        if ($userName === null || $userName === "") {
-            exit(EXITMSG_NOTIFICATIONERROR);
-        }
-        $commentTimestamp = str_replace(array(" ", "-", ":"), "", $commentTimestamp);
-        $link = $link . "/index.php#" . $commentTimestamp;
-    }
-    if ($fullTitle) {
+    } else {
         $filename = $sGeneral['subscribersFile'];
         $text1 = "new";
         $text2 = "blog";
-    } else {
-        $filename = $year . "-" . $month . "-" . $day . "-" . $title . "-SUBS.txt";
-        $text1 = "commented";
-        $text2 = "comments";
+        $newBlogPost = true;
     }
     $path = $sGeneral['subscribersDir'] . "/" . $filename;
+
+    // Start creating a notification email. It will be very short...
     $body1 = "<html><body><p><a href=\"$link\">Link to the $text1 blog post</a></p>";
-    if ($userName !== null) {
+    // ...unless it is a comment notification because then we want to add the
+    // comment itself.
+    if ($commentTimestamp !== null) {
         if (!empty($userURL)) {
             $nick = "<a href=\"$userURL\">$userName</a>";
         } else {
@@ -132,18 +130,21 @@ function sendNotifications(
         $body1 = $body1 . "<p style=\"font-size: small;\">Above you see the original version of the comment.
                            The author could have edited it.
                            Follow the link to see the newest version.</p>";
-    }
 
-    if (!$fullTitle) {
-        $body1 = $body1 . "</body></html>";
-        $mail = createMail($title, $fullTitle, $sEmail, $sGeneral['blogName']);
-        $mail->addAddress($sEmail['ownerPrivateMail']);
-        $mail->Body = $body1;
-        $mail->send();
+        // If the owner private mail is set, the owner will receive an automatic
+        // notification about any comment. They will be able to react quickly in
+        // case of spam or similar
+        if ($sEmail['ownerPrivateMail']) {
+            $body1 = $body1 . "</body></html>";
+            $mail = createMail($newBlogPost, $fullTitle, $sEmail, $sGeneral['blogName']);
+            $mail->addAddress($sEmail['ownerPrivateMail']);
+            $mail->Body = $body1;
+            $mail->send();
+        }
     }
 
     if (!file_exists($path)) {
-        return;
+        return false;
     }
     $subscribers = fopen($path, "r");
     while (!feof($subscribers)) {
@@ -152,6 +153,7 @@ function sendNotifications(
             break;
         }
         list($subscriber, $password) = explode("<|>", $line);
+        // We add a footer with an unsubscribe link
         $unsubLink = $sGeneral['siteURL'] .
                      "/assets/unsubscribe.php?user=$subscriber&pw=$password&what=$filename";
         $body2 = "<p style=\"font-size: small;\"><a href=\"$unsubLink\">
@@ -159,7 +161,7 @@ function sendNotifications(
                   <p style=\"font-size: small;\">Do not reply to this email.
                   If you encounter technical problems, contact me here:
                   {$sEmail['blogContactMail']}</p></body></html>";
-        $mail = createMail($title, $fullTitle, $sEmail, $sGeneral['blogName']);
+        $mail = createMail($newBlogPost, $fullTitle, $sEmail, $sGeneral['blogName']);
         $mail->addAddress($subscriber);
         $mail->Body = $body1 . $body2;
         $mail->send();
@@ -178,7 +180,7 @@ function sendNotifications(
  */
 function sendTestEmail($recipient, $sEmail, $sBlogName)
 {
-    $mail = createMail("Test message", false, $sEmail, $sBlogName);
+    $mail = createMail(true, "Test message", $sEmail, $sBlogName);
     $mail->addAddress($recipient);
     $mail->Body = "This is test.";
     $mail->send();

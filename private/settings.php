@@ -31,8 +31,8 @@ $settings = [
         "mailNotificationsHost" => "smtp.myblog.com",
         "mailNotificationsUsername" => "notifications@myblog.com",
         "mailNotificationsPassword" => "myemailpassword_unhashed",
-        // Notifications reach you through this email
-        // (to confirm that they are coming as they should)
+        // Comment notifications reach you automatically through this email.
+        // Set the string to null or empty if you do not want to receive them
         "ownerPrivateMail" => "owner@mail.com",
         // ...but this is the official contact email for your blog
         "blogContactMail" => "contact@myblog.com",

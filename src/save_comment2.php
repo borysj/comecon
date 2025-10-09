@@ -204,6 +204,17 @@ function gravatarExists($email, $notYetHashed)
     }
 }
 
+function getPostFullTitle($postURL)
+{
+    $html = file_get_contents($postURL);
+    if (preg_match('/<h1[^>]*>(.*?)<\/h1>/is', $html, $matches)) {
+        $postFullTitle = strip_tags($matches[1]);
+    } else {
+        return null;
+    }
+    return rawurlencode($postFullTitle);
+}
+
 
 // We check if the user is registered. They could be registered if they have
 // provided a password together with their name.
@@ -318,6 +329,7 @@ if (preg_match($pattern, $postURL, $matches)) {
 } else {
     exit(EXITMSG_ERRORURL);
 }
+$postFullTitle = getPostFullTitle($postURL);
 
 $filePath = "/" . $year . "/" . $month .
             "/" . $day . "/" . $title . "/";
@@ -402,7 +414,7 @@ if (file_put_contents($fullFilePath, $commentLineWithEmail, FILE_APPEND | LOCK_E
         $userName,
         $userURL,
         $userComment,
-        null,
+        $postFullTitle,
         $settings['general'],
         $settings['email']
     );
