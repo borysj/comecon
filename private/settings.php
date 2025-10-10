@@ -19,7 +19,7 @@ $siteDir = "";  //ESSENTIAL
 $settings = [
     "general" => [
         // The name of your blog
-        "blogName" => "My Blog",
+        "blogName" => "My Great Blog", //ESSENTIAL
         // The URL of your blog without the trailing slash
         "siteURL" => "https://myblog.example.com", //ESSENTIAL
         // Server subpath for your comments directory (preferably non-public)
