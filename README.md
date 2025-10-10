@@ -162,7 +162,21 @@ for every new blog post. Give it the correct name
 remember to add the link to the particular feed within every blog post.
 Otherwise, no one will know about it. :-)
 
-Mail notifications?
+### Mail notifications: New blog posts
 
+If you suspect that some of your readers are unfamiliar with RSS/Atom, you may
+want to turn on email notifications about new blog posts.
+
+1. Run `compose install` in the Comecon folder to install
+   [PHPMailer](https://github.com/PHPMailer/PHPMailer).
+2. Edit the `email` category in the settings. Here, you have to connect your
+   email account to Comecon. `notify` stays `false`; that one is about about
+   sending the comment notifications, not the blog posts notifications.
+3. Make `misc/form-blog_subscription` available for you readers. The form
+   mentions captcha; you choose it in the `email` category of the settings. You
+   have to inform them somehow about "the secret code".
+4. Every time you publish a new blog post, you have to run
+   `comecon.php?action=notify` manually. See the instruction in
+   `src/email_notifications.php`.
 
 
