@@ -176,7 +176,7 @@ if (file_put_contents($fullFilePath, $commentLineWithEmail, FILE_APPEND | LOCK_E
     // ...and update the comment feeds in the background...
     if ($settings['feed']['updateFeedNewest'] || $settings['feed']['updateFeedPost']) {
         updateFeed(
-            $year . $month . $day,
+            $year . "-" . $month . "-" . $day,
             $title,
             $postURL,
             $currentDateTime,

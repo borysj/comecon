@@ -35,7 +35,7 @@ define('EXITMSG_KEYISWRONG', "A key is not set or not a string");
 define('EXITMSG_NOTIFICATIONERROR', "I cannot create an email notification due to wrong parameters");
 define('MSG_COMMENTINCONTEXT', "The comments could have been changed or deleted in the meanwhile.
         Follow the link to the blog to find the most recent version.");
-define('MSG_COMMENTFEEDENTRYTITLE', "Comment for the blog post");
+define('MSG_COMMENTFEEDENTRYTITLE', "Comment for the blog post:");
 define('LABEL_EDITCOMMENTTITLE', "Edit comment");
 define('LABEL_EDITCOMMENTFIELD', "Edit your comment.<br>If you wish to remove it,
         delete everything and confirm using the button.");

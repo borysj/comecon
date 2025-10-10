@@ -299,8 +299,9 @@ function checkVip($userName, $userPassword, $vipNicks)
 /**
  * Update the comment feed.
  *
- * @param string $dateOfPost The date of the commented blog post, YYYYMMDD
- * @param string $postTitle The title of the commented blog post
+ * @param string $dateOfPost The date of the commented blog post, YYYY-MM-DD
+ * @param string $fullTitle The full title of the commented blog post
+ * @param string $postTitle The slugified title of the commented blog post
  * @param string $postURL The URL of the commented blog post
  * @param string $commentTimestamp The timestamp of the comment, from date($settings['save']['timestamp'])
  * @param string $commenter The name of the commenter
@@ -320,6 +321,7 @@ function checkVip($userName, $userPassword, $vipNicks)
  */
 function updateFeed(
     $dateOfPost,
+    $fullTitle,
     $postTitle,
     $postURL,
     $commentTimestamp,
@@ -342,7 +344,7 @@ function updateFeed(
 
     $newEntry = <<<ENTRYENDS
     <entry>
-    <title>$entryTitle $postTitle</title>
+    <title>$entryTitle $fullTitle</title>
     <author><name>$commenter</name><uri>$commenterURL</uri></author>
     <link rel="alternate" type="text/html" href="$commentURLWithAnchor" />
     <id>$postTitle$formattedTimestamp</id>
@@ -380,7 +382,7 @@ function updateFeed(
     }
 
     if ($sUpdatePost) {
-        $feedFilename = "comments_blogpost" . $dateOfPost . ".xml";
+        $feedFilename = "comments_blogpost" . $dateOfPost . "-" . $postTitle . ".xml";
         $feedFilepath = $sCommentFeedsDir . "/" . $feedFilename;
         if (!file_exists($feedFilepath)) {
             return false;
