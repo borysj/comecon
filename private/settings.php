@@ -49,7 +49,7 @@ $settings = [
         "allComments" => false,
         "allCommentsFile" => $siteDir . "/all_comments.txt",
         // Maximal length of a comment, in characters.
-        // Remember to set `maxlength` in `form-submit_comment.php` at slightly smaller
+        // Remember to set `maxlength` in `form-submit_comment.html` at slightly smaller
         // value for a safety margin for tags.
         "maxCommentLength" => 4000,
         // Use any random sequence of characters for the email salts.
