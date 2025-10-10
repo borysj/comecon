@@ -21,7 +21,7 @@ But this number is my intuition only; Comecon has been tested thoroughly, but
 not stress-tested.
 
 Comecon requires an identifier in the HTML body of every blog post:
-`/YYYY/MM/DD/post-title`. This identifier has actually to be inserted twice per
+`YYYY-MM-DD-post-title`. This identifier has actually to be inserted twice per
 blog post: next to the snippet that displays comments below the post, and into
 the form for submitting comments. See below under DEPLOYMENT for more
 information. As you can see, you cannot have two posts with the same title on
@@ -60,19 +60,37 @@ These are instructions for deploying the core part of Comecon. For information
 about search engine, random post selection and random quote generator, see
 DETAILS.
 
-1. Copy all PHP-files from `src` to your server into
-`https://myblog.com/assets` or `https://myblog.com/sub/path/assets` or similar.
-The final subdirectory **must** be called `assets`.
+1. Clone or unzip Comecon into a non-public directory of your blog site. If you
+   use a VPS, it will be something like `/var/www/comecon`. If you are on shared
+   hosting, it will be something like `/home/username/comecon`. If you are on
+   shared hosting, but can use only the public HTML directory for your files,
+   check FAQ.
+2. Fill out the essential settings in `comecon/private/settings.php` and add at
+   least yourself and your grandmother to `comecon/private/vip.php`.
+3. In the HTML of every blog post (that you want to connect to Comecon), you have
+   to include:
+   - the PHP snippet with the post identifier: `<?php $postID="YYYY-MM-DD-post-title" ?>`
+   - the PHP script for displaying the comments: `includes\add_comments.php`
+   - the HTML form for submitting a comment: `includes\form-submit_comment.html`
+   If unsure, take a look at `examples\blog_post.html`. Also, remember that the
+   HTML form can be placed before the comment display. However, the PHP snippet
+   with the post identifier must come before the comment display.
+
+Assuming that your WWW server can process PHP, you are ready to go.
+
+Jekyll?
+Master comment file?
+Feeds?
+Mail notifications?
+
+
 2. Copy all PHP-files from `private` to a non-public directory on your server.
 This directory could be e.g. `/home/johndoe/data`. You can set the name of the
 directory through `site.dir_with_data`, see below.
-3. Fill out `settings.php` and `vip.php` (that you have just copied from
 `private`).
 4. Create an empty file called `all_comments.txt` in your assets subdirectory.
 This file could have another name; change `$allCommentsFile` in `settings.php`
 accordingly.
-5. In every blog post you must include `form-submit_comment.html` and
-`add_comments.php` (the latter will be displaying comments).
 6. Finally, unpack [PHP Mailer](https://github.com/PHPMailer/PHPMailer) to a
 directory on your server. `$phpMailerDir` from `settings.php` must be pointing
 to that directory. Notice that you only need `src` of PHP Mailer. Take a look at
