@@ -79,6 +79,10 @@ generator), see [DETAILS](blob/main/DETAILS.md).
      - the blog post full title.
 5. The submission form is unstyled, so you might want to add some CSS. See
    `examples/styles.css`.
+6. If you self-host, link `comecon.php` to the root of your website, like this:
+   `ln -s /var/www/comecon/comecon.php /var/www/html/comecon.php`. If you are on
+   shared hosting, move `comecon.php` to the root of your website, and adjust
+   all file paths from requires and includes.
 
 Assuming that your WWW server can process PHP, you are now ready to go.
 
@@ -111,6 +115,17 @@ Assuming that your WWW server can process PHP, you are now ready to go.
      However, they can of course be entered manually, or semi-manually with a
      template. It all depends on how you run your non-WordPress blog.
 5. As above.
+6. If you are on shared hosting, you cannot create a symbolic link to the main
+   script from the website root directory. As this script must be public, you
+   will have to move it into the website root (there where you hold `index.html`
+   or `index.php` for your website). However, then the main script will get
+   confused, and will look for other (private) Comecon scripts in wrong places.
+   You have to manually adjust the file paths after **all** the require- and
+   include-statements. For instance, you will have to change `require_once
+   __DIR__ . "/private/settings.php";` to something like `require_once __DIR__ .
+   "../comecon/private/settings.php";`. Here `..` means to go up one directory
+   level (out of the website root) and then descend into the (private) Comecon
+   directory.
 
 ## Optional features
 
