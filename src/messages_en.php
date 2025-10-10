@@ -32,6 +32,7 @@ define('EXITMSG_FILEUNREADABLE', "The file is unreadable");
 define('EXITMSG_NOTSTRING', "A string was expected");
 define('EXITMSG_WRONGREQUESTMETHOD', "The request method (GET or POST) is wrong");
 define('EXITMSG_KEYISWRONG', "A key is not set or not a string");
+define('EXITMSG_NOTIFICATIONERROR', "I cannot create an email notification due to wrong parameters");
 define('MSG_COMMENTINCONTEXT', "The comments could have been changed or deleted in the meanwhile.
         Follow the link to the blog to find the most recent version.");
 define('MSG_COMMENTFEEDENTRYTITLE', "Comment for the blog post");
