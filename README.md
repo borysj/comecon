@@ -64,7 +64,11 @@ DETAILS.
    use a VPS, it will be something like `/var/www/comecon`. If you are on shared
    hosting, it will be something like `/home/username/comecon`. If you are on
    shared hosting, but can use only the public HTML directory for your files,
-   check FAQ.
+   check FAQ.  
+   **IMPORTANT:** You will be soon asked to run `composer install` for the
+   optional feature of email notifications. If you are on shared hosting, you
+   should run it locally first, and then copy the Comecon folder (with
+   dependencies already installed) to your shared hosting. 
 2. Fill out the essential settings in `comecon/private/settings.php` and add at
    least yourself and your grandmother to `comecon/private/vip.php`.
 3. In the HTML of every blog post (that you want to connect to Comecon), you have
