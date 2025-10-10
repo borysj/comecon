@@ -1,51 +1,56 @@
 # INTRODUCTION
 
 Comecon is a commenting system for your (static) blog. It is written in vanilla
-PHP without any frameworks and with almost no JavaScript. PHP is employed to
+PHP without any frameworks and without JavaScript. PHP is employed to
 both save and display comments.
 
 Comecon is **not** a WordPress-plugin nor any other kind of plugin. It is
 a collection of PHP-files that you must set up and upload to your webpage
 server following the instructions in DEPLOYMENT.
 
-Furthermore, Comecon does not use any database.  There is no MySQL and the
-comments are written to and read from flat files (TXT with custom delimiter
-<|>). This decision is explained below in the FAQ.
+Furthermore, Comecon does not use any database.  There is no MySQL involved.
+The comments are written to and read from flat files (TXT with custom delimiter
+<|>). This weird design decision is explained below in FAQ.
 
-Comecon has two core limitations you should be aware of from the outset:
+Comecon has not been optimized for a large (commenting) traffic to the website.
+It probably will not work correctly if you are a hot blogger receiving multiple
+comment submissions across your blog simultaneously. However, Comecon works
+*very* quickly and reliably if comments are reasonably sparse. I guess you won't
+experience any problems unless there are more than one comment per five seconds.
+But this number is my intuition only; Comecon has been tested thoroughly, but
+not stress-tested.
 
-* Since there is no database, Comecon might not work correctly if there are
-  multiple comment submissions at once. Thus, Comecon is probably not the best
-  choice if your blog has a lot of (commenting) traffic. However, it works
-  *very* quickly if comments are reasonably sparse. I guess the problems won't
-  start if there is less than one comment per ten seconds.
-* Comecon assumes you won't be blogging more than once per day, and it requires
-  that all blog posts have the following URL:
-  `https://myblog.com/YYYY/MM/DD/post-title/index.php`  The scripts rely heavily
-  on the YYYY/MM/DD/post-title identifiers to manage the comment files.
-
+Comecon requires an identifier in the HTML body of every blog post:
+`/YYYY/MM/DD/post-title`. This identifier has actually to be inserted twice per
+blog post: next to the snippet that displays comments below the post, and into
+the form for submitting comments. See below under DEPLOYMENT for more
+information. As you can see, you cannot have two posts with the same title on
+the same day.
 
 
 # FEATURES
 
-Comecon allows blog readers to:
+Comecon allows your readers to:
 
-* add and read comments under blog posts (obviously);
-* attach links under their nicknames;
-* receive email notifications about new comments (or about new blog posts, for
+- add and later read comments under blog posts (obviously);
+- attach links (of their websites) to their nicknames;
+- receive email notifications about new comments (or about new blog posts, for
   that matter);
-* edit or delete their comments within predefined time after submitting;
-* register their nicknames and feature their comments.
+- edit or delete their comments within predefined time after submitting;
+- register their nicknames in order to simplify the comment submission and
+  "upgrade" the color of the nick.
 
-Furthermore, Comecon has:
+Comecon features also:
 
-* a simple captcha;
-* an internal search engine for the blog posts and the comments.
+- a simple captcha;
+- comment feeds (using Atom format).
 
-Bonus features:
+There are also bonus scripts that have nothing to do with commenting, but you
+might want them for your blog. At least I wanted them for mine:
 
-* random post selection;
-* random quote generator.
+- a simple internal search engine for the blog posts and the comments;
+- random post selection;
+- random quote generator.
 
 
 
