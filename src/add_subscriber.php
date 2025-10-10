@@ -6,7 +6,7 @@ $subsFilePath = $settings['general']['subscribersDir'] . "/" . $settings['genera
 // The captcha is a three characters long "secret code" at the end of the
 // email, therefore -3.
 if (substr($userEmail, -3) !== $settings['email']['captchaEmail']) {
-    exit(EXITMSG_BADCAPTCHAEMAIL);
+    exit(EXITMSG_BADCAPTCHA);
 } else {
     $userEmail = substr($userEmail, 0, -3);
 }

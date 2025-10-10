@@ -13,7 +13,7 @@ define('EXITMSG_ERRORSAVINGCOMMENT', "An error occurred while saving your commen
 define('EXITMSG_ERRORRUNNINGCOMMENTSCRIPT', "An error occurred while activating the comment script.<br>
         Go back to the comment form and try again.<br>If the error persists, please send
         a message to {$settings['email']['blogContactMail']}");
-define('EXITMSG_BADCAPTCHAEMAIL', "You are supposed to add the antibot code to your email.
+define('EXITMSG_BADCAPTCHA', "You are supposed to add the antibot code to your input.
         Read carefully the instruction right above the form.");
 define('EXITMSG_EMAILNOTFOUND', "I have not found this email on the subscriber list.");
 define('EXITMSG_SUBSCRIBERLISTNOTFOUND', "The subscriber list has not been found at all.");
