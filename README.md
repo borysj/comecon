@@ -66,7 +66,9 @@ generator), see [DETAILS](blob/main/DETAILS.md).
 1. Clone or unzip Comecon into a non-public directory of your website.
 2. Fill out `private/settings.php` and `private/vip.php`.
 3. Create the directory that `commentsDir` from the settings points to.
-4. In the HTML of every blog post (that you want to connect to Comecon), you
+4. Set the captcha question in the HTML form
+   `includes/form-submit_comment.html`.
+5. In the HTML of every blog post (that you want to connect to Comecon), you
    have to include:
    - a PHP snippet with the post identifier: `<?php $postID="YYYY-MM-DD-post-title" ?>`
    - the PHP script for displaying the comments: `includes/add_comments.php`
@@ -77,9 +79,9 @@ generator), see [DETAILS](blob/main/DETAILS.md).
      - the blog post URL;
      - the blog post identifier;
      - the blog post full title.
-5. The submission form is unstyled, so you might want to add some CSS. See
+6. The submission form is unstyled, so you might want to add some CSS. See
    `examples/styles.css`.
-6. If you self-host, link `comecon.php` to the root of your website, like this:
+7. If you self-host, link `comecon.php` to the root of your website, like this:
    `ln -s /var/www/comecon/comecon.php /var/www/html/comecon.php`. If you are on
    shared hosting, move `comecon.php` to the root of your website, and adjust
    all file paths from requires and includes.
@@ -99,7 +101,8 @@ Assuming that your WWW server can process PHP, you are now ready to go.
    marked as essential. In `private/vip.php`, you should remove the example
    users, and add at least yourself and your grandmother.
 3. As above.
-4. A few remarks:
+4. As above.
+5. A few remarks:
    - If you are unsure how to insert these three elements, take a look at
      `examples/blog_post_plain.html`.
    - Also, remember that the HTML form could be placed before the comment
@@ -114,8 +117,8 @@ Assuming that your WWW server can process PHP, you are now ready to go.
      static blog generator like Jekyll (check `examples/blog_post_jekyll.html`).
      However, they can of course be entered manually, or semi-manually with a
      template. It all depends on how you run your non-WordPress blog.
-5. As above.
-6. If you are on shared hosting, you cannot create a symbolic link to the main
+6. As above.
+7. If you are on shared hosting, you cannot create a symbolic link to the main
    script from the website root directory. As this script must be public, you
    will have to move it into the website root (there where you hold `index.html`
    or `index.php` for your website). However, then the main script will get
@@ -187,11 +190,36 @@ want to turn on email notifications about new blog posts.
 2. Edit the `email` category in the settings. Here, you have to connect your
    email account to Comecon. `notify` stays `false`; that one is about about
    sending the comment notifications, not the blog posts notifications.
-3. Make `misc/form-blog_subscription` available for you readers. The form
+3. Create the directory that the `subscribersDir` setting points to.
+4. Make `misc/form-blog_subscription` available for you readers. The form
    mentions captcha; you choose it in the `email` category of the settings. You
    have to inform them somehow about "the secret code".
-4. Every time you publish a new blog post, you have to run
+5. Every time you publish a new blog post, you have to run
    `comecon.php?action=notify` manually. See the instruction in
    `src/email_notifications.php`.
 
+The subscribers will receive an email notification about each new blog post you
+publish. There will be an unsubscribe link in the email.
 
+### Mail notifications: New comments
+
+If you suspect that some of your readers are unfamiliar with RSS/Atom, you may
+want to turn on email notifications about new comments (per blog post).
+
+1. Run `compose install` in the Comecon folder to install
+   [PHPMailer](https://github.com/PHPMailer/PHPMailer).
+2. Edit the `email` category in the settings. Here, you have to connect your
+   email account to Comecon. `notify` gets `true`.
+3. Create the directory that the `subscribersDir` setting points to.
+4. Uncomment the label for `email2` in `includes/form-submit_comment.html`.
+
+Now, if someone subscribes to a blog post by email, a subscriber file with their
+email address will be created. If someone published a new comment under this
+blog post, a notification will be sent to every subscriber.
+
+### Register new users
+
+You have to manually add new commenters to `private/vip.php`. You can encourage
+your readers to send you a registration mail with the necessary information
+(nickname, password, website, email, whether they want to receive comment
+notifications by email).
