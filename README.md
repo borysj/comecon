@@ -73,6 +73,10 @@ generator), see [DETAILS](blob/main/DETAILS.md).
      (remember to set the correct comment directory in the top part of the
      script)
    - the HTML form for submitting a comment: `includes/form-submit_comment.html`
+     which contains three hidden fields:
+     - the blog post URL;
+     - the blog post identifier;
+     - the blog post full title.
 5. The submission form is unstyled, so you might want to add some CSS. See
    `examples/styles.css`.
 
