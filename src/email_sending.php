@@ -155,7 +155,7 @@ function sendNotifications(
         list($subscriber, $password) = explode("<|>", $line);
         // We add a footer with an unsubscribe link
         $unsubLink = $sGeneral['siteURL'] .
-                     "/assets/unsubscribe.php?user=$subscriber&pw=$password&what=$filename";
+                     "comecon.php?action=unsubscribe&user=$subscriber&pw=$password&what=$filename";
         $body2 = "<p style=\"font-size: small;\"><a href=\"$unsubLink\">
                   Use this link to unsubscribe from the $text2</a></p>
                   <p style=\"font-size: small;\">Do not reply to this email.

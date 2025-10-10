@@ -61,7 +61,7 @@ if (file_exists($commentFilePath)) {
                 $dateDashed = $year . "-" . $month . "-" . $day;
                 ?>
                 <p class="comm_author_edit<?=$cc[6]?>">
-                <a href="{{ site.url }}/assets/edit_comment.php?d=<?=$dateDashed?>&c=<?=$_COOKIE[$cookieName]?>">
+                <a href="{{ site.url }}/comecon.php?action=edit&d=<?=$dateDashed?>&c=<?=$_COOKIE[$cookieName]?>">
                 ..:: You have 20 minutes to edit your comment ::..
                 </a></p>
                 <?php
