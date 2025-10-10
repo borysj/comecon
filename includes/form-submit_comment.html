@@ -1,6 +1,6 @@
 <p><br><br></p>
 <div class="commentFormCSS" style="text-align: center;">
-<form name="commentForm" action="{{ site.url }}/comecon.php?action=save" method="POST" onsubmit="submitButton.disabled = true; return true;">
+<form name="commentForm" action="/comecon.php?action=save" method="POST" onsubmit="submitButton.disabled = true; return true;">
 <fieldset>
 <legend align="left">C O M E C O N</legend>
 <input type="hidden" id="url" name="url">
@@ -18,7 +18,7 @@ If your cookies are on, you will be able to edit your comment."
 <label for="name">Signature:</label>
 <input id="name" name="name" required>
 
-<label for="password">Password (if you have <a href="{{ site.url }}/registration.html">registered</a>):</label>
+<label for="password">Password (if you have <a href="/registration.html">registered</a>):</label>
 <input id="password" name="password" type="password">
 
 <label for="webpage">Your webpage:</label>

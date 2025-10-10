@@ -1,4 +1,7 @@
 <?php
+// Set the correct comment directory here (same as
+// $settings['general']['commentDir'] and uncomment:
+// $commentDir =
 $postURI = $_SERVER["REQUEST_URI"];
 if (!is_string($postURI)) {
     exit("The post URL is unreadable");
@@ -12,7 +15,7 @@ if (str_contains($postURI, "index.php")) {
     $a = -1;
 }
 $commentFile = str_replace("/", "-", substr($postURI, 1, $a) . "-COMMENTS.txt");
-$commentFilePath = "{{ site.dir_with_comments }}/" . $commentFile;
+$commentFilePath = $commentDir . "/" . $commentFile;
 if (file_exists($commentFilePath)) {
     ?>
     <p><br><br><br></p>
@@ -61,7 +64,7 @@ if (file_exists($commentFilePath)) {
                 $dateDashed = $year . "-" . $month . "-" . $day;
                 ?>
                 <p class="comm_author_edit<?=$cc[6]?>">
-                <a href="{{ site.url }}/comecon.php?action=edit&d=<?=$dateDashed?>&c=<?=$_COOKIE[$cookieName]?>">
+                <a href="/comecon.php?action=edit&d=<?=$dateDashed?>&c=<?=$_COOKIE[$cookieName]?>">
                 ..:: You have 20 minutes to edit your comment ::..
                 </a></p>
                 <?php
