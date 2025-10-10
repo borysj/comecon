@@ -73,7 +73,7 @@ $settings = [
         "updateFeedNewest" => false,
         "updateFeedPost" => false,
         // Server subpath for the directory with comment feeds
-        "commentFeedsDir" => $homeDir . "/html/commfeeds",
+        "commentFeedsDir" => $siteDir . "/commfeeds",
     ],
     "edit" => [
         // Use any short random string of characters.
@@ -113,7 +113,7 @@ $settings = [
         // Server subpath (public) for where you keep searchable blog posts.
         // "Searchable" means "in plain text without any tags".
         // See the explanation in README.
-        "searchDataDirectory" => $homeDir . "/html/db_posts",
+        "searchDataDirectory" => $siteDir . "/db_posts",
         // Server subpath for search queries (preferably non-public).
         // This is for the curios; you will see what keywords people are looking for on
         // your blog.

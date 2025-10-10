@@ -70,6 +70,8 @@ generator), see [DETAILS](blob/main/DETAILS.md).
    have to include:
    - a PHP snippet with the post identifier: `<?php $postID="YYYY-MM-DD-post-title" ?>`
    - the PHP script for displaying the comments: `includes/add_comments.php`
+     (remember to set the correct comment directory in the top part of the
+     script)
    - the HTML form for submitting a comment: `includes/form-submit_comment.html`
 5. The submission form is unstyled, so you might want to add some CSS. See
    `examples/styles.css`.
@@ -89,56 +91,74 @@ Assuming that your WWW server can process PHP, you are now ready to go.
    marked as essential. In `private/vip.php`, you should remove the example
    users, and add at least yourself and your grandmother.
 3. As above.
-4. If you are unsure how to insert these three elements, take a look at
-   `examples/blog_post_plain.html`. Also, remember that the HTML form could be
-   placed before the comment display. However, the PHP snippet with the post
-   identifier must come before the comment display. The idea is that you include
-   the snippet, the script and the form using a static blog generator like
-   Jekyll (check `examples/blog_post_jekyll.html`). However, they can of course
-   be entered manually, or semi-manually with a template. It all depends on how
-   you run your non-WordPress blog.
+4. A few remarks:
+   - If you are unsure how to insert these three elements, take a look at
+     `examples/blog_post_plain.html`.
+   - Also, remember that the HTML form could be placed before the comment
+     display. The ordering is up to you. However, the PHP snippet with the post
+     identifier must come before the comment display.
+   - You have to enter the comment directory manually in `add_comments.php`,
+     because this PHP script will be part of blog posts that might be spread
+     around in your directory hierarchy. I think it is easiest to enter it
+     manually once and for all instead of tracing the relative position of
+     `settings.php`.
+   - The idea is that you include the snippet, the script and the form using a
+     static blog generator like Jekyll (check `examples/blog_post_jekyll.html`).
+     However, they can of course be entered manually, or semi-manually with a
+     template. It all depends on how you run your non-WordPress blog.
 5. As above.
 
+## Optional features
 
-Jekyll?
-Master comment file?
-Feeds?
+### Master comment file
+
+The comments will be saved in text sidefiles. Every blog gets its own
+comment file on the arrival of the first comment (so there will be no empty comment files
+spamming your server). However, you may also wish, in addition, to save each
+comment into a single master file. Why? I had two reasons:
+
+- I wanted to have a kind of backup.
+- I wanted the master comment file to be available in the public directory,
+  because upon every blog update, I had a script that counted the total number
+  of comments and updated this information in a post listing of my blog.
+
+If you wish to activate the master comment file, set the `allComments` setting
+to `true`, and possibly change the filepath under `allCommentsFile`. The
+default location is the public root, but you can put the file wherever you wish.
+
+**You have to create this file yourself (an empty file with the correct name in
+the chosen directory).**
+
+No worries, Comecon will remember to edit the master comment file as well when someone
+edit their comment. But the comments to be displayed will be always read from
+the particular comment files.
+
+### Feeds
+
+Comecon can update Atom feeds on your blog site every time someone leaves a
+comment. There are two kinds of feeds: The master feed containing the newest
+comments only, and feeds with particular comments for separate blog posts. To
+turn these functions on, adjust the `feed` category in the settings, and create
+a directory for the feeds. Obviously, the directory must be public.
+
+Comecon **does not** create the feed files, it only updates them. In `examples`
+you will find the template for the master feed, and the template for a
+particular feed.
+
+In the master feed, only the 10 newest comments will be retained. This number is
+hard-coded, but you can change it easily inside the function `updateFeed` in
+`src/utilities.php`.
+
+**To prepare the master feed**, simply copy the master feed file into the feed
+directory. Then share the link to the master feed with your readers.
+
+**To prepare particular feeds**, you have to create a new particular feed file
+for every new blog post. Give it the correct name
+(`comments-YYYYMMDD-post-title.xml`) and move it into the feed directory. Also,
+remember to add the link to the particular feed within every blog post.
+Otherwise, no one will know about it. :-)
+
 Mail notifications?
-
-
-2. Copy all PHP-files from `private` to a non-public directory on your server.
-This directory could be e.g. `/home/johndoe/data`. You can set the name of the
-directory through `site.dir_with_data`, see below.
-`private`).
-4. Create an empty file called `all_comments.txt` in your assets subdirectory.
-This file could have another name; change `$allCommentsFile` in `settings.php`
-accordingly.
-6. Finally, unpack [PHP Mailer](https://github.com/PHPMailer/PHPMailer) to a
-directory on your server. `$phpMailerDir` from `settings.php` must be pointing
-to that directory. Notice that you only need `src` of PHP Mailer. Take a look at
-the first lines of `email_sending.php` to understand exactly what you need.
-
-Comecon is meant to be used with a static site generator (SSG), specifically
-[Jekyll](https://jekyllrb.com/).  However, it is NOT required that you use
-Jekyll, nor any other SSG for that matter.
-
-**If you do use Jekyll:**
-
-Most of the PHP-scripts are meant to be parsed by Jekyll. This is why they are
-preluded with `layout: null` headers. Within these scripts you will namely find
-Jekyll tags `{{ site.url }}` and `{{ site.dir_with_data }}`. These must be
-defined in the Jekyll config file. `site.url` is obviously your webpage, e.g.
-`https://myblog.com`.  `site.dir_with_data` is the server directory where you
-keep `settings.php` and `vip.php`, e.g. `/home/johndoe/data`.
-
-**If you do not use Jekyll:**
-
-In all PHP-scripts:
-
-* Remove `layout: null` headers together with the delimiting `---`.
-* Replace `{{ site.url }} with your blog URL, e.g. `https://myblog.com`.
-* Replace `{{ site.dir_with_data }} with the server directory where you keep the
-  `vip.php` and `settings.php`, e.g. `/home/johndoe/data`.
 
 
 
