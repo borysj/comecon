@@ -1,18 +1,27 @@
 <?php
 
+// The settings marked with ESSENTIAL must be set, otherwise Comecon won't work.
+// The other settings can be left with their default values for now. However,
+// you have to edit several of them if you want the optional features. Look into
+// README.md for details.
+
 // Server path for your home directory, one level above where your site is.
 // On shared hosting it can be something like /home/johndoe
 // On a VPS it is up to you, but usually you want /var/www
-$homeDir = "";
+// Remember, no trailing slash!
+$homeDir = "";  //ESSENTIAL
+
 // Server path for your site directory. Typically /home/johndoe/public_html on a
 // shared hosting, or /var/www/html on a VPS
-$siteDir = "";
+// Remember, no trailing slash!
+$siteDir = "";  //ESSENTIAL
+
 $settings = [
     "general" => [
         // The name of your blog
         "blogName" => "My Blog",
         // The URL of your blog without the trailing slash
-        "siteURL" => "https://myblog.example.com",
+        "siteURL" => "https://myblog.example.com", //ESSENTIAL
         // Server subpath for your comments directory (preferably non-public)
         "commentsDir" => $homeDir . "/data/comments",
         // Server subpath for your subscribers directory (preferably non-public)
@@ -74,7 +83,9 @@ $settings = [
         "emailSaltA" => "rtald5kss",
         "emailSaltB" => "34arAsrqA",
         // Write here the answer to the captcha question for the comment form
-        "commentCaptcha" => "correct_answer",
+        // The question itself is formulated in the form in
+        // includes/form-submit_comment.html
+        "commentCaptcha" => "correct_answer", //ESSENTIAL
         // Set to true if you want to update comment feeds.
         // There can be two feeds: for the newest comments, and specifically for
         // the given blog post. However, read the manual first!

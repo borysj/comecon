@@ -69,8 +69,10 @@ DETAILS.
    optional feature of email notifications. If you are on shared hosting, you
    should run it locally first, and then copy the Comecon folder (with
    dependencies already installed) to your shared hosting. 
-2. Fill out the essential settings in `comecon/private/settings.php` and add at
-   least yourself and your grandmother to `comecon/private/vip.php`.
+2. Fill out the essential settings in `comecon/private/settings.php`. Ensure
+   that `commentsDir` points to an existing directory (create it). Add at
+   least yourself and your grandmother to `comecon/private/vip.php`, and remove
+   the example users.
 3. In the HTML of every blog post (that you want to connect to Comecon), you have
    to include:
    - the PHP snippet with the post identifier: `<?php $postID="YYYY-MM-DD-post-title" ?>`
@@ -80,7 +82,12 @@ DETAILS.
    HTML form can be placed before the comment display. However, the PHP snippet
    with the post identifier must come before the comment display.
 
-Assuming that your WWW server can process PHP, you are ready to go.
+The idea is that you include the snippet, the script and the form using a static
+blog generator like Jekyll. However, they can of course be entered manually, or
+semi-manually with some template. It all depends on how you run your
+non-WordPress blog.
+
+Assuming that your WWW server can process PHP, you are now ready to go.
 
 Jekyll?
 Master comment file?
