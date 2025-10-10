@@ -306,9 +306,10 @@ function checkVip($userName, $userPassword, $vipNicks)
  * @param string $commenter The name of the commenter
  * @param string $commenterURL The URL of the commenter's website
  * @param string $comment The comment text (may contain HTML tags)
- * @param bool $newestComments If true, update also the global feed with the newest
- * comments. If false, update only the feed with the particular feed for this blog
- * post
+ * @param bool $updateNewest If true, update the global feed with the newest
+ * comments
+ * @param bool $updatePost If true, update the specific comment feed for this
+ * particular blog post
  * @param string $sCommentFeedsDir The filepath to the directory with comment
  * feeds
  *
@@ -325,14 +326,10 @@ function updateFeed(
     $commenter,
     $commenterURL,
     $comment,
-    $newestComments,
+    $sUpdateNewest,
+    $sUpdatePost,
     $sCommentFeedsDir
 ) {
-    $feedFilename = "comments_blogpost" . $dateOfPost . ".xml";
-    $feedFilepath = $sCommentFeedsDir . "/" . $feedFilename;
-    if (!file_exists($feedFilepath)) {
-        return false;
-    }
     $commentAnchor = str_replace(array(" ", "-", ":"), "", $commentTimestamp);
     $commentURLWithAnchor = $postURL . "#" . $commentAnchor;
     $timestamp = strtotime($commentTimestamp);
@@ -342,6 +339,7 @@ function updateFeed(
     $formattedTimestamp = date("c", $timestamp);
     $entryTitle = MSG_COMMENTFEEDENTRYTITLE;
     $commentInContext = MSG_COMMENTINCONTEXT;
+
     $newEntry = <<<ENTRYENDS
     <entry>
     <title>$entryTitle $postTitle</title>
@@ -355,21 +353,8 @@ function updateFeed(
     </entry>
     </feed>
     ENTRYENDS;
-    $feedContent = file_get_contents($feedFilepath);
-    if (!$feedContent) {
-        return false;
-    }
-    // We use regex to change the <updated>-tag of the feed with the date of the
-    // update (which is the timestamp of the comment just added)
-    $feedContent = preg_replace('/^\s*<updated>.*$/m', "<updated>$formattedTimestamp</updated>", $feedContent, 1);
-    if ($feedContent === null) {
-        return false;
-    }
-    // We replace the closing tag of the feed with the new item
-    $feedContent = str_replace("</feed>", $newEntry, $feedContent);
-    file_put_contents($feedFilepath, $feedContent);
-    // We will possibly also update the global feed with the newest comments
-    if ($newestComments) {
+
+    if ($sUpdateNewest) {
         $feedFilepath = $sCommentFeedsDir . "/comments_newest.xml";
         if (!file_exists($feedFilepath)) {
             return false;
@@ -393,6 +378,28 @@ function updateFeed(
         $feedContent = str_replace("</feed>", $newEntry, $feedContent);
         file_put_contents($feedFilepath, $feedContent);
     }
+
+    if ($sUpdatePost) {
+        $feedFilename = "comments_blogpost" . $dateOfPost . ".xml";
+        $feedFilepath = $sCommentFeedsDir . "/" . $feedFilename;
+        if (!file_exists($feedFilepath)) {
+            return false;
+        }
+        $feedContent = file_get_contents($feedFilepath);
+        if (!$feedContent) {
+            return false;
+        }
+        // We use regex to change the <updated>-tag of the feed with the date of the
+        // update (which is the timestamp of the comment just added)
+        $feedContent = preg_replace('/^\s*<updated>.*$/m', "<updated>$formattedTimestamp</updated>", $feedContent, 1);
+        if ($feedContent === null) {
+            return false;
+        }
+        // We replace the closing tag of the feed with the new item
+        $feedContent = str_replace("</feed>", $newEntry, $feedContent);
+        file_put_contents($feedFilepath, $feedContent);
+    }
+
     return true;
 }
 

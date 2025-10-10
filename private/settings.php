@@ -76,12 +76,13 @@ $settings = [
         // Write here the answer to the captcha question for the comment form
         "commentCaptcha" => "correct_answer",
         // Set to true if you want to update comment feeds.
-        // However, read the manual first:
-        // You will need a feed file for the newest comments,
-        // and a separate feed file for each blog post.
-        // Comecon does NOT create this files, you have to create them when you
-        // generate and update the blog
-        "updateFeed" => false,
+        // There can be two feeds: for the newest comments, and specifically for
+        // the given blog post. However, read the manual first!
+        // These feeds must be around already. Comecon DOES not create them.
+        // The idea is that a new particular feed will be created empty when the
+        // blog is updated with a new blog post
+        "updateFeedNewest" => false,
+        "updateFeedPost" => false,
     ],
     "edit" => [
         // Use any short random string of characters.

@@ -173,9 +173,8 @@ if (file_put_contents($fullFilePath, $commentLineWithEmail, FILE_APPEND | LOCK_E
     unset($_POST);
     // First, send the user back to their comment...
     header("Location: {$settings['general']['siteURL']}{$filePath}index.php#lastComment");
-    // ...and update the comment feeds in the background (from the user's
-    // perspective).
-    if ($settings['save']['updateFeed']) {
+    // ...and update the comment feeds in the background...
+    if ($settings['save']['updateFeedNewest'] || $settings['save']['updateFeedPost']) {
         updateFeed(
             $year . $month . $day,
             $title,
@@ -184,11 +183,13 @@ if (file_put_contents($fullFilePath, $commentLineWithEmail, FILE_APPEND | LOCK_E
             $userName,
             $userURL,
             $userComment,
-            true,
+            $settings['save']['updateFeedNewest'],
+            $settings['save']['updateFeedPost'],
             $settings['general']['commentFeedsDir']
         );
     }
-    // Notify the email subscribers about the new comment
+    // ...and notify the email subscribers about the new comment
+    // (at least the blog owner will be notified)
     sendNotifications(
         $year,
         $month,
