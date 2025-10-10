@@ -28,34 +28,10 @@ $settings = [
         "subscribersDir" => $homeDir . "/data/subscribers",
         // File with emails that are notified about new blog posts
         "subscribersFile" => "subscribers.txt",
-        // Server subpath for the directory with comment feeds
-        "commentFeedsDir" => $homeDir . "/html/commfeeds",
         // Language of the blog, for lang attribute of html in edit_comment.php
         "language" => "en",
         // Message file in proper language
         "messages" => "messages_en.php",
-    ],
-    "email" => [
-        // Set to true if you want to notify subscribers about new comments by
-        // email. If it is set to false, but the ownerPrivateMail below is
-        // filled out, you will nonetheless receive automatic notifications (and
-        // only you)
-        "notify" => false,
-        // Email server parameters for sending notifications
-        "mailNotificationsHost" => "smtp.myblog.com",
-        "mailNotificationsUsername" => "notifications@myblog.com",
-        "mailNotificationsPassword" => "myemailpassword_unhashed",
-        // Comment notifications reach you automatically through this email.
-        // Set the string to null or empty if you do not want to receive them
-        "ownerPrivateMail" => "owner@mail.com",
-        // ...but this is the official contact email for your blog
-        "blogContactMail" => "contact@myblog.com",
-        // When subscribing to the blog posts by email, the user has to add this captcha
-        // at the end of his email address.
-        "captchaEmail" => "847",
-        // Use this command to calculate hash:
-        // php -r "echo(hash('sha256', 'unhashed_password'));"
-        "notificationPassword" => "hashed_password_for_sending_notifications",
     ],
     "save" => [
         // If you want to change the time zone and the timestamp format,
@@ -86,6 +62,8 @@ $settings = [
         // The question itself is formulated in the form in
         // includes/form-submit_comment.html
         "commentCaptcha" => "correct_answer", //ESSENTIAL
+    ],
+    "feed" => [
         // Set to true if you want to update comment feeds.
         // There can be two feeds: for the newest comments, and specifically for
         // the given blog post. However, read the manual first!
@@ -94,6 +72,8 @@ $settings = [
         // blog is updated with a new blog post
         "updateFeedNewest" => false,
         "updateFeedPost" => false,
+        // Server subpath for the directory with comment feeds
+        "commentFeedsDir" => $homeDir . "/html/commfeeds",
     ],
     "edit" => [
         // Use any short random string of characters.
@@ -106,6 +86,28 @@ $settings = [
         // 25 minutes is the real deadline; but the user will be informed that they have
         // only 20 to give them some extra margin.
         "commentEditTimeout" => 25 * 60,
+    ],
+    "email" => [
+        // Set to true if you want to notify subscribers about new comments by
+        // email. If it is set to false, but the ownerPrivateMail below is
+        // filled out, you will nonetheless receive automatic notifications (and
+        // only you)
+        "notify" => false,
+        // Email server parameters for sending notifications
+        "mailNotificationsHost" => "smtp.myblog.com",
+        "mailNotificationsUsername" => "notifications@myblog.com",
+        "mailNotificationsPassword" => "myemailpassword_unhashed",
+        // Comment notifications reach you automatically through this email.
+        // Set the string to null or empty if you do not want to receive them
+        "ownerPrivateMail" => "owner@mail.com",
+        // ...but this is the official contact email for your blog
+        "blogContactMail" => "contact@myblog.com",
+        // When subscribing to the blog posts by email, the user has to add this captcha
+        // at the end of his email address.
+        "captchaEmail" => "847",
+        // Use this command to calculate hash:
+        // php -r "echo(hash('sha256', 'unhashed_password'));"
+        "notificationPassword" => "hashed_password_for_sending_notifications",
     ],
     "search" => [
         // Server subpath (public) for where you keep searchable blog posts.
