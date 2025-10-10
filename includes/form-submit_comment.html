@@ -3,7 +3,9 @@
 <form name="commentForm" action="/comecon.php?action=save" method="POST" onsubmit="submitButton.disabled = true; return true;">
 <fieldset>
 <legend align="left">C O M E C O N</legend>
-<input type="hidden" id="url" name="url">
+<input type="hidden" id="postID" name="postID" value="">
+<input type="hidden" id="postURL" name="postURL" value="">
+<input type="hidden" id="postFullTitle" name="postFullTitle" value="">
 
 <label for="comment">Leave your opinion (max. 4000 characters):</label>
 <textarea id="comment" name="comment" maxlength="3900"
@@ -45,11 +47,3 @@ placeholder="####">
 </fieldset>
 </form>
 </div>
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-        var urlField = document.getElementById("url");
-        var currentURL = window.location.href;
-        urlField.value = currentURL;
-        });
-</script>
