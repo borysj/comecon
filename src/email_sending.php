@@ -60,7 +60,8 @@ function createMail($newBlogPost, $fullTitle, $sEmail, $sBlogName)
  * @param array<mixed> $sGeneral General settings (the blog URL, the blog name,
  * the filepath for the blog subscribers, the directory with the comment subscribers)
  * @param array<string> $sEmail Email settings (host, username, password, contact/reply-to email,
- * owner's private email for receiving a copy of notification)
+ * owner's private email for receiving a copy of notification, whether we are
+ * sending notifications to subscribers at all)
  * @return void
  */
 function sendNotifications(
@@ -143,7 +144,9 @@ function sendNotifications(
         }
     }
 
-    if (!file_exists($path)) {
+    // If there is no subscription file for this particular post, or if the
+    // notify-settings is false, we do not send notifications
+    if (!file_exists($path) || !$sEmail('notify']) {
         return false;
     }
     $subscribers = fopen($path, "r");

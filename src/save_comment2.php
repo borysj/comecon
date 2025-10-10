@@ -200,7 +200,7 @@ if (file_put_contents($fullFilePath, $commentLineWithEmail, FILE_APPEND | LOCK_E
         $userComment,
         $postFullTitle,
         $settings['general'],
-        $settings['email']
+        $settings['email'],
     );
 } else {
     unset($_POST);

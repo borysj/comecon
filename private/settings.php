@@ -27,6 +27,11 @@ $settings = [
         "messages" => "messages_en.php",
     ],
     "email" => [
+        // Set to true if you want to notify subscribers about new comments by
+        // email. If it is set to false, but the ownerPrivateMail below is
+        // filled out, you will nonetheless receive automatic notifications (and
+        // only you)
+        "notify" => false,
         // Email server parameters for sending notifications
         "mailNotificationsHost" => "smtp.myblog.com",
         "mailNotificationsUsername" => "notifications@myblog.com",
