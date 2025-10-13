@@ -32,6 +32,7 @@ function prepareString($string, $length, $breaklines, $markdown, $http)
         $string = preg_replace('/\[(.*?)\]\((https?:\/\/)?(.*?)\)/', '<a href="http://$3">$1</a>', $string) ?? $string;
         $string = preg_replace('/\*\*(.*?)\*\*/', '<b>$1</b>', $string) ?? $string;
         $string = preg_replace('/\*(.*?)\*/', '<i>$1</i>', $string) ?? $string;
+        $string = preg_replace('/_(.*?)_/', '<i>$1</i>', $string) ?? $string;
     }
     if ($http && stripos($string, "http") !== 0) {
         $string = "http://" . $string;
