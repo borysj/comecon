@@ -6,7 +6,7 @@ $subsFilePath = $settings['general']['subscribersDir'] . "/" . $settings['genera
 // The captcha is a three characters long "secret code" at the end of the
 // email, therefore -3.
 if (substr($userEmail, -3) !== $settings['email']['captchaEmail']) {
-    exit(EXITMSG_BADCAPTCHA);
+    exit(EXITMSG_BADCAPTCHA . " ::: " . __FILE__ . ":" . __LINE__);
 } else {
     $userEmail = substr($userEmail, 0, -3);
 }
@@ -18,7 +18,7 @@ if (substr($userEmail, -3) !== $settings['email']['captchaEmail']) {
 if (filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
     $fileContents = file_get_contents($subsFilePath);
     if (!$fileContents) {
-        exit(EXITMSG_FILEUNREADABLE);
+        exit(EXITMSG_FILEUNREADABLE . " ::: " . __FILE__ . ":" . __LINE__);
     }
     if (stripos($fileContents, $userEmail) === false) {
         $password = mt_rand(1000000, 9999999);

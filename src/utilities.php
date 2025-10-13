@@ -49,12 +49,12 @@ function prepareString($string, $length, $breaklines, $markdown, $http)
 function validate_request($expectedMethod, $requiredKeys)
 {
     if ($_SERVER['REQUEST_METHOD'] !== $expectedMethod) {
-        exit(EXITMSG_WRONGREQUESTMETHOD);
+        exit(EXITMSG_WRONGREQUESTMETHOD . " ::: " . __FILE__ . ":" . __LINE__);
     }
     $requestData = ($expectedMethod === 'POST') ? $_POST : $_GET;
     foreach ($requiredKeys as $key) {
         if (!isset($requestData[$key]) || !is_string($requestData[$key])) {
-            exit(EXITMSG_KEYISWRONG);
+            exit(EXITMSG_KEYISWRONG . " ::: " . __FILE__ . ":" . __LINE__);
         }
     }
 }

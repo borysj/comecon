@@ -79,19 +79,19 @@ function sendNotifications(
 ) {
     // Validate parameters
     if ($commentTimestamp === "") {
-        exit(EXITMSG_NOTIFICATIONERROR);
+        exit(EXITMSG_NOTIFICATIONERROR . " ::: " . __FILE__ . ":" . __LINE__);
     }
     if (!preg_match('/^\d{4}$/', $year)) {
-        exit(EXITMSG_NOTIFICATIONERROR);
+        exit(EXITMSG_NOTIFICATIONERROR . " ::: " . __FILE__ . ":" . __LINE__);
     }
     if (!preg_match('/^\d{2}$/', $month)) {
-        exit(EXITMSG_NOTIFICATIONERROR);
+        exit(EXITMSG_NOTIFICATIONERROR . " ::: " . __FILE__ . ":" . __LINE__);
     }
     if (!preg_match('/^\d{2}$/', $day)) {
-        exit(EXITMSG_NOTIFICATIONERROR);
+        exit(EXITMSG_NOTIFICATIONERROR . " ::: " . __FILE__ . ":" . __LINE__);
     }
     if (!preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $title)) {
-        exit(EXITMSG_NOTIFICATIONERROR);
+        exit(EXITMSG_NOTIFICATIONERROR . " ::: " . __FILE__ . ":" . __LINE__);
     }
 
     // Create a link to the blog post (possibly to the specific comment),
@@ -99,7 +99,7 @@ function sendNotifications(
     $link = $sGeneral['siteURL'] . "/" . $year . "/" . $month . "/" . $day . "/" . $title;
     if ($commentTimestamp !== null) {
         if ($userName === null || $userName === "" && $userComment === null || $userComment === "") {
-        exit(EXITMSG_NOTIFICATIONERROR);
+        exit(EXITMSG_NOTIFICATIONERROR . " ::: " . __FILE__ . ":" . __LINE__);
         } else {
             $commentTimestamp = str_replace(array(" ", "-", ":"), "", $commentTimestamp);
             $link = $link . "/index.php#" . $commentTimestamp;

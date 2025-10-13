@@ -28,7 +28,7 @@ function searchThroughFiles($searchDir, $searchString, $pattern, $trailingChars)
                 if (is_file($filePath)) {
                     $fileContent = file_get_contents($filePath);
                     if (!$fileContent) {
-                        exit(EXITMSG_FILEUNREADABLE);
+                        exit(EXITMSG_FILEUNREADABLE . " ::: " . __FILE__ . ":" . __LINE__);
                     }
                     // Look for the phrase in the file
                     if (stripos($fileContent, $searchString) !== false) {
@@ -65,11 +65,11 @@ function saveSearchString($searchString, $sTimezone, $sTimestamp, $sRecord)
 }
 
 if (!is_string($_POST["searchPhrase"])) {
-    exit(EXITMSG_NOTSTRING);
+    exit(EXITMSG_NOTSTRING . " ::: " . __FILE__ . ":" . __LINE__);
 }
 $searchString = htmlspecialchars($_POST["searchPhrase"], ENT_QUOTES);
 if (empty($searchString)) {
-    exit(EXITMSG_NOSEARCHPHRASE);
+    exit(EXITMSG_NOSEARCHPHRASE . " ::: " . __FILE__ . ":" . __LINE__);
 }
 
 // If the search string starts with "123", ignore it and do not save the search
@@ -82,7 +82,7 @@ if (str_starts_with($searchString, '123')) {
     $searchString = substr($searchString, '  ');
     $saveQuery = true;
 } else {
-    exit(EXITMSG_BADCAPTCHA);
+    exit(EXITMSG_BADCAPTCHA . " ::: " . __FILE__ . ":" . __LINE__);
 }
 
 if ($saveQuery) {

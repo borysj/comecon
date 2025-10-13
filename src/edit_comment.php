@@ -26,9 +26,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
         header("Location: {$settings['general']['siteURL']}{$commentElements[0]}index.php");
     } else {
-        exit(EXITMSG_TOOLATETOEDITCOMMENT);
+        exit(EXITMSG_TOOLATETOEDITCOMMENT . " ::: " . __FILE__ . ":" . __LINE__);
     }
-    exit(0);
+    exit(0 . " ::: " . __FILE__ . ":" . __LINE__);
 }
 
 // Check if the admin is accessing. The POST key for the admin password is 'p'.
@@ -52,11 +52,11 @@ if ($commentLine) {
     $commentElements = explode("<|>", $commentLine);
     $comment = HTML2markdown($commentElements[5]);
 } else {
-    exit(EXITMSG_WRONGCOMMENTID);
+    exit(EXITMSG_WRONGCOMMENTID . " ::: " . __FILE__ . ":" . __LINE__);
 }
 // If it is too late to edit (and the editor is not an admin), abort
 if (!earlyEnoughToEdit($commentElements[1]) && !$adminAccess) {
-    exit(EXITMSG_TOOLATETOEDITCOMMENT);
+    exit(EXITMSG_TOOLATETOEDITCOMMENT . " ::: " . __FILE__ . ":" . __LINE__);
 }
 
 ?>

@@ -7,7 +7,7 @@ if (file_exists($filePath)) {
     // registered, so there is no point in proceeding. If false, there is some
     // error, because the file is unreadable.
     if ($lines) {
-        exit(EXITMSG_FILEUNREADABLE);
+        exit(EXITMSG_FILEUNREADABLE . " ::: " . __FILE__ . ":" . __LINE__);
     }
 
     $foundUser = false;
@@ -40,13 +40,13 @@ if (file_exists($filePath)) {
         echo $user . EXITMSG_REMOVEDSUBSCRIBER . $what;
     } elseif ($foundUser) {
         // User was found, but password was wrong
-        exit(EXITMSG_CANNOTREMOVESUBSCRIBER . $user);
+        exit(EXITMSG_CANNOTREMOVESUBSCRIBER . $user . " ::: " . __FILE__ . ":" . __LINE__);
     } else {
         // User was not found in the file
-        exit(EXITMSG_EMAILNOTFOUND);
+        exit(EXITMSG_EMAILNOTFOUND . " ::: " . __FILE__ . ":" . __LINE__);
     }
 } else {
-    exit(EXITMSG_SUBSCRIBERLISTNOTFOUND);
+    exit(EXITMSG_SUBSCRIBERLISTNOTFOUND . " ::: " . __FILE__ . ":" . __LINE__);
 }
 // Delete the particular subscription file if this was the only email
 if (file_exists($filePath) && filesize($filePath) === 0 && $what !== $settings['general']['subscribersFile']) {

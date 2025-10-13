@@ -4,7 +4,7 @@
 // $commentDir =
 $postURI = $_SERVER["REQUEST_URI"];
 if (!is_string($postURI)) {
-    exit("The post URL is unreadable");
+    exit("The post URL is unreadable" . " ::: " . __FILE__ . ":" . __LINE__);
 }
 if (str_contains($postURI, "index.php")) {
     $a = -10;
@@ -24,7 +24,7 @@ if (file_exists($commentFilePath)) {
     <?php
     $fileContents = file_get_contents($commentFilepath);
     if (!is_string($fileContents)) {
-        exit("The comment file is unreadable");
+        exit("The comment file is unreadable" . " ::: " . __FILE__ . ":" . __LINE__);
     }
     $comments = explode(PHP_EOL, $fileContents);
     foreach ($comments as $key => $c) {
@@ -59,7 +59,7 @@ if (file_exists($commentFilePath)) {
                     $day = $matches[3];
                     $title = $matches[4];
                 } else {
-                    exit("I cannot parse the URL");
+                    exit("I cannot parse the URL" . " ::: " . __FILE__ . ":" . __LINE__);
                 }
                 $dateDashed = $year . "-" . $month . "-" . $day;
                 ?>

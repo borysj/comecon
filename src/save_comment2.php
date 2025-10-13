@@ -7,7 +7,7 @@ if (!empty($userPassword)) {
     if ($vipInfo[0]) {
         $userRank = $vipInfo[1];
     } else {
-        exit(EXITMSG_WRONGPASSWORD);
+        exit(EXITMSG_WRONGPASSWORD . " ::: " . __FILE__ . ":" . __LINE__);
     }
 } else {
     $vipInfo = [false, 0, "", "", 0];
@@ -17,7 +17,7 @@ if (!empty($userPassword)) {
 $captcha = trim(htmlspecialchars($_POST["captcha"], ENT_QUOTES));
 if (!$vipInfo[0]) {
     if ($captcha !== $settings['save']['commentCaptcha']) {
-        exit(EXITMSG_BADCOMMENTCAPTCHA);
+        exit(EXITMSG_BADCOMMENTCAPTCHA . " ::: " . __FILE__ . ":" . __LINE__);
     }
 }
 
@@ -111,7 +111,7 @@ if (preg_match($pattern, $postURL, $matches)) {
     $day = $matches[3];
     $title = $matches[4];
 } else {
-    exit(EXITMSG_ERRORURL);
+    exit(EXITMSG_ERRORURL . " ::: " . __FILE__ . ":" . __LINE__);
 }
 $postFullTitle = getPostFullTitle($postURL);
 
@@ -132,7 +132,7 @@ $fullFilePath = $settings['general']['commentsDir'] . "/" .
     $year . "-" . $month . "-" . $day . "-" . $title . '-COMMENTS.txt';
 
 if (checkIfDuplicate($fullFilePath, $userComment)) {
-    exit(EXITMSG_DUPLICATE);
+    exit(EXITMSG_DUPLICATE . " ::: " . __FILE__ . ":" . __LINE__);
 }
 
 createNonexistentFile($fullFilePath);
@@ -146,7 +146,7 @@ if (!empty($userEmail) && $wantsEmails == 1) {
         createNonexistentFile($subsFilePath);
         $fileContents = file_get_contents($subsFilePath);
         if (!$fileContents) {
-            exit(EXITMSG_FILEUNREADABLE);
+            exit(EXITMSG_FILEUNREADABLE . " ::: " . __FILE__ . ":" . __LINE__);
         }
         // If the email is not already in the subscribers file, add it
         // together with the password (used for unsubscribing)
@@ -205,5 +205,5 @@ if (file_put_contents($fullFilePath, $commentLineWithEmail, FILE_APPEND | LOCK_E
     );
 } else {
     unset($_POST);
-    exit(EXITMSG_ERRORSAVINGCOMMENT);
+    exit(EXITMSG_ERRORSAVINGCOMMENT . " ::: " . __FILE__ . ":" . __LINE__);
 }
