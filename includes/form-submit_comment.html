@@ -3,14 +3,13 @@
 <form name="commentForm" action="/comecon.php?action=save" method="POST" onsubmit="submitButton.disabled = true; return true;">
 <fieldset>
 <legend align="left">C O M E C O N</legend>
-<input type="hidden" id="postID" name="postID" value="">
 <input type="hidden" id="postURL" name="postURL" value="">
 <input type="hidden" id="postFullTitle" name="postFullTitle" value="">
 
 <label for="comment">Leave your opinion (max. 4000 characters):</label>
 <textarea id="comment" name="comment" maxlength="3900"
  placeholder="Add links like that: [Example](www.example.com).
-You can also use **bold** or *italics*.
+You can also use **bold** or *italics* (this also works for _italics_).
 You can mark code and filenames `like this`.
 Use paragraphs, newlines and blank lines will be preserved.
 If your cookies are on, you will be able to edit your comment."
@@ -20,8 +19,10 @@ If your cookies are on, you will be able to edit your comment."
 <label for="name">Signature:</label>
 <input id="name" name="name" required>
 
+<!--
 <label for="password">Password (if you have <a href="/registration.html">registered</a>):</label>
 <input id="password" name="password" type="password">
+-->
 
 <label for="webpage">Your webpage:</label>
 <input id="webpage" name="webpage"

@@ -1,0 +1,52 @@
+<p><br><br></p>
+<div class="commentFormCSS" style="text-align: center;">
+<form name="commentForm" action="/comecon.php?action=save" method="POST" onsubmit="submitButton.disabled = true; return true;">
+<fieldset>
+<legend align="left">C O M E C O N</legend>
+<input type="hidden" id="postURL" name="postURL" value="">
+<input type="hidden" id="postFullTitle" name="postFullTitle" value="">
+
+<label for="comment">Zostaw swój komentarz (maks. 4000 znaków):</label>
+<textarea id="comment" name="comment" maxlength="3900"
+ placeholder="Dodawaj linki tak: [Przykład](www.example.com).
+Możesz też używać **pogrubienia** oraz *kursywy* (to też jest _kursywa_).
+Kod i nazwy plików możesz wyróżniać `w ten sposób`.
+Możesz dzielić komentarz na akapity. Nowe i puste wiersze będą zachowane.
+Jeżeli masz włączone ciasteczka, będziesz mógł edytować komentarz po publikacji."
+ required>
+</textarea>
+
+<label for="name">Podpis:</label>
+<input id="name" name="name" required>
+
+<!--
+<label for="password">Hasło (jeśli się zarejestrowałeś):</label>
+<input id="password" name="password" type="password">
+-->
+
+<label for="webpage">Twoja witryna:</label>
+<input id="webpage" name="webpage"
+ placeholder="Możesz pominąć początkowe http(s):// w adresie">
+
+<label for="email">Twój email (dla <a href="https://gravatar.com">grawatara</a> i ewentualnych powiadomień mailowych):</label>
+<input id="email" name="email" type="email"
+ placeholder="Możesz zostawić puste" >
+
+<!--
+<label for="email2">
+    <input id="email-comments" name="email-comments" type="checkbox">
+    Odhacz, jeżeli chcesz subskrybować mailem komentarze do tego wpisu
+</label>
+-->
+
+<label for="captcha">
+   Biedna kapcza: <br>Jkś łtawe, ale zmsaokwane ptynie?<br><br>
+</label>
+
+<input id="captcha" name="captcha"
+placeholder="">
+
+<input type="submit" name="submitButton" value="Wyślij">
+</fieldset>
+</form>
+</div>

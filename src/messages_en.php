@@ -8,7 +8,7 @@ define('EXITMSG_ERRORURL', "An error occurred while reading the address of the p
 define('EXITMSG_DUPLICATE', "This comment is a duplicate.<br>Probably you have clicked
         a button several times too quickly<br>or tried to refresh a webpage right after adding it.");
 define('EXITMSG_ERRORSAVINGCOMMENT', "An error occurred while saving your comment.<br>
-        Go back and try again.<br>If the error persists, please send a message to
+        Go back to the comment form and try again.<br>If the error persists, please send a message to
         {$settings['email']['blogContactMail']}");
 define('EXITMSG_ERRORRUNNINGCOMMENTSCRIPT', "An error occurred while activating the comment script.<br>
         Go back to the comment form and try again.<br>If the error persists, please send
