@@ -299,8 +299,29 @@ If you want to translate Comecon to your language you must:
 
 Notice that the Polish translation is already provided in `lang/pl`.
 
+# FAQ
+
+**Why Comecon?**
+
+**Why no database?**
+
+**Vibe-coded?**
+
+**Requirements?**
+
+**Shared hosting, everything must be public**
+
+**Tests**
+
+**Complicated deployment?**
+
+**Hidden fields?**
+
+
+
 # POSSIBLE IMPROVEMENTS
 
+* captcha
 * `vip.php` is currently updated manually by the webmaster. However, it could be
 done through a form and with a script.
 * `save_comment.php` should probably be refactored. There is some redundancy
@@ -316,6 +337,7 @@ guess.
 with fake comments if someone is up for pranks. A more diverse captcha should be
 designed or integrated into the system.
 
+# CONTRIBUTING
 
 
 # LICENCE
