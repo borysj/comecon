@@ -106,7 +106,7 @@ Assuming that your WWW server can process PHP, you are now ready to go.
 6. As above.
 7. A few remarks:
    - If you are unsure how to insert these three elements, take a look at
-     `examples/blog_post_plain.html`.
+     `examples/blog_post_plain.php`.
    - Also, remember that the HTML form could be placed before the comment
      display. The ordering is up to you. However, the PHP snippet with the post
      identifier must come before the comment display.
