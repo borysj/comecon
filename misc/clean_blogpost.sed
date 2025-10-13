@@ -41,3 +41,5 @@ s|\" %}$||
 /^{% highlight/,/{% endhighlight %}/d
 # Remove multiple spaces
 s|[ ]\+| |g
+# Merge paragraphs into single lines, but keep blank lines
+:a;N;$!ba;s|\n\([^\n]\)| \1|g
