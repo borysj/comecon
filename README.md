@@ -11,7 +11,7 @@ following the instructions in [Deployment](#deployment). The entry point is
 
 Furthermore, Comecon does not use any database.  There is no MySQL involved.
 The comments are written to and read from flat files (TXT with custom delimiter
-<|>). This weird design decision is explained below in [FAQ](#faq-sql).
+<|>). This weird design decision is explained below in [FAQ](#faq-db).
 
 Comecon has **not** been optimized for a large commenting traffic to the website.
 It probably will stutter lot if you are a hot blogger receiving multiple
@@ -24,17 +24,20 @@ been tested thoroughly, but not stress-tested.
 
 Comecon requires that you insert a permalink identifier into the HTML body of
 every blog post, something like `/YYYY/MM/DD/post-title` or
-`/this-is-a-blog-post.php`. Everything is explained and below.
+`/this-is-a-blog-post.php`. How and why is explained below.
 
 [Features](#features)  
 [Deployment: Short version](#deployment)  
 [Deployment: Some details](#basic-functionality-some-details)  
-[Bonus features](#bonus-features)  
+[Bonus scripts](#bonus-scripts)  
 [Other language support](#other-language-support)  
 [FAQ](#faq)  
 [Possible improvements](#possible-improvements)  
 [Contributing](#contributing)  
-[Licence](#licence)  
+[Licence](#licence)
+
+For an even more detailed description, see
+[DETAILS.md](https://github.com/borysj/comecon/blob/main/DETAILS.md).
 
 # Features
 
@@ -42,15 +45,13 @@ Comecon:
 
 - adds comments to your blog posts through an HTML form;
 - displays the comments under the blog post;
-- lets the commenter attach a link (presumably to their website) to their
-  nickname;
+- lets the commenter attach a link to their nickname;
 - lets the commenter edit or delete their comment within predefined time after
   submitting;
 - lets the commenter register their nickname in order to simplify the comment
   submission and "upgrade" the color of the nick;
 - is integrated with [Gravatar](https://gravatar.com);
-- has a basic captcha to stop spam bots trying their luck randomly in input
-  fields;
+- has a basic captcha to stop spam bots trying their luck in input fields;
 - has an email notification system;
 - updates comment feeds (in
   [Atom](https://en.wikipedia.org/wiki/Atom_(web_standard)) format; this is
@@ -64,9 +65,7 @@ you might want them for your blog. At least I wanted them for mine:
 - random post selector;
 - random quote generator.
 
-
-
-# DEPLOYMENT
+# Deployment
 
 These are instructions for deploying the core part of Comecon. 
 
@@ -143,9 +142,9 @@ Assuming that your WWW server can process PHP, you are now ready to go.
    level (out of the website root) and then descend into the (private) Comecon
    directory.
 
-## Optional features
+# Optional features
 
-### Master comment file
+## Master comment file
 
 The comments will be saved in text sidefiles. Every blog gets its own
 comment file on the arrival of the first comment (so there will be no empty comment files
@@ -168,7 +167,7 @@ No worries, Comecon will remember to edit the master comment file as well when s
 edit their comment. But the comments to be displayed will be always read from
 the particular comment files.
 
-### Feeds
+## Feeds
 
 Comecon can update Atom feeds on your blog site every time someone leaves a
 comment. There are two kinds of feeds: The master feed containing the newest
@@ -193,7 +192,7 @@ for every new blog post. Give it the correct name
 remember to add the link to the particular feed within every blog post.
 Otherwise, no one will know about it. :-)
 
-### Mail notifications: New blog posts
+## Mail notifications: New blog posts
 
 If you suspect that some of your readers are unfamiliar with RSS/Atom, you may
 want to turn on email notifications about new blog posts.
@@ -212,7 +211,7 @@ want to turn on email notifications about new blog posts.
 The subscribers will receive an email notification about each new blog post you
 publish. There will be an unsubscribe link in the email.
 
-### Mail notifications: New comments
+## Mail notifications: New comments
 
 If you suspect that some of your readers are unfamiliar with RSS/Atom, you may
 want to turn on email notifications about new comments (per blog post).
@@ -226,7 +225,7 @@ Now, if someone subscribes to a blog post by email, a subscriber file with their
 email address will be created. If someone published a new comment under this
 blog post, a notification will be sent to every subscriber.
 
-### Register new users
+## Register new users
 
 You have to manually add new commenters to `private/vip.php`. You can encourage
 your readers to send you a registration mail with the necessary information
@@ -234,6 +233,9 @@ your readers to send you a registration mail with the necessary information
 notifications by email).
 
 # Bonus scripts
+
+The scripts below have nothing to do with commenting, but might be useful for a
+static blog.
 
 ## Search
 
@@ -329,11 +331,14 @@ Notice that the Polish translation is already provided in `lang/pl`.
 
 **Hidden fields?**
 
+**Sed?**
+
 
 
 # Possible improvements
 
 * captcha
+* better search
 * `vip.php` is currently updated manually by the webmaster. However, it could be
 done through a form and with a script.
 * `save_comment.php` should probably be refactored. There is some redundancy
