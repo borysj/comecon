@@ -30,7 +30,7 @@ $settings = [
         "subscribersFile" => "subscribers.txt",
         // Language of the blog, for lang attribute of html in edit_comment.php
         "language" => "en",
-        // Message file in proper language
+        // Message file in your language
         "messages" => "messages_en.php",
     ],
     "save" => [

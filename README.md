@@ -42,7 +42,7 @@ Comecon:
   fields;
 - has an email notification system;
 - updates comment feeds (in
-  [Atom](https://en.wikipedia.org/wiki/Atom_(web_standard) format; this is
+  [Atom](https://en.wikipedia.org/wiki/Atom_(web_standard)) format; this is
   practically the same as RSS).
 
 There are also three bonus scripts that have nothing to do with commenting, but
@@ -57,31 +57,31 @@ you might want them for your blog. At least I wanted them for mine:
 
 # DEPLOYMENT
 
-These are instructions for deploying the core part of Comecon. For information
-about the bonus scripts(search engine, random post selector, and random quote
-generator), see [DETAILS](blob/main/DETAILS.md).
+These are instructions for deploying the core part of Comecon. 
 
 ## Basic functionality: Short version
 
 1. Clone or unzip Comecon into a non-public directory of your website.
-2. Fill out `private/settings.php` and `private/vip.php`.
-3. Create the directory that `commentsDir` from the settings points to.
-4. Set the captcha question in the HTML form
+2. Run `compose installer` to install the
+   [PHPMailer](https://github.com/PHPMailer/PHPMailer) dependency.
+3. Fill out `private/settings.php` and `private/vip.php`.
+4. Create the directory that `commentsDir` from the settings points to.
+5. Add the same directory manually to the top part of
    `includes/form-submit_comment.html`.
-5. In the HTML of every blog post (that you want to connect to Comecon), you
+6. Set the captcha question in the HTML form
+   `includes/form-submit_comment.html`.
+7. In the HTML of every blog post (that you want to connect to Comecon), you
    have to include:
    - a PHP snippet with the post identifier: `<?php $postID="YYYY-MM-DD-post-title" ?>`
    - the PHP script for displaying the comments: `includes/add_comments.php`
-     (remember to set the correct comment directory in the top part of the
-     script)
    - the HTML form for submitting a comment: `includes/form-submit_comment.html`
      which contains three hidden fields:
      - the blog post URL;
      - the blog post identifier;
      - the blog post full title.
-6. The submission form is unstyled, so you might want to add some CSS. See
-   `examples/styles.css`.
-7. If you self-host, link `comecon.php` to the root of your website, like this:
+8. The submission form is unstyled, so you might want to add some new classes to
+   your CSS. See `examples/styles.css`.
+9. If you self-host, link `comecon.php` to the root of your website, like this:
    `ln -s /var/www/comecon/comecon.php /var/www/html/comecon.php`. If you are on
    shared hosting, move `comecon.php` to the root of your website, and adjust
    all file paths from requires and includes.
@@ -93,16 +93,18 @@ Assuming that your WWW server can process PHP, you are now ready to go.
 1. The non-public directory should be something like `/var/www/comecon` if you
    self-host, or something like `/home/username/comecon` on shared hosting. If
    your are on shared hosting and can upload your files to the public HTML directory only,
-   check FAQ. Also, if you want the optional feature of email notifications, I
-   will tell you below to run `composer install`. On shared hosting, you should
-   run this command locally first, and then copy the Comecon folder (with
-   dependencies already installed) to the server.
-2. To begin with, in `private/settings.php` you must fill out only the settings
+   check FAQ. 
+2. On shared hosting you won't be able to install anything with composer. You
+   have to download Comecon first to your local machine, then run `composer install`,
+   and then upload the Comecon folder to your server with the dependency already
+   inside.
+3. To begin with, in `private/settings.php` you must fill out only the settings
    marked as essential. In `private/vip.php`, you should remove the example
    users, and add at least yourself and your grandmother.
-3. As above.
 4. As above.
-5. A few remarks:
+5. As above.
+6. As above.
+7. A few remarks:
    - If you are unsure how to insert these three elements, take a look at
      `examples/blog_post_plain.html`.
    - Also, remember that the HTML form could be placed before the comment
@@ -117,8 +119,8 @@ Assuming that your WWW server can process PHP, you are now ready to go.
      static blog generator like Jekyll (check `examples/blog_post_jekyll.html`).
      However, they can of course be entered manually, or semi-manually with a
      template. It all depends on how you run your non-WordPress blog.
-6. As above.
-7. If you are on shared hosting, you cannot create a symbolic link to the main
+8. As above.
+9. If you are on shared hosting, you cannot create a symbolic link to the main
    script from the website root directory. As this script must be public, you
    will have to move it into the website root (there where you hold `index.html`
    or `index.php` for your website). However, then the main script will get
@@ -185,16 +187,14 @@ Otherwise, no one will know about it. :-)
 If you suspect that some of your readers are unfamiliar with RSS/Atom, you may
 want to turn on email notifications about new blog posts.
 
-1. Run `compose install` in the Comecon folder to install
-   [PHPMailer](https://github.com/PHPMailer/PHPMailer).
-2. Edit the `email` category in the settings. Here, you have to connect your
+1. Edit the `email` category in the settings. Here, you have to connect your
    email account to Comecon. `notify` stays `false`; that one is about about
    sending the comment notifications, not the blog posts notifications.
-3. Create the directory that the `subscribersDir` setting points to.
-4. Make `misc/form-blog_subscription` available for you readers. The form
+2. Create the directory that the `subscribersDir` setting points to.
+3. Make `misc/form-blog_subscription.html` available for you readers. The form
    mentions captcha; you choose it in the `email` category of the settings. You
    have to inform them somehow about "the secret code".
-5. Every time you publish a new blog post, you have to run
+4. Every time you publish a new blog post, you have to run
    `comecon.php?action=notify` manually. See the instruction in
    `src/email_notifications.php`.
 
@@ -206,12 +206,10 @@ publish. There will be an unsubscribe link in the email.
 If you suspect that some of your readers are unfamiliar with RSS/Atom, you may
 want to turn on email notifications about new comments (per blog post).
 
-1. Run `compose install` in the Comecon folder to install
-   [PHPMailer](https://github.com/PHPMailer/PHPMailer).
-2. Edit the `email` category in the settings. Here, you have to connect your
+1. Edit the `email` category in the settings. Here, you have to connect your
    email account to Comecon. `notify` gets `true`.
-3. Create the directory that the `subscribersDir` setting points to.
-4. Uncomment the label for `email2` in `includes/form-submit_comment.html`.
+2. Create the directory that the `subscribersDir` setting points to.
+3. Uncomment the label for `email2` in `includes/form-submit_comment.html`.
 
 Now, if someone subscribes to a blog post by email, a subscriber file with their
 email address will be created. If someone published a new comment under this
@@ -223,3 +221,104 @@ You have to manually add new commenters to `private/vip.php`. You can encourage
 your readers to send you a registration mail with the necessary information
 (nickname, password, website, email, whether they want to receive comment
 notifications by email).
+
+# Bonus scripts
+
+## Search
+
+You can use `misc/search.php` as a crude PHP-only search engine for your blog.
+It asks the server to look ("grep") through all your post and comment files for
+a given phrase. Sounds primitive and slow. Surprisingly enough, it works better
+and faster than the standard WordPress search engine. At least for a website
+where the traffic is reasonably small. 
+
+The search phrase comes from `misc/form-search.html` that you have to insert
+into your blog website. You must upload the search script to the website root.
+If you upload it somewhere else, you will have to edit the script link in the
+search form.
+
+The search script will sanitize the search phrase and look for it in the search
+data directory as defined in `private/settings.php`. 
+
+What is the search data directory? It consists of a "data" file, one such file
+for each of your blog posts. These are simply blog posts without any HTML or
+Markdown tags. If (some of) the tags are still around, it will deteriorate the
+search results because e.g. `**Tolkien** is best` will not give match for
+`Tolkien is best`-search phrase.
+
+If you are familiar with `sed`, you can use `misc/clean_blogpost.sed`
+to remove Markdown tags:  
+`sed -f clean_blogpost.sed blogpost.md > blogpost.txt`
+
+Additionally, you should convert paragraphs into single lines if your
+editor is doing hard wraps. It could be done with `tr`:
+`tr "\n" " " < blogpost.txt`
+
+...but I recommend a cryptic sed command:
+`sed ':a;N;$!ba;s|\n\([^\n]\)| \1|g' blogpost.md > blogpost.txt`
+
+It is superior to `tr`, because `tr` while mash the entire post into a single
+line. The above sed command will respect blank lines which are normally used to
+divide paragraphs in Markdown.
+
+The search script will also look for the search phrase in all comment files
+within the standard comments directory (defined in settings).
+
+Notice that the phrase will be saved to the search queries record (again,
+settings) unless the phrase starts with `123`. this simple "password" can be
+easily changed inside the search script. The rationale is that the site owner
+might want to use the search engine without necessarily saving the query. The
+idea behind saving the phrases is, after all, to provide a record of what the
+**visitors** are looking for.
+
+## Random post selector
+
+The script `misc/random_post.php` redirects to a random blog post. Take a look
+at the first line of the script.  Change it to where the text file with all your
+blog post addresses are (one URL per line). Normally, that text file would be
+updated using the static site generator.
+
+## Random quote generator
+
+Displays a random quote from a file. See the description inside the script.
+
+# LANGUAGE SUPPORT
+
+The text strings displayed by the PHP part of Comecon to the user are all
+gathered as constants in `src/messages_en.php`. A few more strings are in
+`src/email_sending.php`.
+
+If you want to translate Comecon to your language you must:
+
+- translate `messages_en.php` to `messages_xx.php` (the messages beginning with
+  MSG and LABEL are the most important one; EXITMSG are the error messages);
+- change the two language settings in `settings.php`;
+- translate all the strings in `src/email_sending.php`;
+- translate all the forms you use (first and foremost
+  `includes/form-submit_comment.html).
+
+Notice that the Polish translation is already provided in `lang/pl`.
+
+# POSSIBLE IMPROVEMENTS
+
+* `vip.php` is currently updated manually by the webmaster. However, it could be
+done through a form and with a script.
+* `save_comment.php` should probably be refactored. There is some redundancy
+between it and `add_subscriber.php`. Also, `edit_comment.php` contains
+effectively the same function for converting Markdown to HTML as
+`save_comment.php`.
+* My inutition tells me that `email_notification.php` is a bad way of sending
+notifications about new blog posts, since the activation URL is accessible to
+anyone. On the other hand, the whole idea is to make the notification system
+simple; and as long as it is protected by password, it should work fine... I
+guess.
+* Captcha consists of one question only, so it is very easy to flood Comecon
+with fake comments if someone is up for pranks. A more diverse captcha should be
+designed or integrated into the system.
+
+
+
+# LICENCE
+
+CC BY-NC-SA 2024, Borys Jagielski
+https://blogrys.pl
