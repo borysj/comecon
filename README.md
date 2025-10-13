@@ -6,26 +6,37 @@ display comments.
 
 Comecon is **not** a WordPress-plugin nor any other kind of plugin. It is a
 collection of PHP scripts that you must set up and upload to your webpage server
-following the instructions in DEPLOYMENT. The entry point is `comecon.php`.
+following the instructions in [Deployment](#deployment). The entry point is
+`comecon.php`.
 
 Furthermore, Comecon does not use any database.  There is no MySQL involved.
 The comments are written to and read from flat files (TXT with custom delimiter
-<|>). This weird design decision is explained below in FAQ.
+<|>). This weird design decision is explained below in [FAQ](#faq-sql).
 
-Comecon has not been optimized for a large (commenting) traffic to the website.
-It probably will stuttering lot if you are a hot blogger receiving multiple
-comment submissions simultaneously across your blog. However, Comecon works
-*very* quickly and reliably if comments are reasonably sparse. I guess you won't
-experience any problems unless there are more than one comment per five seconds.
-But that number is my intuition only; Comecon has been tested thoroughly, but
-not stress-tested.
+Comecon has **not** been optimized for a large commenting traffic to the website.
+It probably will stutter lot if you are a hot blogger receiving multiple
+comment submissions simultaneously across your blog.
 
-Comecon requires an identifier in the HTML body of every blog post:
-`YYYY-MM-DD-post-title`. As you can see, you cannot have two posts with the same
-title on the same day. Microbloggers beware.
+However, Comecon works **very** quickly and reliably if comments are reasonably
+sparse. I guess you won't experience any problems unless there are more than one
+comment per five seconds.  But that number is my intuition only; Comecon has
+been tested thoroughly, but not stress-tested.
 
+Comecon requires that you insert a permalink identifier into the HTML body of
+every blog post, something like `/YYYY/MM/DD/post-title` or
+`/this-is-a-blog-post.php`. Everything is explained and below.
 
-# FEATURES
+[Features](#features)  
+[Deployment: Short version](#deployment)  
+[Deployment: Some details](#basic-functionality-some-details)  
+[Bonus features](#bonus-features)  
+[Other language support](#other-language-support)  
+[FAQ](#faq)  
+[Possible improvements](#possible-improvements)  
+[Contributing](#contributing)  
+[Licence](#licence)  
+
+# Features
 
 Comecon:
 
@@ -282,7 +293,7 @@ updated using the static site generator.
 
 Displays a random quote from a file. See the description inside the script.
 
-# LANGUAGE SUPPORT
+# Other language support
 
 The text strings displayed by the PHP part of Comecon to the user are all
 gathered as constants in `src/messages_en.php`. A few more strings are in
@@ -303,6 +314,7 @@ Notice that the Polish translation is already provided in `lang/pl`.
 
 **Why Comecon?**
 
+<a id="faq-db"></a>
 **Why no database?**
 
 **Vibe-coded?**
@@ -319,7 +331,7 @@ Notice that the Polish translation is already provided in `lang/pl`.
 
 
 
-# POSSIBLE IMPROVEMENTS
+# Possible improvements
 
 * captcha
 * `vip.php` is currently updated manually by the webmaster. However, it could be
@@ -337,10 +349,10 @@ guess.
 with fake comments if someone is up for pranks. A more diverse captcha should be
 designed or integrated into the system.
 
-# CONTRIBUTING
+# Contributing
 
 
-# LICENCE
+# Licence
 
 CC BY-NC-SA 2024, Borys Jagielski
 https://blogrys.pl
