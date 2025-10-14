@@ -3,7 +3,7 @@
 <form name="commentForm" action="/comecon.php?action=save" method="POST" onsubmit="submitButton.disabled = true; return true;">
 <fieldset>
 <legend align="left">C O M E C O N</legend>
-<input type="hidden" id="postURL" name="postID" value="">
+<input type="hidden" id="postID" name="postID" value="<?=$postID ?>">
 <input type="hidden" id="postFullTitle" name="postFullTitle" value="">
 
 <label for="comment">Leave your opinion (max. 4000 characters):</label>
