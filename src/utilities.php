@@ -161,7 +161,7 @@ function earlyEnoughToEdit($commentDateTime, $sCommentEditTimeout)
  * [3] (string): The author's website (can be empty)
  * [4] (string): The author's email (can be empty)
  * [5] (string): The comment itself (with HTML tags)
- * [6] (string): The author's rank (see vip.php)
+ * [6] (string): The author's rank (see commenters.php)
  *
  * @param string $commentFilepath The filepath of the comment file where the
  * change will be made
@@ -273,9 +273,9 @@ function checkIfDuplicate($commentFilePath, $comment)
  *      3 for a normal registered user)
  * [2]: string, the user's website
  * [3]: string, the user's email (for subscription) or possibly only the hash of
- *      the user's email (for gravatar); see description in vip.php
+ *      the user's email (for gravatar); see description in commenters.php
  * [4]: int, 0 if user does not want to subscribe to comments after posting
- *      their own, 1 if they want to; see description in vip.php
+ *      their own, 1 if they want to; see description in commenters.php
  *
  * @param string $userName The name provided by the commenter
  * @param string $userPassword The password provided by the commenter

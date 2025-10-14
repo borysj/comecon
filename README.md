@@ -74,7 +74,7 @@ These are instructions for deploying the core part of Comecon.
 1. Clone or unzip Comecon into a non-public directory of your website.
 2. Run `compose installer` to install the
    [PHPMailer](https://github.com/PHPMailer/PHPMailer) dependency.
-3. Fill out `private/settings.php` and `private/vip.php`.
+3. Fill out `private/settings.php` and `private/commenters.php`.
 4. Create the directory that `commentsDir` from the settings points to.
 5. Add the same directory manually to the top part of
    `includes/display_comments.html`.
@@ -109,7 +109,7 @@ Assuming that your WWW server can process PHP, you are now ready to go.
    and then upload the Comecon folder to your server with the dependency already
    inside.
 3. To begin with, in `private/settings.php` you must fill out only the settings
-   marked as essential. In `private/vip.php`, you should remove the example
+   marked as essential. In `private/commenters.php`, you should remove the example
    users, and add at least yourself and your grandmother.
 4. As above.
 5. You have to enter the comment directory manually, because this PHP script
@@ -224,7 +224,7 @@ blog post, a notification will be sent to every subscriber.
 
 ## Register new users
 
-You have to manually add new commenters to `private/vip.php`. You can encourage
+You have to manually add new commenters to `private/commenters.php`. You can encourage
 your readers to send you a registration mail with the necessary information
 (nickname, password, website, email, whether they want to receive comment
 notifications by email).
@@ -338,7 +338,7 @@ Notice that the Polish translation is already provided in `lang/pl`.
 
 * captcha
 * better search
-* `vip.php` is currently updated manually by the webmaster. However, it could be
+* `commenters.php` is currently updated manually by the webmaster. However, it could be
 done through a form and with a script.
 * `save_comment.php` should probably be refactored. There is some redundancy
 between it and `add_subscriber.php`. Also, `edit_comment.php` contains

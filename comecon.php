@@ -36,7 +36,7 @@ if (isset($_GET["action"])) {
             $userURL = prepareString($_POST["webpage"], 60, false, false, true);
             $userEmail = prepareString($_POST["email"], 60, false, false, false);
             $vipNicks = [];
-            include "private/vip.php";
+            include "private/commenters.php";
             require __DIR__ . "/src/email_sending.php";
             require __DIR__ . "/src/save_comment2.php";
             break;
