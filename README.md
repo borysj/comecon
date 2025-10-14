@@ -330,7 +330,7 @@ Notice that the Polish translation is already provided in `lang/pl`.
 
 **Full title**
 
-**Sed?**
+**Sed? Manual feed updates?**
 
 
 
