@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xml:lang="pl" xmlns="http://www.w3.org/2005/Atom">
+<feed xml:lang="CHANGE: en" xmlns="http://www.w3.org/2005/Atom">
 
-    <title>Blogrys (najnowsze komentarze)</title>
-    <link rel="alternate" href="https://blogrys.pl" />
-    <link rel="self" href="https://blogrys.pl/assets/commfeeds/comments_newest.xml" />
-    <updated>2024-05-14</updated>
-    <id>https://blogrys.pl/</id>
-    <icon>https://blogrys.pl/assets/images/favicon/favicon-32x32.png</icon>
-    <generator uri="https://blogrys.pl/2024/04/26/comecon/index.php">
+    <title>CHANGE: Blog Name (newest comments)</title>
+    <link rel="alternate" href="CHANGE: https://blog.example.com" />
+    <link rel="self" href="CHANGE: https://blog.example.com/assets/commfeeds/comments_newest.xml" />
+    <updated>CHANGE: 2024-05-14</updated>
+    <id>CHANGE: https://blog.example.com/</id>
+    <icon>CHANGE: https://blog.example.com/assets/images/favicon/favicon-32x32.png</icon>
+    <generator uri="https://github.com/borysj/comecon">
         Comecon
     </generator>
 
