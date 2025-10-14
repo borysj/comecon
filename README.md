@@ -77,18 +77,18 @@ These are instructions for deploying the core part of Comecon.
 3. Fill out `private/settings.php` and `private/vip.php`.
 4. Create the directory that `commentsDir` from the settings points to.
 5. Add the same directory manually to the top part of
-   `includes/form-submit_comment.html`.
+   `includes/display_comments.html`.
 6. Set the captcha question in the HTML form
    `includes/form-submit_comment.html`.
 7. In the HTML of every blog post (that you want to connect to Comecon), you
    have to include:
-   - a PHP snippet with the post identifier: `<?php $postID="YYYY-MM-DD-post-title" ?>`
-   - the PHP script for displaying the comments: `includes/add_comments.php`
+   - a PHP snippet with the post identifier: `<?php $postID="post_identifier" ?>`
+     (the post identifier can contain only ASCII letters (both cases), numbers,
+     underscores, dashes)
+   - the PHP script for displaying the comments: `includes/display_comments.php`
    - the HTML form for submitting a comment: `includes/form-submit_comment.html`
-     which contains three hidden fields:
-     - the blog post URL;
-     - the blog post identifier;
-     - the blog post full title.
+     which contains a hidden field for the full title of the blog post being
+     commented on
 8. The submission form is unstyled, so you might want to add some new classes to
    your CSS. See `examples/styles.css`.
 9. If you self-host, link `comecon.php` to the root of your website, like this:
@@ -112,19 +112,16 @@ Assuming that your WWW server can process PHP, you are now ready to go.
    marked as essential. In `private/vip.php`, you should remove the example
    users, and add at least yourself and your grandmother.
 4. As above.
-5. As above.
+5. You have to enter the comment directory manually, because this PHP script
+   will be a part of every blog post, and the posts might be spread around in
+   your directory hierarchy. I think it is easiest to enter it manually once and
+   for all instead of tracing the relative position of `settings.php`.
 6. As above.
 7. A few remarks:
    - If you are unsure how to insert these three elements, take a look at
      `examples/blog_post_plain.php`.
-   - Also, remember that the HTML form could be placed before the comment
-     display. The ordering is up to you. However, the PHP snippet with the post
-     identifier must come before the comment display.
-   - You have to enter the comment directory manually in `add_comments.php`,
-     because this PHP script will be part of blog posts that might be spread
-     around in your directory hierarchy. I think it is easiest to enter it
-     manually once and for all instead of tracing the relative position of
-     `settings.php`.
+   - The ordering of the PHP snippet with the post identifier, the PHP script
+     and the comment form is important
    - The idea is that you include the snippet, the script and the form using a
      static blog generator like Jekyll (check `examples/blog_post_jekyll.html`).
      However, they can of course be entered manually, or semi-manually with a
