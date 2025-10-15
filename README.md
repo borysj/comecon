@@ -103,7 +103,7 @@ for more information.
    have to include:
    - a PHP snippet with the post identifier: `<?php $postID="post_identifier" ?>`
      (the post identifier can contain only ASCII letters (both cases), numbers,
-     underscores, dashes)
+     underscores, dashes; it should be no longer than 100 characters)
    - the PHP script for displaying the comments: `includes/display_comments.php`
    - the HTML form for submitting a comment: `includes/form-submit_comment.html`
      which contains a hidden field for the full title of the blog post being

@@ -21,20 +21,18 @@ if (isset($_GET["action"])) {
             require __DIR__ . '/src/edit_comment.php';
             break;
         case "notify":
-            validate_request("GET", ["p", "y", "m", "d", "t", "f"]);
+            validate_request("GET", ["p", "id", "f", "u"]);
             if (hash("sha256", $_GET["p"]) !== $settings['email']['notificationPassword']) {
                 exit(EXITMSG_WRONGEMAILNOTIFICATIONPASSWORD);
             }
-            $y = $_GET["y"]; // year of the blog post
-            $m = $_GET["m"]; // month
-            $d = $_GET["d"]; // day
-            $t = $_GET["t"]; // slugified title
-            $f = $_GET["f"]; // full title (with %20 for spaces)
+            $id = $_GET["id"]; // post identifier
+            $f = $_GET["f"]; // full title of the blog post
+            $u = $_GET["u"]; // URL of the blog post
             require __DIR__ . "/src/email_sending.php";
             require __DIR__ . "/src/email_notification.php";
             break;
         case "save":
-            // We also expect $_POST["postID"], but we do not need to check for
+            // We expect $_POST["postID"], but we do not need to check for
             // its existence. It has already been done by display_comment.php
             // which should come before the comment submission form. If
             // something has gone wrong there, the entire script has died
@@ -55,9 +53,9 @@ if (isset($_GET["action"])) {
             // $_POST["postFullTitle"] is set by the blog author in the form,
             // and at the very least should be an empty string
             if ($_POST["postFullTitle"] === "") {
-                $fullTitle = getFullTitle($_SERVER["REQUEST_URI"]);
+                $postFullTitle = getFullTitle($_SERVER["REQUEST_URI"]);
             } else {
-                $fullTitle = $_POST["postFullTitle"];
+                $postFullTitle = $_POST["postFullTitle"];
             }
             $commenters = [];
             include "private/commenters.php";

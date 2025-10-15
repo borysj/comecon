@@ -22,6 +22,7 @@ if (!$vipInfo[0]) {
 }
 
 $userRank = $vipInfo[1];
+
 // If the user has not provided their website, but is recognized as a
 // registered user, get the website from the user database. Notice that the
 // website from the database could be an empty string; it is not mandatory.
@@ -32,7 +33,7 @@ if (empty($userURL) && $vipInfo[0] === true) {
 }
 
 // Process the user email. Here, there are several cases.
-// The user has provided email directly (in the comment form)
+// 1) The user has provided email directly (in the comment form)
 if (!empty($userEmail)) {
     // If the gravatar for this email exists, hash the email directly
     if (gravatarExists($userEmail, true)) {
@@ -52,7 +53,7 @@ if (!empty($userEmail)) {
         $wantsEmails = 0;
     }
 } elseif (!empty($vipInfo[3])) {
-// The user has not provided email directly, but has registered it before
+    // 2) The user has not provided email directly, but has registered it before
     // If the user said earlier that they want to subscribe to comments by
     // email, get their email. If the gravatar does not exist, salt the hash
     // for increased security (the hash will be accessible through gravatar
@@ -85,51 +86,24 @@ if (!empty($userEmail)) {
 date_default_timezone_set($settings['save']['timezone']);
 $currentDateTime = date($settings['save']['timestamp']);
 
-// We need the basic URL of the commented blog post. There could be a
-// fragment identified of an earlier comment. If so, we have to remove it.
-$postURL = $_POST["url"];
-if (str_contains($postURL, "#")) {
-    $postURL = strstr($postURL, "#", true);
-}
-// The basic URL should end with index.php.
-// This is OK: https://blog.example.com/2020/05/20/blog-title/index.php
-// This is not OK: https://blog.example.com/2020/05/20/blog-title/
-// The latter works perfectly fine as far as displaying the blog post is
-// concerned, but we want also to have the URL in its standard form.
-if (!str_ends_with($postURL, "index.php")) {
-    if (!str_ends_with($postURL, "/")) {
-        $postURL .= "/index.php";
-    } else {
-        $postURL .= "index.php";
-    }
-}
-
-$pattern = "/(\d{4})\/(\d{2})\/(\d{2})\/(.*)\//";
-if (preg_match($pattern, $postURL, $matches)) {
-    $year = $matches[1];
-    $month = $matches[2];
-    $day = $matches[3];
-    $title = $matches[4];
-} else {
+if (!isset($_SERVER["REQUEST_URI"])) {
     exit(EXITMSG_ERRORURL . " ::: " . __FILE__ . ":" . __LINE__);
+} else {
+    $postURL = $_SERVER["REQUEST_URI"];
 }
-$postFullTitle = getPostFullTitle($postURL);
 
-$filePath = "/" . $year . "/" . $month .
-            "/" . $day . "/" . $title . "/";
 // The email variant will be stored in the comment file specific for this
 // blog post. The second variant without emails will be stored in the global
-// and public comment file.
-$commentLineWithEmail = $filePath . "<|>" .
+// and possibly public comment file.
+$commentLineWithEmail = $postID . "<|>" .
                         $currentDateTime . "<|>" .
                         $userName . "<|>" . $userURL . "<|>" . $hashedEmail . "<|>" .
                         $userComment . "<|>" . $userRank . PHP_EOL;
-$commentLineWithoutEmail = $filePath . "<|>" .
+$commentLineWithoutEmail = $postID . "<|>" .
                            $currentDateTime . "<|>" .
                            $userName . "<|>" . $userURL . "<|>" . "<|>" .
                            $userComment . "<|>" . $userRank . PHP_EOL;
-$fullFilePath = $settings['general']['commentsDir'] . "/" .
-    $year . "-" . $month . "-" . $day . "-" . $title . '-COMMENTS.txt';
+$fullFilePath = $settings['general']['commentsDir'] . "/" . $postID . "-COMMENTS.txt";
 
 if (checkIfDuplicate($fullFilePath, $userComment)) {
     exit(EXITMSG_DUPLICATE . " ::: " . __FILE__ . ":" . __LINE__);
@@ -141,7 +115,7 @@ createNonexistentFile($fullFilePath);
 // update (possible create) the subscribers file
 if (!empty($userEmail) && $wantsEmails == 1) {
     if (filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
-        $subsFile = $year . "-" . $month . "-" . $day . "-" . $title . "-SUBS.txt";
+        $subsFile = $postID . "-SUBS.txt";
         $subsFilePath = $settings['general']['subscribersDir'] .  "/" . $subsFile;
         createNonexistentFile($subsFilePath);
         $fileContents = file_get_contents($subsFilePath);
@@ -158,7 +132,7 @@ if (!empty($userEmail) && $wantsEmails == 1) {
 }
 
 // Update the global comment file and the particular comment file. Set the
-// cookie in case the user wants to edit their comment
+// cookie for comment edit
 if (file_put_contents($fullFilePath, $commentLineWithEmail, FILE_APPEND | LOCK_EX) !== false) {
     if ($settings['save']['allComments']) {
         file_put_contents($settings['save']['allCommentsFile'], $commentLineWithoutEmail, FILE_APPEND | LOCK_EX);
@@ -177,8 +151,8 @@ if (file_put_contents($fullFilePath, $commentLineWithEmail, FILE_APPEND | LOCK_E
     // ...and update the comment feeds in the background...
     if ($settings['feed']['updateFeedNewest'] || $settings['feed']['updateFeedPost']) {
         updateFeed(
-            $year . "-" . $month . "-" . $day,
-            $title,
+            $postID,
+            $postFullTitle,
             $postURL,
             $currentDateTime,
             $userName,
@@ -190,15 +164,13 @@ if (file_put_contents($fullFilePath, $commentLineWithEmail, FILE_APPEND | LOCK_E
     // ...and notify the email subscribers about the new comment
     // (at least the blog owner will be notified)
     sendNotifications(
-        $year,
-        $month,
-        $day,
-        $title,
+        $postID,
+        $postFullTitle,
+        $postURL,
         $currentDateTime,
         $userName,
         $userURL,
         $userComment,
-        $postFullTitle,
         $settings['general'],
         $settings['email'],
     );
