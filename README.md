@@ -281,17 +281,6 @@ If you are familiar with `sed`, you can use `misc/clean_blogpost.sed`
 to remove Markdown tags:  
 `sed -f clean_blogpost.sed blogpost.md > blogpost.txt`
 
-Additionally, you should convert paragraphs into single lines if your
-editor is doing hard wraps. It could be done with `tr`:
-`tr "\n" " " < blogpost.txt`
-
-...but I recommend a cryptic sed command:
-`sed ':a;N;$!ba;s|\n\([^\n]\)| \1|g' blogpost.md > blogpost.txt`
-
-It is superior to `tr`, because `tr` while mash the entire post into a single
-line. The above sed command will respect blank lines which are normally used to
-divide paragraphs in Markdown.
-
 The search script will also look for the search phrase in all comment files
 within the standard comments directory (defined in settings).
 
