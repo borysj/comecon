@@ -186,27 +186,26 @@ the particular comment files.
 ## Feeds
 
 Comecon can update Atom feeds on your blog site every time someone leaves a
-comment. There are two kinds of feeds: The master feed containing the newest
-comments only, and feeds with particular comments for separate blog posts. To
-turn these functions on, adjust the `feed` category in the settings, and create
-a directory for the feeds. Obviously, the directory must be public.
+comment. We speak here about two kinds of feeds: The master feed containing the
+newest comments, and specific feeds with comments for separate blog posts. To turn
+on one or both of these feed types, adjust the `feed` category in the settings,
+and create a directory for the feeds. Obviously, the directory must be public.
 
 Comecon **does not** create the feed files, it only updates them. In `examples`
 you will find the template for the master feed, and the template for a
-particular feed.
+specific feed.
 
-In the master feed, only the 10 newest comments will be retained. This number is
-hard-coded, but you can change it easily inside the function `updateFeed` in
-`src/utilities.php`.
+**To prepare the master feed**, simply copy the master feed file
+`newest-comments.xml` into the feed directory. Adjust all parameters marked with
+"Change:". Then share the link to the master feed with your readers.
 
-**To prepare the master feed**, simply copy the master feed file into the feed
-directory. Then share the link to the master feed with your readers.
-
-**To prepare particular feeds**, you have to create a new particular feed file
-for every new blog post. Give it the correct name
-(`comments-YYYYMMDD-post-title.xml`) and move it into the feed directory. Also,
-remember to add the link to the particular feed within every blog post.
-Otherwise, no one will know about it. :-)
+**To prepare specific feeds**, you will have to create a new feed file for every
+new blog post yourself. First, you should adjust the general template (look for
+parameters marked with "Change:"). Then, you will have to replace "PLACEHOLDERS"
+when you create a specific feed (the title of the specific blog post, its URL,
+the URL of the feed file itself, the date). Call the feed file for
+`comments-postID.xml` where `postID` is the blog post identifier. Finally, move
+the feed file into the feed directory.
 
 ## Commenter registration
 

@@ -74,6 +74,8 @@ $settings = [
         "updateFeedPost" => false,
         // Server subpath for the directory with comment feeds
         "commentFeedsDir" => $siteDir . "/commfeeds",
+        // Number of newest comments to be retained in the master feed
+        "newestComments" = 10,
     ],
     "edit" => [
         // Use any short random string of characters.

@@ -183,9 +183,7 @@ if (file_put_contents($fullFilePath, $commentLineWithEmail, FILE_APPEND | LOCK_E
             $userName,
             $userURL,
             $userComment,
-            $settings['feed']['updateFeedNewest'],
-            $settings['feed']['updateFeedPost'],
-            $settings['feed']['commentFeedsDir']
+            $settings['feed']
         );
     }
     // ...and notify the email subscribers about the new comment

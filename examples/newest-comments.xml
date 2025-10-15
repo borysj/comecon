@@ -3,7 +3,7 @@
 
     <title>CHANGE: Blog Name (newest comments)</title>
     <link rel="alternate" href="CHANGE: https://blog.example.com" />
-    <link rel="self" href="CHANGE: https://blog.example.com/assets/commfeeds/comments_newest.xml" />
+    <link rel="self" href="CHANGE: https://blog.example.com/assets/commfeeds/newest-comments.xml" />
     <updated>CHANGE: 2024-05-14</updated>
     <id>CHANGE: https://blog.example.com/</id>
     <icon>CHANGE: https://blog.example.com/assets/images/favicon/favicon-32x32.png</icon>

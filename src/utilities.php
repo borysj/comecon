@@ -308,12 +308,10 @@ function checkVip($userName, $userPassword, $vipNicks)
  * @param string $commenter The name of the commenter
  * @param string $commenterURL The URL of the commenter's website
  * @param string $comment The comment text (may contain HTML tags)
- * @param bool $updateNewest If true, update the global feed with the newest
- * comments
- * @param bool $updatePost If true, update the specific comment feed for this
- * particular blog post
- * @param string $sCommentFeedsDir The filepath to the directory with comment
- * feeds
+ * @param array<string, mixed> $sFeed Feed settings (wheter we update the
+ * newest comments feed, whether we update the specific feeds,
+ * the filepath to the directory with comment feeds, the number of
+ * the newest comments to be retained)
  *
  * @return bool Returns false if the filepath for the feed does not
  * exist or if the feed content is unreadable or if the comment timestamp is
@@ -329,9 +327,7 @@ function updateFeed(
     $commenter,
     $commenterURL,
     $comment,
-    $sUpdateNewest,
-    $sUpdatePost,
-    $sCommentFeedsDir
+    $sFeed
 ) {
     $commentAnchor = str_replace(array(" ", "-", ":"), "", $commentTimestamp);
     $commentURLWithAnchor = $postURL . "#" . $commentAnchor;
@@ -357,8 +353,8 @@ function updateFeed(
     </feed>
     ENTRYENDS;
 
-    if ($sUpdateNewest) {
-        $feedFilepath = $sCommentFeedsDir . "/comments_newest.xml";
+    if ($sFeed['updateNewest']) {
+        $feedFilepath = $sFeed['commentFeedsDir'] . "/newest-comments.xml";
         if (!file_exists($feedFilepath)) {
             return false;
         }
@@ -368,7 +364,7 @@ function updateFeed(
         }
         // If there are more than 10 items in the feed, delete the first (i.e.
         // the oldest) item
-        if (substr_count($feedContent, "<entry>") > 10) {
+        if (substr_count($feedContent, "<entry>") > $sFeed['newestComments']) {
             $feedContent = preg_replace('/\R?<entry>[\s\S]+?<\/entry>\R?/m', "", $feedContent, 1);
         }
         if ($feedContent === null) {
@@ -382,9 +378,9 @@ function updateFeed(
         file_put_contents($feedFilepath, $feedContent);
     }
 
-    if ($sUpdatePost) {
+    if ($sFeed['updatePost']) {
         $feedFilename = "comments_blogpost" . $dateOfPost . "-" . $postTitle . ".xml";
-        $feedFilepath = $sCommentFeedsDir . "/" . $feedFilename;
+        $feedFilepath = $sFeed['commentFeedsDir'] . "/" . $feedFilename;
         if (!file_exists($feedFilepath)) {
             return false;
         }
