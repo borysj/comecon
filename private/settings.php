@@ -84,9 +84,10 @@ $settings = [
         // Use this command to calculate hash:
         // php -r "echo(hash('sha256', 'unhashed_password'));"
         "adminCommentPassword" => "hashed_password",
-        // User has 25 minutes to edit their comment.
-        // 25 minutes is the real deadline; but the user will be informed that they have
-        // only 20 to give them some extra margin.
+        // The commenter has 25 minutes to edit their comment.
+        // 25 minutes is the real deadline, but the commenter will be informed that they have
+        // only 20 to give them some extra margin while editing.
+        // If you change this value, remember to change the message in includes/display_comments.php
         "commentEditTimeout" => 25 * 60,
     ],
     "email" => [

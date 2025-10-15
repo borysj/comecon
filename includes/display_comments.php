@@ -53,6 +53,7 @@ if (file_exists($commentFilePath)) {
                 ?>
                 <p class="comm_author_edit<?=$cc[6]?>">
                 <a href="/comecon.php?action=edit&id=<?=$postID?>&c=<?=$_COOKIE[$cookieName]?>">
+                <!-- Remember to edit the time if you have changed it in the setting -->
                 ..:: You have 20 minutes to edit your comment ::..
                 </a></p>
                 <?php

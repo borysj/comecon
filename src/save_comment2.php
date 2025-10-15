@@ -167,6 +167,7 @@ if (file_put_contents($fullFilePath, $commentLineWithEmail, FILE_APPEND | LOCK_E
     setcookie(
         "{$filePath}<|>{$cookieDateTime}",
         hash("sha256", $currentDateTime . $userName . $settings['edit']['commentSalt']),
+        // -5*60 to give an extra margin of five minutes when editing
         time() + $settings['edit']['commentEditTimeout'] - 5 * 60,
         "/"
     );
