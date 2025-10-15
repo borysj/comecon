@@ -32,6 +32,11 @@ $settings = [
         "language" => "en",
         // Message file in your language
         "messages" => "messages_en.php",
+        // If the full titles of your posts are not entered manually in the
+        // comment form (as they should be), Comecon will try to find them
+        // in the first header in the post page. But which header? Set 1 for h1,
+        // 2 for h2, and so on.
+        "locationFullTitle" => "1",
     ],
     "save" => [
         // If you want to change the time zone and the timestamp format,

@@ -1,6 +1,6 @@
 <?php
 
-// -- USED BY SEVERAL SCRIPTS -- //
+// -- USED BY comecon.php OR BY SEVERAL SCRIPTS -- //
 
 /**
  * Validates the request method and the presence and type of required keys.
@@ -20,6 +20,26 @@ function validate_request($expectedMethod, $requiredKeys)
             exit(EXITMSG_KEYISWRONG . " ::: " . __FILE__ . ":" . __LINE__);
         }
     }
+}
+
+/**
+ * Attempts to grab the full title of a blog post directly from the HTML
+ *
+ * @param string $url The URL of the blog post
+ * @return string|null $fullTitle The candidate for the full title, or null if
+ * parsing of the HTML did not work
+ */
+function getFullTitle($url)
+{
+    $html = file_get_contents($url);
+    $n = $settings['general']['locationFullTitle'];
+    if (preg_match('/<h' . $n . '[^>]*>(.*?)<\/h' . $n . '>/is', $html, $matches)) {
+        $fullTitle = strip_tags($matches[1]);
+        $fullTitle = trim($fullTitle);
+    } else {
+        $fullTitle = null;
+    }
+    return $fullTitle;
 }
 
 /**
