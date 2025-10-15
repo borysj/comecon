@@ -67,7 +67,7 @@ function prepareString($string, $length, $breaklines, $markdown, $http)
 /**
  * Finds the relevant comment in the database.
  *
- * @param string $postDate The date of the commented post, YYYY-MM-DD
+ * @param string $postID The ID of the commented post
  * @param string $commentID Either YYYYMMDDHHMMSS if the admin is accessing,
  * or a hashed value from a cookie set for the author of the comment
  * @param bool $adminAccess If true, the admin is accessing. If false, the
@@ -77,12 +77,9 @@ function prepareString($string, $length, $breaklines, $markdown, $http)
  * @return string $commentLine The comment record from the database (the actual
  * comment together with its descriptors)
  */
-function findComment($postDate, $commentID, $adminAccess, $sCommentsDir, $sCommentSalt)
+function findComment($postID, $commentID, $adminAccess, $sCommentsDir, $sCommentSalt)
 {
-    // Notice: We expect at most one post with the given date.
-    // This is a tenet of Comecon (no more than one blog post per day).
-    // If there are several, only the first one will be examined.
-    $commentFilePath = glob("$sCommentsDir/$postDate*");
+    $commentFilePath = glob("$sCommentsDir/$postID*");
     if (!$commentFilePath) {
         return "";
     }

@@ -9,9 +9,14 @@ if (isset($_GET["action"])) {
 
     switch ($action) {
         case "edit":
-            validate_request("GET", ["p", "d", "c"]);
-            $p = $_GET["p"];
-            $d = $_GET["d"];
+            if (isset($_GET["p"])) {
+                validate_request("GET", ["p", "id", "c"]);
+                $p = $_GET["p"];
+            } else {
+                validate_request("GET", ["id", "c"]);
+                $p = "";
+            }
+            $id = $_GET["id"];
             $c = $_GET["c"];
             require __DIR__ . '/src/edit_comment.php';
             break;
