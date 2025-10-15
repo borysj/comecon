@@ -277,16 +277,16 @@ function checkIfDuplicate($commentFilePath, $comment)
  *
  * @param string $userName The name provided by the commenter
  * @param string $userPassword The password provided by the commenter
- * @param array<string, mixed> $vipNicks The associative array with the registered users
+ * @param array<string, mixed> $commenters The associative array with the registered users
  *
  * @return array<mixed>
  */
-function checkVip($userName, $userPassword, $vipNicks)
+function checkVip($userName, $userPassword, $commenters)
 {
-    if (array_key_exists($userName, $vipNicks)) {
-        if ($vipNicks[$userName][0] === hash("sha256", $userPassword)) {
-            return [true, $vipNicks[$userName][1], $vipNicks[$userName][2],
-                    $vipNicks[$userName][3], $vipNicks[$userName][4]];
+    if (array_key_exists($userName, $commenters)) {
+        if ($commenters[$userName][0] === hash("sha256", $userPassword)) {
+            return [true, $commenters[$userName][1], $commenters[$userName][2],
+                    $commenters[$userName][3], $commenters[$userName][4]];
         } else {
             return [false, -1, "", "", 0];
         }

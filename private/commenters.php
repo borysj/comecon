@@ -18,7 +18,7 @@
 // but the true email is irrelevant. You can use this command for the hash:
 // php -r "echo(hash('sha256', 'ORIGINAL_EMAIL'))";
 
-$vipNicks = [
+$commenters = [
     "JohnAuthor" => ["0f2907ce9dfc41381d6039cd054f8cb33c4ab2f6520210035e2a32b04bc2b7d3",
     1,
     "https://mypage.com/blog",

@@ -3,7 +3,7 @@
 // We check if the user is registered. They could be registered if they have
 // provided a password together with their name.
 if (!empty($userPassword)) {
-    $vipInfo = checkVip($userName, $userPassword, $vipNicks);
+    $vipInfo = checkVip($userName, $userPassword, $commenters);
     if ($vipInfo[0]) {
         $userRank = $vipInfo[1];
     } else {

@@ -40,7 +40,7 @@ if (isset($_GET["action"])) {
             $userComment = prepareString($_POST["comment"], $settings['save']['maxCommentLength'], true, true, false);
             $userURL = prepareString($_POST["webpage"], 60, false, false, true);
             $userEmail = prepareString($_POST["email"], 60, false, false, false);
-            $vipNicks = [];
+            $commenters = [];
             include "private/commenters.php";
             require __DIR__ . "/src/email_sending.php";
             require __DIR__ . "/src/save_comment2.php";
