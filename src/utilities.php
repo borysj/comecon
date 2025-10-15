@@ -48,11 +48,12 @@ function prepareString($string, $length, $breaklines, $markdown, $http)
         $string = str_replace(array("\r\n", "\r", "\n"), "", $string);
     }
     if ($markdown) {
-        $string = preg_replace('/`(.*?)`/', '<code>$1</code>', $string) ?? $string;
-        $string = preg_replace('/\[(.*?)\]\((https?:\/\/)?(.*?)\)/', '<a href="http://$3">$1</a>', $string) ?? $string;
-        $string = preg_replace('/\*\*(.*?)\*\*/', '<b>$1</b>', $string) ?? $string;
-        $string = preg_replace('/\*(.*?)\*/', '<i>$1</i>', $string) ?? $string;
-        $string = preg_replace('/_(.*?)_/', '<i>$1</i>', $string) ?? $string;
+        $string = preg_replace('/`([^`\n]+)`/', '<code>$1</code>', $string) ?? $string;
+        $string = preg_replace('/\[[^\]\n]+\]\((http:\/\/)?(.*?)\)/', '<a href="http://$3">$1</a>', $string) ?? $string;
+        $string = preg_replace('/\[[^\]\n]+\]\((https:\/\/)?(.*?)\)/', '<a href="https://$3">$1</a>', $string) ?? $string;
+        $string = preg_replace('/\*\*([^\*\n]+)\*\*/', '<strong>$1</strong>', $string) ?? $string;
+        $string = preg_replace('/\*(?! )([^\*\n]+)\*/', '<em>$1</em>', $string) ?? $string;
+        $string = preg_replace('/(?<=^|\s)_([^_\n]+)_(?=\s|$)/', '<em>$1</em>', $string) ?? $string;
     }
     if ($http && stripos($string, "http") !== 0) {
         $string = "http://" . $string;
@@ -127,8 +128,8 @@ function HTML2markdown($comment)
 {
     $comment = str_replace("<br/>", "\n", $comment);
     $comment = preg_replace('/<code>(.*?)<\/code>/', '`$1`', $comment) ?? $comment;
-    $comment = preg_replace('/<b>(.*?)<\/b>/', '**$1**', $comment) ?? $comment;
-    $comment = preg_replace('/<i>(.*?)<\/i>/', '*$1*', $comment) ?? $comment;
+    $comment = preg_replace('/<strong>(.*?)<\/strong>/', '**$1**', $comment) ?? $comment;
+    $comment = preg_replace('/<em>(.*?)<\/em>/', '*$1*', $comment) ?? $comment;
     $comment = preg_replace('/<a href="(.*?)">(.*?)<\/a>/', '[$2]($1)', $comment) ?? $comment;
     return $comment;
 }
