@@ -120,9 +120,11 @@ recently set a cookie. If yes, a link for comment edit will be displayed (see
 description of `edit_comment.php`).
 
 
-### form-submit_comments
+### form-submit_comment
 
-An HTML form for comment submission. You have to add it under each blog post.
+A form for comment submission. Actually, it contains a small PHP snippet,
+so the HTML extension is misleading. It doesn't really matter, because in the end it will be embedded into
+your blog post which has to be a PHP file. You have to add it under each blog post.
 See description of `save_comment.php` for additional details.  Remember that the
 URL of each post must be of the form
 `https://myblog.com/YYYY/MM/DD/post-title/index.php` as stressed in the
