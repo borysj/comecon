@@ -22,15 +22,26 @@ sparse. I guess you won't experience any problems unless there are more than one
 comment per five seconds.  But that number is my intuition only; Comecon has
 been tested thoroughly, but not stress-tested.
 
-Comecon requires that you insert a permalink identifier into the HTML body of
-every blog post, something like `/YYYY/MM/DD/post-title` or
-`/this-is-a-blog-post.php`. How and why is explained below.
+Comecon requires that you insert an identifier into the HTML body of
+every blog post, something like `YYYY-MM-DD-post-title` or
+`this-is-a-blog-post`. How and why is explained below.
 
 [Features](#features)  
-[Deployment: Short version](#deployment)  
-[Deployment: Some details](#basic-functionality-some-details)  
+[Deployment](#deployment)  
+:: [Short version](#short-version)  
+:: [Some details](#some-details)  
+[Optional features](#optional-features)
+:: [Master comment file](#master-comment-file)
+:: [Feeds](#feeds)
+:: [Commenter registration](#commenter-registration)
+:: [Mail notifications](#mail-notifications)
+:: :: [New blog posts](#new-blog-posts)
+:: :: [New comments](#new-comments)
 [Bonus scripts](#bonus-scripts)  
-[Other language support](#other-language-support)  
+:: [Search](#search)
+:: [Random post selector](#random-post-selector)
+:: [Random quote generator](#random-quote-generator)
+[Language support](#language-support)  
 [FAQ](#faq)  
 [Possible improvements](#possible-improvements)  
 [Contributing](#contributing)  
@@ -67,9 +78,17 @@ you might want them for your blog. At least I wanted them for mine:
 
 # Deployment
 
-These are instructions for deploying the core part of Comecon. 
+These are instructions for deploying the core part of Comecon.
 
-## Basic functionality: Short version
+If you are self-hosting, run `git clone` (e.g. from `/var/www` so Comecon will
+be cloned to `/var/www/comecon`), and then run `deploy.sh` (probably you should
+do it with sudo).
+
+You can also follow the deployment steps manually. You have to follow them if
+you are on shared hosting. In this case, see also [Some details](#some-details)
+for more information.
+
+## Short version
 
 1. Clone or unzip Comecon into a non-public directory of your website.
 2. Run `compose installer` to install the
@@ -98,7 +117,7 @@ These are instructions for deploying the core part of Comecon.
 
 Assuming that your WWW server can process PHP, you are now ready to go.
 
-## Basic functionality: Some details
+## Some details
 
 1. The non-public directory should be something like `/var/www/comecon` if you
    self-host, or something like `/home/username/comecon` on shared hosting. If
@@ -189,7 +208,16 @@ for every new blog post. Give it the correct name
 remember to add the link to the particular feed within every blog post.
 Otherwise, no one will know about it. :-)
 
-## Mail notifications: New blog posts
+## Commenter registration
+
+You have to manually add new commenters to `private/commenters.php`. You can encourage
+your readers to send you a registration mail with the necessary information
+(nickname, password, website, email, whether they want to receive comment
+notifications by email).
+
+## Mail notifications
+
+### New blog posts
 
 If you suspect that some of your readers are unfamiliar with RSS/Atom, you may
 want to turn on email notifications about new blog posts.
@@ -208,7 +236,7 @@ want to turn on email notifications about new blog posts.
 The subscribers will receive an email notification about each new blog post you
 publish. There will be an unsubscribe link in the email.
 
-## Mail notifications: New comments
+### New comments
 
 If you suspect that some of your readers are unfamiliar with RSS/Atom, you may
 want to turn on email notifications about new comments (per blog post).
@@ -221,13 +249,6 @@ want to turn on email notifications about new comments (per blog post).
 Now, if someone subscribes to a blog post by email, a subscriber file with their
 email address will be created. If someone published a new comment under this
 blog post, a notification will be sent to every subscriber.
-
-## Register new users
-
-You have to manually add new commenters to `private/commenters.php`. You can encourage
-your readers to send you a registration mail with the necessary information
-(nickname, password, website, email, whether they want to receive comment
-notifications by email).
 
 # Bonus scripts
 
@@ -292,7 +313,7 @@ updated using the static site generator.
 
 Displays a random quote from a file. See the description inside the script.
 
-# Other language support
+# Language support
 
 The text strings displayed by the PHP part of Comecon to the user are all
 gathered as constants in `src/messages_en.php`. A few more strings are in
@@ -331,8 +352,6 @@ Notice that the Polish translation is already provided in `lang/pl`.
 **Full title**
 
 **Sed? Manual feed updates?**
-
-
 
 # Possible improvements
 
