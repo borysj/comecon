@@ -61,8 +61,8 @@ $settings = [
         // These salts will be used for email if the owner does not have gravatar.
         // Then the true email is irrelevant, and another layer of obfuscation
         // (on top of SHA-256) will be added.
-        "emailSaltA" => "rtald5kss",
-        "emailSaltB" => "34arAsrqA",
+        "emailSaltA" => "",
+        "emailSaltB" => "",
         // Write here the answer to the captcha question for the comment form
         // The question itself is formulated in the form in
         // includes/form-submit_comment.html
