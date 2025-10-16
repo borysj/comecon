@@ -62,8 +62,8 @@ $settings = [
         // These salts will be used for email if the owner does not have gravatar.
         // Then the true email is irrelevant, and another layer of obfuscation
         // (on top of SHA-256) will be added.
-        "emailSaltA" => "", //IMPORTANT
-        "emailSaltB" => "", //IMPORTANT
+        "emailSaltA" => "CHANGEME", //IMPORTANT
+        "emailSaltB" => "CHANGEME", //IMPORTANT
         // Write here the answer to the captcha question for the comment form
         // The question itself is formulated in the form in
         // includes/form-submit_comment.html
@@ -85,11 +85,11 @@ $settings = [
     ],
     "edit" => [
         // Use any random string of characters.
-        "cookieKey" => "", //IMPORTANT
+        "cookieKey" => "CHANGEME", //IMPORTANT
         // This is your admin backdoor for editing comments.
         // Use this command to calculate hash:
         // php -r "echo(hash('sha256', 'unhashed_password'));"
-        "adminCommentPassword" => "hashed_password", //IMPORTANT
+        "adminCommentPassword" => "CHANGEME", //IMPORTANT
         // The commenter has 25 minutes to edit their comment.
         // 25 minutes is the real deadline, but the commenter will be informed that they have
         // only 20 to give them some extra margin while editing.
@@ -103,12 +103,14 @@ $settings = [
         // only you)
         "notify" => false,
         // Email server parameters for sending notifications
-        "mailNotificationsHost" => "smtp.myblog.com",
-        "mailNotificationsUsername" => "notifications@myblog.com",
-        "mailNotificationsPassword" => "myemailpassword_unhashed",
+        // For security reasons, it is recommended to store these in a separate,
+        // ignored file (e.g., `private/prod-settings.php`) and include it here.
+        "mailNotificationsHost" => "smtp.example.com",
+        "mailNotificationsUsername" => "notifications@example.com",
+        "mailNotificationsPassword" => "CHANGEME",
         // Comment notifications reach you automatically through this email.
         // Set the string to null or empty if you do not want to receive them
-        "ownerPrivateMail" => "owner@mail.com",
+        "ownerPrivateMail" => "owner@example.com",
         // ...but this is the official contact email for your blog
         "blogContactMail" => "contact@myblog.com",
         // When subscribing to the blog posts by email, the user has to add this captcha
@@ -116,7 +118,7 @@ $settings = [
         "captchaEmail" => "847",
         // Use this command to calculate hash:
         // php -r "echo(hash('sha256', 'unhashed_password'));"
-        "notificationPassword" => "hashed_password_for_sending_notifications",
+        "notificationPassword" => "CHANGEME",
     ],
     "search" => [
         // Server subpath (public) for where you keep searchable blog posts.

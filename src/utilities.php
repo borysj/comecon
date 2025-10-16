@@ -23,6 +23,20 @@ function validate_request($expectedMethod, $requiredKeys)
 }
 
 /**
+ * Sanitizes a post ID.
+ *
+ * @param string $postID The post ID to be sanitized
+ * @return string The sanitized post ID
+ */
+function sanitizePostID($postID)
+{
+    $postID = preg_replace("/[^a-zA-Z0-9_\-]/", "", $postID);
+    $postID = ltrim($postID, "-");
+    $postID = substr($postID, 0, 100);
+    return $postID;
+}
+
+/**
  * Attempts to grab the full title of a blog post directly from the HTML
  *
  * @param string $url The URL of the blog post
@@ -31,6 +45,10 @@ function validate_request($expectedMethod, $requiredKeys)
  */
 function getFullTitle($url)
 {
+    // Simple SSRF protection
+    if (!preg_match('/^https?:\/\//i', $url)) {
+        return null;
+    }
     $html = file_get_contents($url);
     $n = $settings['general']['locationFullTitle'];
     if (preg_match('/<h' . $n . '[^>]*>(.*?)<\/h' . $n . '>/is', $html, $matches)) {

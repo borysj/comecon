@@ -16,7 +16,7 @@ if (isset($_GET["action"])) {
                 validate_request("GET", ["id", "c"]);
                 $adminPassword = "";
             }
-            $postID = $_GET["id"];
+            $postID = sanitizePostID($_GET["id"]);
             $commentID = $_GET["c"];
             require __DIR__ . '/src/edit_comment.php';
             break;
@@ -25,7 +25,7 @@ if (isset($_GET["action"])) {
             if (hash("sha256", $_GET["p"]) !== $settings['email']['notificationPassword']) {
                 exit(EXITMSG_WRONGEMAILNOTIFICATIONPASSWORD);
             }
-            $postID = $_GET["id"];
+            $postID = sanitizePostID($_GET["id"]);
             $postFullTitle = $_GET["f"];
             $postURL = $_GET["u"];
             require __DIR__ . "/src/email_sending.php";
@@ -38,10 +38,7 @@ if (isset($_GET["action"])) {
             // something has gone wrong there, the entire script has died
             // already.
             validate_request("POST", ["comment", "name", "captcha", "url", "password", "webpage", "email"]);
-            $postID = $_POST["postID"];
-            $postID = preg_replace("/[^a-zA-Z0-9_\-]/", "", $postID);
-            $postID = ltrim($postID, "-");
-            $postID = substr($postID, 0, 100);
+            $postID = sanitizePostID($_POST["postID"]);
             if ($postID === "") {
                 exit("I cannot display the comments, because the post identifier was invalid.");
             }
@@ -58,7 +55,7 @@ if (isset($_GET["action"])) {
                 $postFullTitle = $_POST["postFullTitle"];
             }
             $commenters = [];
-            include "private/commenters.php";
+            require_once __DIR__ . "/private/commenters.php";
             require __DIR__ . "/src/email_sending.php";
             require __DIR__ . "/src/save_comment2.php";
             break;
