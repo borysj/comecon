@@ -330,7 +330,7 @@ strings.
 
 **Vibe-coded?**
 
-**Requirements?**
+**Requirements? Only blogs?**
 
 **Shared hosting, everything must be public**
 
@@ -343,6 +343,8 @@ strings.
 **Full title**
 
 **Sed? Manual feed updates?**
+
+**Name? Ussr?
 
 # Possible improvements
 

@@ -23,9 +23,9 @@ $settings = [
         // The URL of your blog without the trailing slash
         "siteURL" => "https://myblog.example.com", //ESSENTIAL
         // Server subpath for your comments directory (preferably non-public)
-        "commentsDir" => $homeDir . "/data/comments",
+        "commentsDir" => $homeDir . "/comecon-data/comments",
         // Server subpath for your subscribers directory (preferably non-public)
-        "subscribersDir" => $homeDir . "/data/subscribers",
+        "subscribersDir" => $homeDir . "/comecon-data/subscribers",
         // File with emails that are notified about new blog posts
         "subscribersFile" => "subscribers.txt",
         // Language of the blog, for lang attribute of html in edit_comment.php
@@ -125,6 +125,6 @@ $settings = [
         // Server subpath for search queries (preferably non-public).
         // This is for the curios; you will see what keywords people are looking for on
         // your blog.
-        "searchQueriesRecord" => $homeDir . "/data/search_queries.txt",
+        "searchQueriesRecord" => $homeDir . "/comecon-data/search_queries.txt",
     ],
 ];

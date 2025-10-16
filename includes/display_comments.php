@@ -1,10 +1,10 @@
 <?php
 // Set the comment directory here and uncomment.
 // It must be exactly the same as the value of
-// $settings['general']['commentDir'], only that you cannot refer to settings
+// $settings['general']['commentsDir'], only that you cannot refer to settings
 // from here. This snippet will be embedded in blog posts whose location
 // in the directory structure will be generally uncertain.
-// $commentDir =
+// $commentsDir =
 
 if (!isset($postID) || $postID === "") {
     exit("I cannot display the comments, because the post identifier has not been set.");
@@ -16,7 +16,7 @@ if ($postID === "") {
     exit("I cannot display the comments, because the post identifier was invalid.");
 }
 $commentFile = $postID . "-COMMENTS.txt");
-$commentFilePath = $commentDir . "/" . $commentFile;
+$commentFilePath = $commentsDir . "/" . $commentFile;
 
 if (file_exists($commentFilePath)) {
     $fileContents = file_get_contents($commentFilepath);
