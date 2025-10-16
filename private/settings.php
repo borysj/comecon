@@ -1,6 +1,7 @@
 <?php
 
 // The settings marked with ESSENTIAL must be set, otherwise Comecon won't work.
+// The settings marked with IMPORTANT should be set as soon as possible.
 // The other settings can be left with their default values for now. However,
 // you have to edit several of them if you want the optional features. Look into
 // README.md for details.
@@ -19,7 +20,7 @@ $siteDir = "";  //ESSENTIAL
 $settings = [
     "general" => [
         // The name of your blog
-        "blogName" => "My Great Blog", //ESSENTIAL
+        "blogName" => "My Great Blog", //IMPORTANT
         // The URL of your blog without the trailing slash
         "siteURL" => "https://myblog.example.com", //ESSENTIAL
         // Server subpath for your comments directory (preferably non-public)
@@ -43,7 +44,7 @@ $settings = [
         // you can look up PHP functions date_default_timezone_set() and
         // date() to learn about possible choices. However, if you change
         // the timestamp format, something may easily get broken.
-        "timezone" => "Europe/Oslo",
+        "timezone" => "Europe/Oslo", //IMPORTANT
         "timestamp" => "Y-m-d H:i:s",
         // There can be a master file with ALL comments in the blog's main folder.
         // There might be a reason why you need it; I was using it to generate
@@ -61,8 +62,8 @@ $settings = [
         // These salts will be used for email if the owner does not have gravatar.
         // Then the true email is irrelevant, and another layer of obfuscation
         // (on top of SHA-256) will be added.
-        "emailSaltA" => "",
-        "emailSaltB" => "",
+        "emailSaltA" => "", //IMPORTANT
+        "emailSaltB" => "", //IMPORTANT
         // Write here the answer to the captcha question for the comment form
         // The question itself is formulated in the form in
         // includes/form-submit_comment.html
@@ -83,12 +84,12 @@ $settings = [
         "newestComments" = 10,
     ],
     "edit" => [
-        // Use any short random string of characters.
-        "commentSalt" => "Sq235k",
+        // Use any random string of characters.
+        "cookieKey" => "", //IMPORTANT
         // This is your admin backdoor for editing comments.
         // Use this command to calculate hash:
         // php -r "echo(hash('sha256', 'unhashed_password'));"
-        "adminCommentPassword" => "hashed_password",
+        "adminCommentPassword" => "hashed_password", //IMPORTANT
         // The commenter has 25 minutes to edit their comment.
         // 25 minutes is the real deadline, but the commenter will be informed that they have
         // only 20 to give them some extra margin while editing.
