@@ -82,8 +82,8 @@ you might want them for your blog. At least I wanted them for mine:
 These are instructions for deploying the core part of Comecon.
 
 If you are self-hosting, run `git clone` (e.g. from `/var/www` so Comecon will
-be cloned to `/var/www/comecon`), and then run `deploy.sh` (probably you should
-do it with sudo).
+be cloned to `/var/www/comecon`), and then run `found_comecon.sh` (probably you
+should do it with sudo). The deployment script will do points 2-6 and 9 for you.
 
 You can also follow the deployment steps manually. You have to follow them if
 you are on shared hosting. In this case, see also [Some details](#some-details)
@@ -101,7 +101,7 @@ for more information.
 6. Set the captcha question in the HTML form
    `includes/form-submit_comment.html`.
 7. In the HTML of every blog post (that you want to connect to Comecon), you
-   have to include:
+   will have to include:
    - a PHP snippet with the post identifier: `<?php $postID="post_identifier" ?>`
      (the post identifier can contain only ASCII letters (both cases), numbers,
      underscores, dashes; it should be no longer than 100 characters)
@@ -116,7 +116,9 @@ for more information.
    shared hosting, move `comecon.php` to the root of your website, and adjust
    all file paths from requires and includes.
 
-Assuming that your WWW server can process PHP, you are now ready to go.
+Assuming that your WWW server can process PHP, you are now ready to go. Remember
+that your blog posts must be now PHP files, since they contain PHP snippets!
+They must no longer have the HTML extension.
 
 ## Some details
 
@@ -177,12 +179,13 @@ If you wish to activate the master comment file, set the `allComments` setting
 to `true`, and possibly change the filepath under `allCommentsFile`. The
 default location is the public root, but you can put the file wherever you wish.
 
-**You have to create this file yourself (an empty file with the correct name in
-the chosen directory).**
+**You have to create this (empty) file yourself.**
 
-No worries, Comecon will remember to edit the master comment file as well when someone
+No worries, Comecon will remember to change the master comment file when someone
 edit their comment. But the comments to be displayed will be always read from
-the particular comment files.
+the specific comment files. Also, only the specific comment files will save the
+(hashes of) the commenters' emails. In the master comment file this field will
+always be left blank (since it might be publicly available).
 
 ## Feeds
 
