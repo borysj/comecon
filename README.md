@@ -312,11 +312,14 @@ If you want to translate Comecon to your language you must:
 - translate `messages_en.php` to `messages_xx.php` (the messages beginning with
   MSG and LABEL are the most important one; EXITMSG are the error messages);
 - change the two language settings in `settings.php`;
-- translate all the strings in `src/email_sending.php`;
+- translate all the relevant strings in `includes/display_comments.php`;
 - translate all the forms you use (first and foremost
-  `includes/form-submit_comment.html).
+  `includes/form-submit_comment.html);
+- translate all the relevant strings in `src/email_sending.php`.
 
-Notice that the Polish translation is already provided in `lang/pl`.
+Notice that the Polish translation is already provided in `lang/pl`. Just
+replace the English files with the Polish files. They only differ in their
+strings.
 
 # FAQ
 
