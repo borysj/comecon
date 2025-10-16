@@ -93,11 +93,12 @@ function prepareString($string, $length, $breaklines, $markdown, $http)
  * @param bool $adminAccess If true, the admin is accessing. If false, the
  * author of the comment is accessing.
  * @param string $sCommentsDir The filepath for the comment directory
- * @param string $sCommentSalt The comment salt for recognizing the comment ID
+ * @param string $sCookieKey The cookie key that the comment ID has been
+ * hashed with
  * @return string $commentLine The comment record from the database (the actual
  * comment together with its descriptors)
  */
-function findComment($postID, $commentID, $adminAccess, $sCommentsDir, $sCommentSalt)
+function findComment($postID, $commentID, $adminAccess, $sCommentsDir, $sCookieKey)
 {
     $commentFilePath = glob("$sCommentsDir/$postID*");
     if (!$commentFilePath) {
@@ -123,7 +124,8 @@ function findComment($postID, $commentID, $adminAccess, $sCommentsDir, $sComment
         } else {
         // If it is not admin, then the comment ID is a hash of the timestamp,
         // the author's nickname and the salt.
-            if (hash("sha256", $commentElements[1] . $commentElements[2] . $sCommentSalt) === $commentID) {
+        $expectedValue = hash("sha256", $commentElements[1] . $commentElements[2] . $sCookieKey);
+            if (hash_equals($expectedValue, $commentID)) {
                 $commentLine = $line;
                 break;
             }

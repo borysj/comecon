@@ -43,7 +43,7 @@ $commentLine = findComment(
     $commentID,
     $adminAccess,
     $settings['general']['commentsDir'],
-    $settings['edit']['commentSalt']
+    $settings['edit']['cookieKey']
 );
 // If the comment record exists, get the comment and convert it to Markdown for
 // display

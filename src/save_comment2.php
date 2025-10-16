@@ -139,15 +139,15 @@ if (file_put_contents($fullFilePath, $commentLineWithEmail, FILE_APPEND | LOCK_E
     }
     $cookieDateTime = str_replace(array("-", " ", ":"), "", $currentDateTime);
     setcookie(
-        "{$filePath}<|>{$cookieDateTime}",
-        hash("sha256", $currentDateTime . $userName . $settings['edit']['commentSalt']),
+        "{$postID}<|>{$cookieDateTime}",
+        hash("sha256", $currentDateTime . $userName . $settings['edit']['cookieKey']),
         // -5*60 to give an extra margin of five minutes when editing
         time() + $settings['edit']['commentEditTimeout'] - 5 * 60,
         "/"
     );
     unset($_POST);
     // First, send the user back to their comment...
-    header("Location: {$settings['general']['siteURL']}{$filePath}index.php#lastComment");
+    header("Location: {$postURL}#lastComment");
     // ...and update the comment feeds in the background...
     if ($settings['feed']['updateFeedNewest'] || $settings['feed']['updateFeedPost']) {
         updateFeed(
