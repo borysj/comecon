@@ -10,4 +10,4 @@ require_once __DIR__ . "/private/settings.php";
 // id is the post identifier
 // f is the URL-encoded full title of the new blog post (use %20 or + for spaces and so on).
 // u is the URL-encoded URL of the new blog post
-sendNotifications($id, $f, $u, null, null, null, null, $settings['general'], $settings['email']);
+sendNotifications($postID, $postFullTitle, $postURL, null, null, null, null, $settings['general'], $settings['email']);

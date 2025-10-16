@@ -25,9 +25,9 @@ if (isset($_GET["action"])) {
             if (hash("sha256", $_GET["p"]) !== $settings['email']['notificationPassword']) {
                 exit(EXITMSG_WRONGEMAILNOTIFICATIONPASSWORD);
             }
-            $id = $_GET["id"]; // post identifier
-            $f = $_GET["f"]; // full title of the blog post
-            $u = $_GET["u"]; // URL of the blog post
+            $postID = $_GET["id"];
+            $postFullTitle = $_GET["f"];
+            $postURL = $_GET["u"];
             require __DIR__ . "/src/email_sending.php";
             require __DIR__ . "/src/email_notification.php";
             break;
