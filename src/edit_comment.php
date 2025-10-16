@@ -31,17 +31,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     exit(0 . " ::: " . __FILE__ . ":" . __LINE__);
 }
 
-// Check if the admin is accessing. The GET key for the admin password is 'p'.
-if ($settings['edit']['adminCommentPassword'] === hash("sha256", $p)) {
+// Check if the admin is accessing
+if ($settings['edit']['adminCommentPassword'] === hash("sha256", $adminPassword)) {
     $adminAccess = true;
 } else {
     $adminAccess = false;
 }
-// Identify the comment record using the blog post ID ('id')
-// and the comment ID ('c')
+// Identify the comment record using the blog post ID and the comment ID
 $commentLine = findComment(
-    $id,
-    $c,
+    $postID,
+    $commentID,
     $adminAccess,
     $settings['general']['commentsDir'],
     $settings['edit']['commentSalt']

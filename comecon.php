@@ -11,13 +11,13 @@ if (isset($_GET["action"])) {
         case "edit":
             if (isset($_GET["p"])) {
                 validate_request("GET", ["p", "id", "c"]);
-                $p = $_GET["p"];
+                $adminPassword = $_GET["p"];
             } else {
                 validate_request("GET", ["id", "c"]);
-                $p = "";
+                $adminPassword = "";
             }
-            $id = $_GET["id"];
-            $c = $_GET["c"];
+            $postID = $_GET["id"];
+            $commentID = $_GET["c"];
             require __DIR__ . '/src/edit_comment.php';
             break;
         case "notify":
