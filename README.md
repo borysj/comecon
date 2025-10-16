@@ -45,6 +45,7 @@ every blog post, something like `YYYY-MM-DD-post-title` or
 [FAQ](#faq)  
 [Possible improvements](#possible-improvements)  
 [Contributing](#contributing)  
+[Acknowledgments](#acknowledgments)
 [Licence](#licence)
 
 For an even more detailed description, see
@@ -367,6 +368,7 @@ designed or integrated into the system.
 
 # Contributing
 
+# Acknowledgments
 
 # Licence
 
