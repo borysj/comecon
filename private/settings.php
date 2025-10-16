@@ -5,11 +5,11 @@
 // you have to edit several of them if you want the optional features. Look into
 // README.md for details.
 
-// Server path for your home directory, one level above where your site is.
+// The path for your server directory, usually one level above where your site is.
 // On shared hosting it can be something like /home/johndoe
 // On a VPS it is up to you, but usually you want /var/www
 // Remember, no trailing slash!
-$homeDir = "";  //ESSENTIAL
+$serverDir = "";  //ESSENTIAL
 
 // Server path for your site directory. Typically /home/johndoe/public_html on a
 // shared hosting, or /var/www/html on a VPS
@@ -23,9 +23,9 @@ $settings = [
         // The URL of your blog without the trailing slash
         "siteURL" => "https://myblog.example.com", //ESSENTIAL
         // Server subpath for your comments directory (preferably non-public)
-        "commentsDir" => $homeDir . "/comecon-data/comments",
+        "commentsDir" => $serverDir . "/comecon-data/comments",
         // Server subpath for your subscribers directory (preferably non-public)
-        "subscribersDir" => $homeDir . "/comecon-data/subscribers",
+        "subscribersDir" => $serverDir . "/comecon-data/subscribers",
         // File with emails that are notified about new blog posts
         "subscribersFile" => "subscribers.txt",
         // Language of the blog, for lang attribute of html in edit_comment.php
@@ -125,6 +125,6 @@ $settings = [
         // Server subpath for search queries (preferably non-public).
         // This is for the curios; you will see what keywords people are looking for on
         // your blog.
-        "searchQueriesRecord" => $homeDir . "/comecon-data/search_queries.txt",
+        "searchQueriesRecord" => $serverDir . "/comecon-data/search_queries.txt",
     ],
 ];
