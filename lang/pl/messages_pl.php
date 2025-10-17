@@ -10,7 +10,8 @@ define('EXITMSG_DUPLICATE', "Wykryto duplikat komentarza.<br>Prawdopodobnie naci
 define('EXITMSG_ERRORSAVINGCOMMENT', "Wystąpił błąd podczas dodawania komentarza.<br>
     Wróć do poprzedniej strony i spróbuj ponownie.<br>Jeżeli błąd będzie nieustępliwy, daj mi znać na {$settings['email']['blogContactMail']}");
 define('EXITMSG_ERRORRUNNINGCOMMENTSCRIPT', "Błąd aktywacji skryptu.<br>
-    Wróć do formularza i spróbuj ponownie.<br>Jeżeli błąd będzie nieustępliwy, daj mi znać na {$settings['email']['blogContactMail']}");
+    Wróć do formularza i spróbuj ponownie.<br>
+    Jeżeli błąd będzie nieustępliwy, daj mi znać na {$settings['email']['blogContactMail']}");
 define('EXITMSG_BADCAPTHAEMAIL', "Musisz dodać antybotowy kod do swojego adresu.
     Przeczytaj uważniej instrukcję tuż nad polem formularza.");
 define('EXITMSG_EMAILNOTFOUND', "Nie znalazłem tego adresu emailowego na liście subskrybentów.");
