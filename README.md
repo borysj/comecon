@@ -266,26 +266,31 @@ static blog.
 You can use `misc/search.php` as a crude PHP-only search engine for your blog.
 It asks the server to look ("grep") through all your post and comment files for
 a given phrase. Sounds primitive and slow. Surprisingly enough, it works better
-and faster than the standard WordPress search engine. At least for a website
+and faster than the standard WordPress search engine; at least for a website
 where the traffic is reasonably small. 
 
-The search phrase comes from `misc/form-search.html` that you have to insert
-into your blog website. You must upload the search script to the website root.
-If you upload it somewhere else, you will have to edit the script link in the
-search form.
+You must upload the search script to the website root. The search phrase comes
+from `misc/form-search.html` that you have to insert into your blog website.
 
-The search script will sanitize the search phrase and look for it in the search
-data directory as defined in `private/settings.php`. 
+If you upload the search script somewhere else than the website root, you will
+have to edit the script link in the search form.
 
-What is the search data directory? It consists of a "data" file, one such file
-for each of your blog posts. These are simply blog posts without any HTML or
-Markdown tags. If (some of) the tags are still around, it will deteriorate the
-search results because e.g. `**Tolkien** is best` will not give match for
-`Tolkien is best`-search phrase.
+The search script will sanitize the search phrase and look for it in the
+searchable post directory as defined in `private/settings.php`. 
 
-If you are familiar with `sed`, you can use `misc/clean_blogpost.sed`
-to remove Markdown tags:  
+The searchable post directory consists of your blog posts in plain TXT, meaning
+no Markdown and no HTML.  If the tags were still around, it would deteriorate
+the search results because e.g. `I believe **Tolkien** is best` would not give
+match for the `I believe Tolkien is best`-search phrase.
+
+Thus, if you want to implement the search in your blog, you have to put a plain
+copy of each blog post in the searchable post directory. If you are familiar
+with `sed`, you can use `misc/clean_blogpost.sed` to remove Markdown tags:  
 `sed -f clean_blogpost.sed blogpost.md > blogpost.txt`
+
+**The first line of each plain post copy must be the post URL**. Otherwise, the
+search engine cannot know where the real versions of these posts are, and cannot
+create a link if a phrase is found.
 
 The search script will also look for the search phrase in all comment files
 within the standard comments directory (defined in settings).

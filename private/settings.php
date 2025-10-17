@@ -123,9 +123,9 @@ $settings = [
     ],
     "search" => [
         // Server subpath (public) for where you keep searchable blog posts.
-        // "Searchable" means "in plain text without any tags".
-        // See the explanation in README.
-        "searchDataDirectory" => $siteDir . "/db_posts",
+        // "Searchable" means "in plain text without any tags, the first line
+        // is the actual post URL". See the explanation in README.
+        "searchableDir" => $siteDir . "/db_posts",
         // Server subpath for search queries (preferably non-public).
         // This is for the curios; you will see what keywords people are looking for on
         // your blog.

@@ -8,14 +8,10 @@ require_once __DIR__ . "/../src/" . $settings['general']['messages'];
  *
  * @param string $searchDir The path to the directory to be searched through
  * @param string $searchString The phrase that we are searching for
- * @param string $pattern The regex name pattern of every relevant file in the
- * directory, used to extract the date and the title
- * @param int $trailingChars The number of trailing characters to be
- * removed from the title
- * @return array<string> An array of strings with date, link and title,
+ * @return array<string> An array of strings with links,
  * one element for each file where the phrase has been found
  */
-function searchThroughFiles($searchDir, $searchString, $pattern, $trailingChars)
+function searchThroughFiles($searchDir, $searchString)
 {
     $searchResults = [];
     // Try to open the directory
@@ -30,17 +26,15 @@ function searchThroughFiles($searchDir, $searchString, $pattern, $trailingChars)
                     if (!$fileContent) {
                         exit(EXITMSG_FILEUNREADABLE . " ::: " . __FILE__ . ":" . __LINE__);
                     }
-                    // Look for the phrase in the file
-                    if (stripos($fileContent, $searchString) !== false) {
-                        // If found, extract the link, the date and the title
-                        // from the filename using the regex pattern
-                        if (preg_match($pattern, $filename, $matches)) {
-                            $link = $settings['general']['siteURL'] . "/" .
-                                $matches[1] . "/" . $matches[2] . "/" . $matches[3] . "/" . $matches[4];
-                            $date = $matches[1] . "/" . $matches[2] . "/" . $matches[3];
-                            // 11 because the leading YYYY-MM-DD is 10 characters long
-                            $title = substr($filename, 11, $trailingChars);
-                            $searchResults[] = "<b>$date:</b> <a href=\"$link\">$title</a>";
+                    // The first line in the post data file or the search file
+                    // stores the post URL.  We have to save it, and then look
+                    // for the search phrase in the rest of it.
+                    $firstLineEnd = strpos($fileContent, PHP_EOL);
+                    if ($firstLineEnd !== false) {
+                        $firstLine = substr($fileContent, 0, $firstLineEnd);
+                        $restOfFile = substr($fileContent, $firstLineEnd + strlen(PHP_EOL));
+                        if (stripos($restOfFile, $searchString) !== false) {
+                            $searchResults[] = "<a href="$firstLine">$firstLine</a>";
                         }
                     }
                 }
@@ -79,7 +73,7 @@ if (str_starts_with($searchString, '123')) {
     $searchString = substr($searchString, 3);
     $saveQuery = false;
 } else if (str_starts_with($searchString, '  ')) {
-    $searchString = substr($searchString, '  ');
+    $searchString = substr($searchString, 2);
     $saveQuery = true;
 } else {
     exit(EXITMSG_BADCAPTCHA . " ::: " . __FILE__ . ":" . __LINE__);
@@ -94,13 +88,8 @@ if ($saveQuery) {
     );
 }
 
-$patternPost = "/(\d{4})-(\d{2})-(\d{2})-([^.]*)/";
-$patternComment = "/(\d{4})-(\d{2})-(\d{2})-(.*)-COMMENTS.txt/";
-
-// -4 to cut the final .txt, -13 to cut the final -COMMENTS.txt from the
-// relevant filename
-$searchResultsPosts = searchThroughFiles($settings['search']['searchDataDirectory'], $searchString, $patternPost, -4);
-$searchResultsComments = searchThroughFiles($settings['general']['commentsDir'], $searchString, $patternComment, -13);
+$searchResultsPosts = searchThroughFiles($settings['search']['searchableDir'], $searchString);
+$searchResultsComments = searchThroughFiles($settings['general']['commentsDir'], $searchString);
 rsort($searchResultsPosts);
 rsort($searchResultsComments);
 $m = count($searchResultsPosts);
