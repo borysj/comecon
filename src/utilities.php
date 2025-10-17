@@ -139,7 +139,7 @@ function validateURL($url, $internal) {
     if ($internal) {
         $myURL = parse_url($settings['general']['siteURL']);
         if (!isset($parsedURL['host']) ||
-            !isset($myURL['host'] ||
+            !isset($myURL['host']) ||
             strtolower($parsedURL['host']) !== strtolower($myURL['host']))
         {
             return false;
