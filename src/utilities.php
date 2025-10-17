@@ -92,7 +92,7 @@ function prepareString($string, $length, $breaklines, $markdown, $http)
         function($matches) {
             $linkText = $matches[1];
             $url = $matches[2];
-            $validURL = isValidURL($url);
+            $validURL = validateURL($url);
             if ($validURL === false) {
                 return $linkText;
             }
@@ -115,12 +115,12 @@ function prepareString($string, $length, $breaklines, $markdown, $http)
 }
 
 /**
- * Validate the Markdown URL provided by the user in a comment.
+ * Validate the URL provided by the user in a comment.
  *
  * @param string $url The provided URL
  * @return string|false Validated URL or false if invalid
  */
-function isValidURL($url) {
+function validateURL($url) {
     $url = trim($url);
     if (stripos($url, 'http://') !== 0 && stripos($url, 'https://') !== 0) {
         $url = 'http://' . $url;
@@ -508,15 +508,4 @@ function gravatarExists($email, $notYetHashed)
     } else {
         return true;
     }
-}
-
-function getPostFullTitle($postURL)
-{
-    $html = file_get_contents($postURL);
-    if (preg_match('/<h1[^>]*>(.*?)<\/h1>/is', $html, $matches)) {
-        $postFullTitle = strip_tags($matches[1]);
-    } else {
-        return null;
-    }
-    return rawurlencode($postFullTitle);
 }

@@ -54,10 +54,15 @@ if (isset($_GET["action"])) {
             $userComment = prepareString($_POST["comment"], $settings['save']['maxCommentLength'], true, true, false);
             $userURL = prepareString($_POST["webpage"], 60, false, false, true);
             $userEmail = prepareString($_POST["email"], 60, false, false, false);
+            if (!isset($_SERVER["REQUEST_URI"])) {
+                exit(EXITMSG_ERRORURL . " ::: " . __FILE__ . ":" . __LINE__);
+            } else {
+                $postURL = validateURL($_SERVER["REQUEST_URI"]);
+            }
             // $_POST["postFullTitle"] is set by the blog author in the form,
             // and at the very least should be an empty string
             if ($_POST["postFullTitle"] === "") {
-                $postFullTitle = getFullTitle($_SERVER["REQUEST_URI"]);
+                $postFullTitle = getFullTitle($postURL);
             } else {
                 $postFullTitle = $_POST["postFullTitle"];
             }

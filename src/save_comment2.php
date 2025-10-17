@@ -86,12 +86,6 @@ if (!empty($userEmail)) {
 date_default_timezone_set($settings['save']['timezone']);
 $currentDateTime = date($settings['save']['timestamp']);
 
-if (!isset($_SERVER["REQUEST_URI"])) {
-    exit(EXITMSG_ERRORURL . " ::: " . __FILE__ . ":" . __LINE__);
-} else {
-    $postURL = $_SERVER["REQUEST_URI"];
-}
-
 // The email variant will be stored in the comment file specific for this
 // blog post. The second variant without emails will be stored in the global
 // and possibly public comment file.
