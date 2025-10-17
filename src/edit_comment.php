@@ -5,7 +5,11 @@
 // global comment file (if the latter is in use)
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     validate_request("POST", ["editedComment"]);
-    if (earlyEnoughToEdit($commentElements[1], $settings['edit']['commentEditTimeout']) || $adminAccess) {
+    if (
+        earlyEnoughToEdit($commentElements[1], $settings['edit']['commentEditTimeout']) ||
+        $adminAccess
+    )
+    {
         $editedComment = prepareString(
             $_POST["editedComment"],
             $settings['save']['maxCommentLength'],
@@ -13,12 +17,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             true,
             false
         );
-        // First and foremost, we are changing the particular comment file.
-        // We have to transform the blog post link /YYYY/MM/DD/title/ into
-        // the comment filename YYYY-MM-DD-title-COMMENTS.txt
-        $commentFilename = substr(str_replace("/", "-", $commentElements[0]), 1, -1) . "-COMMENTS.txt";
-        $commentFilepath = $settings['general']['commentsDir'] . "/" . $commentFilename;
-        changeComment($commentFilepath, $commentElements, $editedComment, false);
+        // We change the specific comment file
+        changeComment($commentFilePath, $commentElements, $editedComment, false);
         // Possible change also the master comment file
         if ($settings['save']['allComments']) {
             $commentFilepath = $settings['save']['allCommentsFile'];
@@ -38,7 +38,7 @@ if ($settings['edit']['adminCommentPassword'] === hash("sha256", $adminPassword)
     $adminAccess = false;
 }
 // Identify the comment record using the blog post ID and the comment ID
-$commentLine = findComment(
+[$commentFilePath, $commentLine] = findComment(
     $postID,
     $commentID,
     $adminAccess,

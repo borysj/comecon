@@ -152,18 +152,18 @@ function isValidURL($url) {
  * @param string $sCommentsDir The filepath for the comment directory
  * @param string $sCookieKey The cookie key that the comment ID has been
  * hashed with
- * @return string The comment record from the database (the actual
- * comment together with its descriptors)
+ * @return array<string> The path to the relevant comment file,
+ * and the comment record
  */
 function findComment($postID, $commentID, $adminAccess, $sCommentsDir, $sCookieKey)
 {
-    $commentFilePath = glob("$sCommentsDir/$postID*");
+    $commentFilePath = "$sCommentsDir/{$postID}-COMMENTS.txt";
     if (!$commentFilePath) {
-        return "";
+        return [null, null];
     }
     $commentFile = fopen($commentFilePath[0], "r");
     if (!$commentFile) {
-        return "";
+        return [null, null];
     }
     // Scan through the relevant comment file
     while (($line = fgets($commentFile)) !== false) {
@@ -189,7 +189,11 @@ function findComment($postID, $commentID, $adminAccess, $sCommentsDir, $sCookieK
         }
     }
     fclose($commentFile);
-    return isset($commentLine) ? $commentLine : "";
+    if (!isset($commentLine)) {
+        return [null, null];
+    } else {
+        return [$commentFilePath, $commentLine];
+    }
 }
 
 /**
