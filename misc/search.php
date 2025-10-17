@@ -12,7 +12,7 @@ require_once __DIR__ . "/../src/" . $settings['general']['messages'];
  * directory, used to extract the date and the title
  * @param int $trailingChars The number of trailing characters to be
  * removed from the title
- * @return array<string> $searchResults An array of strings with date, link and title,
+ * @return array<string> An array of strings with date, link and title,
  * one element for each file where the phrase has been found
  */
 function searchThroughFiles($searchDir, $searchString, $pattern, $trailingChars)

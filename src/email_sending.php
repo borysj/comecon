@@ -17,7 +17,7 @@ require __DIR__ . '/../vendor/autoload.php';
  * notification is about (the blog post is either new or has been commented on)
  * @param array<string> $sEmail Email settings (host, username, password, contact/reply-to email)
  * @param string $sBlogName The name of the blog
- * @return PHPMailer $mail The mail object
+ * @return PHPMailer The mail object
  */
 function createMail($newBlogPost, $fullTitle, $sEmail, $sBlogName)
 {

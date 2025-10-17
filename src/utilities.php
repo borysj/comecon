@@ -40,7 +40,7 @@ function sanitizePostID($postID)
  * Attempts to grab the full title of a blog post directly from the HTML
  *
  * @param string $url The URL of the blog post
- * @return string|null $fullTitle The candidate for the full title, or null if
+ * @return string|null The candidate for the full title, or null if
  * parsing of the HTML did not work
  */
 function getFullTitle($url)
@@ -70,7 +70,7 @@ function getFullTitle($url)
  * @param bool $markdown If false, do nothing. If true, convert Markdown to HTML (but without <p>)
  * @param bool $http If true, add http:// to the beginning of the string if it
  * is not already present.
- * @return string $string The prepared string
+ * @return string The prepared string
  */
 function prepareString($string, $length, $breaklines, $markdown, $http)
 {
@@ -152,7 +152,7 @@ function isValidURL($url) {
  * @param string $sCommentsDir The filepath for the comment directory
  * @param string $sCookieKey The cookie key that the comment ID has been
  * hashed with
- * @return string $commentLine The comment record from the database (the actual
+ * @return string The comment record from the database (the actual
  * comment together with its descriptors)
  */
 function findComment($postID, $commentID, $adminAccess, $sCommentsDir, $sCookieKey)
@@ -198,7 +198,7 @@ function findComment($postID, $commentID, $adminAccess, $sCommentsDir, $sCookieK
  * look for newlines, code fragments, bolds, italics and links.
  *
  * @param string $comment The comment to be converted (it includes HTML tags)
- * @return string $comment The comment to be displayed for the editor (with Markdown)
+ * @return string The comment to be displayed for the editor (with Markdown)
  */
 function HTML2markdown($comment)
 {
@@ -250,7 +250,7 @@ function earlyEnoughToEdit($commentDateTime, $sCommentEditTimeout)
  * edition is actually a deletion, and we are deleting the last comment. Use
  * true for the master comment file, and false for a particular comment file
  * that can be deleted
- * @return bool $commentChanged True if the comment has been changed, false if
+ * @return bool True if the comment has been changed, false if
  * the comment file has not been found or the comment record in the comment file
  * has not been found
  */
@@ -357,7 +357,6 @@ function checkIfDuplicate($commentFilePath, $comment)
  * @param string $userName The name provided by the commenter
  * @param string $userPassword The password provided by the commenter
  * @param array<string, mixed> $commenters The associative array with the registered users
- *
  * @return array<mixed>
  */
 function checkVip($userName, $userPassword, $commenters)
