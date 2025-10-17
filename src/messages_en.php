@@ -33,6 +33,8 @@ define('EXITMSG_NOTSTRING', "A string was expected");
 define('EXITMSG_WRONGREQUESTMETHOD', "The request method (GET or POST) is wrong");
 define('EXITMSG_KEYISWRONG', "A key is not set or not a string");
 define('EXITMSG_NOTIFICATIONERROR', "I cannot create an email notification due to wrong parameters");
+define('EXITMSG_ADMINCOMMENTPASSWORD', "The admin password for editing comments has not been set, add it to settings");
+define('EXITMSG_COOKIEKEY', "The cookie key has not been set, add it to settings");
 define('MSG_COMMENTINCONTEXT', "The comments could have been changed or deleted in the meanwhile.
         Follow the link to the blog to find the most recent version.");
 define('MSG_COMMENTFEEDENTRYTITLE', "Comment for the blog post:");

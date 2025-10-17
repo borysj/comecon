@@ -4,6 +4,13 @@ require_once __DIR__ . "/private/settings.php";
 require_once __DIR__ . "/src/" . $settings['general']['messages'];
 require_once __DIR__ . "/src/utilities.php";
 
+if ($settings['edit']['adminCommentPassword'] === "CHANGEME") {
+    exit(EXITMSG_ADMINCOMMENTPASSWORD);
+}
+if ($settings['edit']['cookieKey'] === "CHANGEME") {
+    exit(EXITMSG_COOKIEKEY);
+}
+
 if (isset($_GET["action"])) {
     $action = $_GET["action"];
 

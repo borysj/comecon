@@ -85,11 +85,12 @@ $settings = [
     ],
     "edit" => [
         // Use any random string of characters.
-        "cookieKey" => "CHANGEME", //IMPORTANT
+        "cookieKey" => "CHANGEME", //ESSENTIAL
         // This is your admin backdoor for editing comments.
         // Use this command to calculate hash:
         // php -r "echo(hash('sha256', 'unhashed_password'));"
-        "adminCommentPassword" => "CHANGEME", //IMPORTANT
+        // Enter the hashed password.
+        "adminCommentPassword" => "CHANGEME", //ESSENTIAL
         // The commenter has 25 minutes to edit their comment.
         // 25 minutes is the real deadline, but the commenter will be informed that they have
         // only 20 to give them some extra margin while editing.

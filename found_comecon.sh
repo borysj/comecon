@@ -47,9 +47,9 @@ echo "Please enter the captcha answer"
 read -p "[Winston] " commentCaptcha
 commentCaptcha=${commentCaptcha:-Winston}
 
-echo "Generating cookie salt..."
-cookieSalt=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | head -c 20)
-echo $cookieSalt
+echo "Generating cookie key..."
+cookieKey=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | head -c 20)
+echo $cookieKey
 
 echo "Modifying the essential settings..."
 $s=private/settings.php
@@ -57,7 +57,7 @@ sed -i "0,|siteDir|s|\"\"|\"$siteDir\"|" $s
 sed -i "0,|blogName|s|My Great Blog|$blogName|" $s
 sed -i "0,|siteURL|s|https://myblog.example.com|$siteURL|" $s
 sed -i "0,|commentCaptcha|s|correct_anser|$commentCaptcha|" $s
-sed -i "0,|cookieSalt|s|\"\"|\"$cookieSalt\"|" $s
+sed -i "0,|cookieKey|s|\"CHANGEME\"|\"$cookieKey\"|" $s
 
 echo "Preparing the includes..."
 sed -i "0,|// \$commentsDir|s|=|= $commentsDir|" includes/display_comments.php

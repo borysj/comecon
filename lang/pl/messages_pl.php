@@ -30,6 +30,9 @@ define('EXITMSG_FILEUNREADABLE', "Nie mogę odczytać pliku");
 define('EXITMSG_NOTSTRING', "Spodziewałem się stringa, a dostałem Bóg raczy wiedzieć co");
 define('EXITMSG_WRONGREQUESTMETHOD', "GET/POST mi się tutaj nie zgadza");
 define('EXITMSG_KEYISWRONG', "Brakuje klucza albo jego wartość nie jest stringiem");
+define('EXITMSG_NOTIFICATIONERROR', "Nie mogę stworzyć powiadomienia mailowego z powodu złych parametrów");
+define('EXITMSG_ADMINCOMMENTPASSWORD', "Hasło admina do edytowania komentarzy nie zostało wybrane, dodaj je w ustawieniach");
+define('EXITMSG_COOKIEKEY', "Klucz do ciasteczek nie został wygenerowany, dodaj go w ustawieniach");
 define('MSG_COMMENTINCONTEXT', "Komentarz mógł w międzyczasie zostać zmieniony lub usunięty.
     Wklikaj się we wpis na blogu, żeby odnaleźć jego najnowszą wersję.");
 define('MSG_COMMENTFEEDENTRYTITLE', "Komentarz do wpisu:");
