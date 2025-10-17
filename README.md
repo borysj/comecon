@@ -96,16 +96,16 @@ for more information.
 3. Fill out `private/settings.php` and `private/commenters.php`.
 4. Create the directory that `commentsDir` from the settings points to.
 5. Add the same directory manually to the top part of
-   `includes/display_comments.html`.
+   `inserts/display_comments.html`.
 6. Set the captcha question in the HTML form
-   `includes/form-submit_comment.html`.
+   `inserts/form-submit_comment.html`.
 7. In the HTML of every blog post (that you want to connect to Comecon), you
    will have to include:
    - a PHP snippet with the post identifier: `<?php $postID="post_identifier" ?>`
      (the post identifier can contain only ASCII letters (both cases), numbers,
      underscores, dashes; it should be no longer than 100 characters)
-   - the PHP script for displaying the comments: `includes/display_comments.php`
-   - the HTML form for submitting a comment: `includes/form-submit_comment.html`
+   - the PHP script for displaying the comments: `inserts/display_comments.php`
+   - the HTML form for submitting a comment: `inserts/form-submit_comment.html`
      which contains a hidden field for the full title of the blog post being
      commented on
 8. The submission form is unstyled, so you might want to add some new classes to
@@ -113,7 +113,7 @@ for more information.
 9. If you self-host, link `comecon.php` to the root of your website, like this:
    `ln -s /var/www/comecon/comecon.php /var/www/html/comecon.php`. If you are on
    shared hosting, move `comecon.php` to the root of your website, and adjust
-   all file paths from requires and includes.
+   all file paths for requires and includes.
 
 Assuming that your WWW server can process PHP, you are now ready to go. Remember
 that your blog posts must be now PHP files, since they contain PHP snippets!
@@ -251,7 +251,7 @@ want to turn on email notifications about new comments (per blog post).
 1. Edit the `email` category in the settings. Here, you have to connect your
    email account to Comecon. `notify` gets `true`.
 2. Create the directory that the `subscribersDir` setting points to.
-3. Uncomment the label for `email2` in `includes/form-submit_comment.html`.
+3. Uncomment the label for `email2` in `inserts/form-submit_comment.html`.
 
 Now, if someone subscribes to a blog post by email, a subscriber file with their
 email address will be created. If someone published a new comment under this
@@ -325,9 +325,9 @@ If you want to translate Comecon to your language you must:
 - translate `messages_en.php` to `messages_xx.php` (the messages beginning with
   MSG and LABEL are the most important one; EXITMSG are the error messages);
 - change the two language settings in `settings.php`;
-- translate all the relevant strings in `includes/display_comments.php`;
+- translate all the relevant strings in `inserts/display_comments.php`;
 - translate all the forms you use (first and foremost
-  `includes/form-submit_comment.html);
+  `inserts/form-submit_comment.html);
 - translate all the relevant strings in `src/email_sending.php`.
 
 Notice that the Polish translation is already provided in `lang/pl`. Just

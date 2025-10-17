@@ -66,7 +66,7 @@ $settings = [
         "emailSaltB" => "CHANGEME", //IMPORTANT
         // Write here the answer to the captcha question for the comment form
         // The question itself is formulated in the form in
-        // includes/form-submit_comment.html
+        // inserts/form-submit_comment.html
         "commentCaptcha" => "correct_answer", //ESSENTIAL
     ],
     "feed" => [
@@ -94,7 +94,7 @@ $settings = [
         // The commenter has 25 minutes to edit their comment.
         // 25 minutes is the real deadline, but the commenter will be informed that they have
         // only 20 to give them some extra margin while editing.
-        // If you change this value, remember to change the message in includes/display_comments.php
+        // If you change this value, remember to change the message in inserts/display_comments.php
         "commentEditTimeout" => 25 * 60,
     ],
     "email" => [
@@ -104,8 +104,6 @@ $settings = [
         // only you)
         "notify" => false,
         // Email server parameters for sending notifications
-        // For security reasons, it is recommended to store these in a separate,
-        // ignored file (e.g., `private/prod-settings.php`) and include it here.
         "mailNotificationsHost" => "smtp.example.com",
         "mailNotificationsUsername" => "notifications@example.com",
         "mailNotificationsPassword" => "CHANGEME",

@@ -77,9 +77,9 @@ sed -i "0,|siteURL|s|https://myblog.example.com|$siteURL|" $s
 sed -i "0,|commentCaptcha|s|correct_anser|$commentCaptcha|" $s
 sed -i "0,|cookieKey|s|CHANGEME|$cookieKey|" $s
 
-printf "\nPreparing the includes..."
-sed -i "0,|// \$commentsDir|s|=|= $commentsDir|" includes/display_comments.php
-sed -i "0,|Poor man\'s captcha|s|Esay but ofubcstaed quistoen?|$captchaQuestion|" includes/form-submit_comment.html
+printf "\nPreparing the inserts..."
+sed -i "0,|// \$commentsDir|s|=|= $commentsDir|" inserts/display_comments.php
+sed -i "0,|Poor man\'s captcha|s|Esay but ofubcstaed quistoen?|$captchaQuestion|" inserts/form-submit_comment.html
 
 printf "\nRemoving examples from the commenters file..."
 mv private/commenters.php private/commenters.bak
@@ -94,8 +94,8 @@ printf "==================================="
 
 printf "\nRemember that in the HTML of every blog post you will have to insert three elements:"
 printf "1) A post identifier written as a PHP snippet"
-printf "2) This code: includes/display_comments.php"
-printf "3) This form: includes/form-submit_comment.html – which should contain the full title of the blog post"
+printf "2) This code: inserts/display_comments.php"
+printf "3) This form: inserts/form-submit_comment.html – which should contain the full title of the blog post"
 printf "Also, your blog posts files must now have PHP extension, so index.php and the_new_blog.php"
 printf "instead of index.html and the_new_blog.html."
 printf "For more details, see README.md or look into the examples directory."

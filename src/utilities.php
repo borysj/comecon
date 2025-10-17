@@ -201,7 +201,7 @@ function findComment($postID, $commentID, $adminAccess, $sCommentsDir, $sCookieK
  * display it for editing in Markdown. The conversion is done with regex. We
  * look for newlines, code fragments, bolds, italics and links.
  *
- * @param string $comment The comment to be converted (it includes HTML tags)
+ * @param string $comment The comment to be converted (with HTML)
  * @return string The comment to be displayed for the editor (with Markdown)
  */
 function HTML2markdown($comment)
