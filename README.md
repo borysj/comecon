@@ -49,9 +49,6 @@ every blog post, something like `YYYY-MM-DD-post-title` or
 [Acknowledgments](#acknowledgments)
 [Licence](#licence)
 
-For an even more detailed description, see
-[DETAILS.md](https://github.com/borysj/comecon/blob/main/DETAILS.md).
-
 # Features
 
 Comecon:
