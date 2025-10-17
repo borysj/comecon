@@ -30,6 +30,7 @@ every blog post, something like `YYYY-MM-DD-post-title` or
 [Deployment](#deployment)  
 :: [Short version](#short-version)  
 :: [Some details](#some-details)  
+[Admin access to comments](#admin-access-to-comments)
 [Optional features](#optional-features)
 :: [Master comment file](#master-comment-file)
 :: [Feeds](#feeds)
@@ -60,6 +61,7 @@ Comecon:
 - lets the commenter attach a link to their nickname;
 - lets the commenter edit or delete their comment within predefined time after
   submitting;
+- lets the admin edit or delete any comment through the browser;
 - lets the commenter register their nickname in order to simplify the comment
   submission and "upgrade" the color of the nick;
 - is integrated with [Gravatar](https://gravatar.com);
@@ -163,6 +165,8 @@ They must no longer have the HTML extension.
    "../comecon/private/settings.php";`. Here `..` means to go up one directory
    level (out of the website root) and then descend into the (private) Comecon
    directory.
+
+# Admin access to comments
 
 # Optional features
 

@@ -1,5 +1,11 @@
 <?php
 
+// EXIT_MSG are error messages.
+// MSG are used when updating a comment feed.
+// LABEL are used in forms and similar.
+// If you are translating the messages, LABEL and MSG are the most important,
+// and there are fewest of them.
+
 define('EXITMSG_BADCOMMENTCAPTCHA', "I suspect you of being a robot.");
 define('EXITMSG_WRONGPASSWORD', "Your comment has not been added.<br>
         You have used a reserved nickname in a wrong way.");
