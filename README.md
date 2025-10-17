@@ -365,10 +365,10 @@ strings.
 * better search
 * `commenters.php` is currently updated manually by the webmaster. However, it could be
 done through a form and with a script.
-* `save_comment.php` should probably be refactored. There is some redundancy
+* `ussr.php` should probably be refactored. There is some redundancy
 between it and `add_subscriber.php`. Also, `edit_comment.php` contains
 effectively the same function for converting Markdown to HTML as
-`save_comment.php`.
+`ussr.php`.
 * My inutition tells me that `email_notification.php` is a bad way of sending
 notifications about new blog posts, since the activation URL is accessible to
 anyone. On the other hand, the whole idea is to make the notification system

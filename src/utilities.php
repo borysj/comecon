@@ -307,7 +307,7 @@ function changeComment($commentFilepath, $commentElements, $newComment, $permane
 }
 
 
-// -- USED BY save_comment.php -- //
+// -- USED BY ussr.php -- //
 
 /**
  * Check whether a file with given path exists. If not, create it, possibly

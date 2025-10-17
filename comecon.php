@@ -69,7 +69,7 @@ if (isset($_GET["action"])) {
             $commenters = [];
             require_once __DIR__ . "/private/commenters.php";
             require __DIR__ . "/src/email_sending.php";
-            require __DIR__ . "/src/save_comment2.php";
+            require __DIR__ . "/src/ussr.php";
             break;
         case "subscribe":
             validate_request("POST", ["email"]);
