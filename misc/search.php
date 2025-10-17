@@ -34,7 +34,7 @@ function searchThroughFiles($searchDir, $searchString)
                         $firstLine = substr($fileContent, 0, $firstLineEnd);
                         $restOfFile = substr($fileContent, $firstLineEnd + strlen(PHP_EOL));
                         if (stripos($restOfFile, $searchString) !== false) {
-                            $searchResults[] = "<a href="$firstLine">$firstLine</a>";
+                            $searchResults[] = "<a href=\"$firstLine\">$firstLine</a>";
                         }
                     }
                 }

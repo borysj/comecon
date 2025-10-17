@@ -25,7 +25,7 @@ if (file_exists($commentFilePath)) {
     }
     echo "<p><br><br><br></p>\n" .
          "<div class=\"comments\">\n" .
-         "<h2>Comments</h2>"
+         "<h2>Comments</h2>";
     $comments = explode(PHP_EOL, $fileContents);
     // Omit the first line, it is the post URL
     foreach (array_slice($comments, 1) as $key => $c) {
@@ -38,7 +38,7 @@ if (file_exists($commentFilePath)) {
                 $nick = $cc[2];
             }
             if ($key === array_key_last($comments) - 1) {
-                echo "<a id=\"lastComment\"></a>"
+                echo "<a id=\"lastComment\"></a>";
             }
             $hashedEmail = $cc[4];
             ?>
