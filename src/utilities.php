@@ -79,16 +79,31 @@ function prepareString($string, $length, $breaklines, $markdown, $http)
     }
     $string = htmlspecialchars($string, ENT_QUOTES);
     $string = trim($string);
-    $string = substr($string, 0, $length);
+    $string = mb_substr($string, 0, $length, "UTF-8");
     if ($breaklines) {
         $string = str_replace(array("\r\n", "\r", "\n"), "<br/>", $string);
     } else {
         $string = str_replace(array("\r\n", "\r", "\n"), "", $string);
     }
     if ($markdown) {
+        // Process links with validation
+        $string = preg_replace_callback(
+        '/\[([^\]\n]+)\]\(([^)\n]+)\)/',
+        function($matches) {
+            $linkText = $matches[1];
+            $url = $matches[2];
+            $validURL = isValidURL($url);
+            if ($validURL === false) {
+                return $linkText;
+            }
+            $safeURL = htmlspecialchars($validURL, ENT_QUOTES);
+            return "<a href=\"" . $safeURL . "\">" . $linkText . "</a>";
+        },
+        $string
+    ) ?? $string;
+
+        // Process style blocks
         $string = preg_replace('/`([^`\n]+)`/', '<code>$1</code>', $string) ?? $string;
-        $string = preg_replace('/\[[^\]\n]+\]\((http:\/\/)?(.*?)\)/', '<a href="http://$3">$1</a>', $string) ?? $string;
-        $string = preg_replace('/\[[^\]\n]+\]\((https:\/\/)?(.*?)\)/', '<a href="https://$3">$1</a>', $string) ?? $string;
         $string = preg_replace('/\*\*([^\*\n]+)\*\*/', '<strong>$1</strong>', $string) ?? $string;
         $string = preg_replace('/\*(?! )([^\*\n]+)\*/', '<em>$1</em>', $string) ?? $string;
         $string = preg_replace('/(?<=^|\s)_([^_\n]+)_(?=\s|$)/', '<em>$1</em>', $string) ?? $string;
@@ -97,6 +112,30 @@ function prepareString($string, $length, $breaklines, $markdown, $http)
         $string = "http://" . $string;
     }
     return $string;
+}
+
+/**
+ * Validate the Markdown URL provided by the user in a comment.
+ *
+ * @param string $url The provided URL
+ * @return string|false Validated URL or false if invalid
+ */
+function isValidURL($url) {
+    $url = trim($url);
+    if (stripos($url, 'http://') !== 0 && stripos($url, 'https://') !== 0) {
+        $url = 'http://' . $url;
+    }
+    if (filter_var($url, FILTER_VALIDATE_URL) === false) {
+        return false;
+    }
+    $parsedURL = parse_url($url);
+    if (
+        !isset($parsedURL['scheme']) ||
+        !in_array(strtolower($parsedURL['scheme']), ['http', 'https']))
+    {
+        return false;
+    }
+    return $url;
 }
 
 
