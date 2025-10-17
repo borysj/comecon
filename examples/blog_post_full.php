@@ -48,15 +48,16 @@
 
 <!-- The post identifier -->
 <?php $postID = "2021-01-16-new-blog-post"; ?>
+<!-- END -->
 
 <!-- display_comments.php -->
 <?php
 // Set the comment directory here and uncomment.
 // It must be exactly the same as the value of
-// $settings['general']['commentDir'], only that you cannot refer to settings
+// $settings['general']['commentsDir'], only that you cannot refer to settings
 // from here. This snippet will be embedded in blog posts whose location
 // in the directory structure will be generally uncertain.
-$commentDir = "/var/www/comments";
+// $commentsDir =
 
 if (!isset($postID) || $postID === "") {
     exit("I cannot display the comments, because the post identifier has not been set.");
@@ -67,8 +68,8 @@ $postID = substr($postID, 0, 100);
 if ($postID === "") {
     exit("I cannot display the comments, because the post identifier was invalid.");
 }
-$commentFile = $postID . "-COMMENTS.txt");
-$commentFilePath = $commentDir . "/" . $commentFile;
+$commentFile = $postID . "-COMMENTS.txt";
+$commentFilePath = $commentsDir . "/" . $commentFile;
 
 if (file_exists($commentFilePath)) {
     $fileContents = file_get_contents($commentFilepath);
@@ -77,9 +78,10 @@ if (file_exists($commentFilePath)) {
     }
     echo "<p><br><br><br></p>\n" .
          "<div class=\"comments\">\n" .
-         "<h2>Comments</h2>"
+         "<h2>Comments</h2>";
     $comments = explode(PHP_EOL, $fileContents);
-    foreach ($comments as $key => $c) {
+    // Omit the first line, it is the post URL
+    foreach (array_slice($comments, 1) as $key => $c) {
         if (!empty($c)) {
             $cc = explode("<|>", $c);
             $commentAnchor = str_replace(array(" ", "-", ":"), "", $cc[1]);
@@ -89,7 +91,7 @@ if (file_exists($commentFilePath)) {
                 $nick = $cc[2];
             }
             if ($key === array_key_last($comments) - 1) {
-                echo "<a id=\"lastComment\"></a>"
+                echo "<a id=\"lastComment\"></a>";
             }
             $hashedEmail = $cc[4];
             ?>
@@ -105,6 +107,7 @@ if (file_exists($commentFilePath)) {
                 ?>
                 <p class="comm_author_edit<?=$cc[6]?>">
                 <a href="/comecon.php?action=edit&id=<?=$postID?>&c=<?=$_COOKIE[$cookieName]?>">
+                <!-- Remember to edit the time if you have changed it in the setting -->
                 ..:: You have 20 minutes to edit your comment ::..
                 </a></p>
                 <?php
@@ -119,6 +122,7 @@ if (file_exists($commentFilePath)) {
     <?php
 }
 ?>
+<!-- END -->
 
 <!-- form-submit_comment.html -->
 <p><br><br></p>
@@ -171,6 +175,7 @@ placeholder="">
 </fieldset>
 </form>
 </div>
+<!-- END -->
 
     </main>
   </body>

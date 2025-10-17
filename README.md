@@ -143,7 +143,7 @@ They must no longer have the HTML extension.
 6. As above.
 7. A few remarks:
    - If you are unsure how to insert these three elements, take a look at
-     `examples/blog_post_plain.php`.
+     `examples/blog_post_full.php`.
    - The ordering of the PHP snippet with the post identifier, the PHP script
      and the comment form is important
    - The idea is that you include the snippet, the script and the form using a
