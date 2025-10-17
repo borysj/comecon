@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 }
 
 // Check if the admin is accessing
-if ($settings['edit']['adminCommentPassword'] === hash("sha256", $adminPassword)) {
+if (hash_equals($settings['edit']['adminCommentPassword'], hash("sha256", $adminPassword))) {
     $adminAccess = true;
 } else {
     $adminAccess = false;
