@@ -126,7 +126,7 @@ function sendNotifications(
 
     // If there is no subscription file for this particular post, or if the
     // notify-settings is false, we do not send notifications
-    if (!file_exists($path) || !$sEmail('notify']) {
+    if (!file_exists($path) || !$sEmail('notify')) {
         return false;
     }
     $subscribers = fopen($path, "r");

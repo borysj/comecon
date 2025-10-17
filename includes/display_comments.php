@@ -15,7 +15,7 @@ $postID = substr($postID, 0, 100);
 if ($postID === "") {
     exit("I cannot display the comments, because the post identifier was invalid.");
 }
-$commentFile = $postID . "-COMMENTS.txt");
+$commentFile = $postID . "-COMMENTS.txt";
 $commentFilePath = $commentsDir . "/" . $commentFile;
 
 if (file_exists($commentFilePath)) {

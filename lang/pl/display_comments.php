@@ -15,7 +15,7 @@ $postID = substr($postID, 0, 100);
 if ($postID === "") {
     exit("Nie mogę wyświetlić komentarzy, ponieważ identyfikator wpisu był nieprawidłowy.");
 }
-$commentFile = $postID . "-COMMENTS.txt");
+$commentFile = $postID . "-COMMENTS.txt";
 $commentFilePath = $commentsDir . "/" . $commentFile;
 
 if (file_exists($commentFilePath)) {

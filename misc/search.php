@@ -78,7 +78,7 @@ if (empty($searchString)) {
 if (str_starts_with($searchString, '123')) {
     $searchString = substr($searchString, 3);
     $saveQuery = false;
-} else if (str_starts_with($searchString, '  ') {
+} else if (str_starts_with($searchString, '  ')) {
     $searchString = substr($searchString, '  ');
     $saveQuery = true;
 } else {
