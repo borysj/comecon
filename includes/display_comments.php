@@ -27,7 +27,8 @@ if (file_exists($commentFilePath)) {
          "<div class=\"comments\">\n" .
          "<h2>Comments</h2>"
     $comments = explode(PHP_EOL, $fileContents);
-    foreach ($comments as $key => $c) {
+    // Omit the first line, it is the post URL
+    foreach (array_slice($comments, 1) as $key => $c) {
         if (!empty($c)) {
             $cc = explode("<|>", $c);
             $commentAnchor = str_replace(array(" ", "-", ":"), "", $cc[1]);
