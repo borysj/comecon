@@ -293,11 +293,6 @@ function changeComment($commentFilepath, $commentElements, $newComment, $permane
         }
     }
     file_put_contents($commentFilepath, $newCommentFileContent, LOCK_EX);
-    // If we have deleted the only comment in a comment file that is not
-    // permanent (i.e. not the master comment file), delete the file
-    if (filesize($commentFilepath) === 0 && !$permanentFile) {
-        unlink($commentFilepath);
-    }
     return $commentChanged;
 }
 
@@ -305,16 +300,21 @@ function changeComment($commentFilepath, $commentElements, $newComment, $permane
 // -- USED BY save_comment.php -- //
 
 /**
- * Check whether a file with given path exists. If not, create it.
+ * Check whether a file with given path exists. If not, create it, possibly
+ * with a predefined first line
  *
  * @param string $path The filepath to check and possibly create
+ * @param string|null $firstline If not null, make it the first line
  * @return void
  */
-function createNonexistentFile($path)
+function createNonexistentFile($path, $firstline)
 {
     if (!file_exists($path)) {
         touch($path);
         chmod($path, 0644);
+    }
+    if ($firstline !== null) {
+        file_put_contents($path, $firstline . PHP_EOL);
     }
 }
 

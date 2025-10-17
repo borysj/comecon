@@ -109,7 +109,7 @@ if (checkIfDuplicate($fullFilePath, $userComment)) {
     exit(EXITMSG_DUPLICATE . " ::: " . __FILE__ . ":" . __LINE__);
 }
 
-createNonexistentFile($fullFilePath);
+createNonexistentFile($fullFilePath, $postURL);
 
 // If the commenter wants to subscribe to comments by email, we have to
 // update (possible create) the subscribers file
@@ -117,7 +117,7 @@ if (!empty($userEmail) && $wantsEmails == 1) {
     if (filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
         $subsFile = $postID . "-SUBS.txt";
         $subsFilePath = $settings['general']['subscribersDir'] .  "/" . $subsFile;
-        createNonexistentFile($subsFilePath);
+        createNonexistentFile($subsFilePath, null);
         $fileContents = file_get_contents($subsFilePath);
         if (!$fileContents) {
             exit(EXITMSG_FILEUNREADABLE . " ::: " . __FILE__ . ":" . __LINE__);
