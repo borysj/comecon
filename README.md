@@ -131,8 +131,8 @@ They must no longer have the HTML extension.
    and then upload the Comecon folder to your server with the dependency already
    inside.
 3. To begin with, in `private/settings.php` you must fill out only the settings
-   marked as essential, otherwise Comecon won't work at all. You should also
-   fill out the settings marked as important. Notice that are several strings
+   marked as ESSENTIAL, otherwise Comecon won't work at all. You should also
+   fill out the settings marked as IMPORTANT. Notice that are several strings
    called CHANGEME that you should, well, change if they are relevant for
    features you want. In `private/commenters.php`, you should remove the example
    users, and add at least yourself and your grandmother.
