@@ -92,7 +92,7 @@ function prepareString($string, $length, $breaklines, $markdown, $http)
         function($matches) {
             $linkText = $matches[1];
             $url = $matches[2];
-            $validURL = validateURL($url);
+            $validURL = validateURL($url, false);
             if ($validURL === false) {
                 return $linkText;
             }
@@ -118,9 +118,10 @@ function prepareString($string, $length, $breaklines, $markdown, $http)
  * Validate the URL provided by the user in a comment.
  *
  * @param string $url The provided URL
+ * @param bool $internal If true, the URL must be related to the blog
  * @return string|false Validated URL or false if invalid
  */
-function validateURL($url) {
+function validateURL($url, $internal) {
     $url = trim($url);
     if (stripos($url, 'http://') !== 0 && stripos($url, 'https://') !== 0) {
         $url = 'http://' . $url;
@@ -134,6 +135,15 @@ function validateURL($url) {
         !in_array(strtolower($parsedURL['scheme']), ['http', 'https']))
     {
         return false;
+    }
+    if ($internal) {
+        $myURL = parse_url($settings['general']['siteURL']);
+        if (!isset($parsedURL['host']) ||
+            !isset($myURL['host'] ||
+            strtolower($parsedURL['host']) !== strtolower($myURL['host']))
+        {
+            return false;
+        }
     }
     return $url;
 }

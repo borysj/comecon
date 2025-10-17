@@ -57,7 +57,7 @@ if (isset($_GET["action"])) {
             if (!isset($_SERVER["REQUEST_URI"])) {
                 exit(EXITMSG_ERRORURL . " ::: " . __FILE__ . ":" . __LINE__);
             } else {
-                $postURL = validateURL($_SERVER["REQUEST_URI"]);
+                $postURL = validateURL($_SERVER["REQUEST_URI"], true);
             }
             // $_POST["postFullTitle"] is set by the blog author in the form,
             // and at the very least should be an empty string
