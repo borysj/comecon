@@ -364,6 +364,7 @@ strings.
 * captcha
 * better search with captcha
 * choice between database or flat files
+* real tests
 * `commenters.php` is currently updated manually by the webmaster. However, it could be
 done through a form and with a script.
 * `ussr.php` should probably be refactored. There is some redundancy
