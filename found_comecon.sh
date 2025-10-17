@@ -2,13 +2,13 @@
 set -e
 
 if ! command -v composer &> /dev/null; then
-    echo "Please install composer first"
+    echo "\nPlease install composer first"
     exit 1
 fi
 
 if ! command -v php &> /dev/null; then
     if ! systemctl status php-fpm &> /dev/null; then
-        echo "Warning: PHP might not be installed, or not running"
+        echo "\nWarning: PHP might not be installed, or not running"
         echo "Remember that Comecon is PHP-based"
         echo "The deployment of Comecon will proceed"
     fi
@@ -16,7 +16,7 @@ fi
 
 composer install --no-dev --optimize-autoloader
 
-echo "Please enter the web server directory"
+echo "\nPlease enter the web server directory"
 echo "where the Comecon private data folders will be kept"
 echo "Do NOT use the trailing slash."
 read -p "[/var/www]: " serverDir
@@ -24,54 +24,72 @@ serverDir=${serverDir:-/var/www}
 commentsDir="${serverDir}/comecon-data/comments"
 mkdir -p $commentsDir
 
-echo "Please enter the website root directory"
+echo "\nPlease enter the website root directory"
 echo "Do NOT use the trailing slash"
 read -p "[/var/www/html]: " siteDir
 siteDir=${siteDir:-/var/www/html}
 
-echo "Please enter the name of your website"
+echo "\nPlease enter the name of your website"
 read -p "[My Great Blog]: " blogName
 blogName=${blogName:-My Great Blog}
 
-echo "Please enter the URL of your website"
+echo "\nPlease enter the URL of your website"
 echo "Do NOT use the trailing slash"
 read -p "[https://myblog.example.com] " siteURL
 siteURL=${siteURL:-https://myblog.example.com}
 
-echo "Please enter the captcha question for the comment form"
+echo "\nPlease enter the captcha question for the comment form"
 echo "Yu cluod obsufcte it lke tis"
 read -p "[Wht ws Churchill fsri nme?] " captchaQuestion
 captchaQuestion=${captchaQuestion:-Wht ws Churchill\' fsri nme?}
 
-echo "Please enter the captcha answer"
+echo "\nPlease enter the captcha answer"
 read -p "[Winston] " commentCaptcha
 commentCaptcha=${commentCaptcha:-Winston}
 
-echo "Generating cookie key..."
+$s=private/settings.php
+if command -v sha256sum &> /dev/null; then
+    echo "\nPlease enter the admin password for editing comments"
+    read -sp "" adminCommentPassword
+    if [ -z "$adminCommentPassword" ]; then
+        echo "\nWarning! You have not set the password."
+        echo "I will continue, but you MUST enter the password hash"
+        echo "manually into settings.php. Otherwise Comecon won't work"
+    else
+        $hashedPassword=$(echo -n "$adminCommentPassword" | sha256sum | awk '{print $1}')
+        sed -i "0,|adminCommmentPassword|s|CHANGEME|$hashedPassword|" $s
+    fi
+else
+    echo "\nI would like to create a hashed password for editing comments,"
+    echo "but I cannot find sha256sum in the system."
+    echo "I will continue, but you MUST enter the password hash"
+    echo "manually into settings.php. Otherwise Comecon won't work"
+fi
+
+echo "\nGenerating cookie key..."
 cookieKey=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | head -c 20)
 echo $cookieKey
 
-echo "Modifying the essential settings..."
-$s=private/settings.php
+echo "\nModifying the essential settings..."
 sed -i "0,|siteDir|s|\"\"|\"$siteDir\"|" $s
 sed -i "0,|blogName|s|My Great Blog|$blogName|" $s
 sed -i "0,|siteURL|s|https://myblog.example.com|$siteURL|" $s
 sed -i "0,|commentCaptcha|s|correct_anser|$commentCaptcha|" $s
-sed -i "0,|cookieKey|s|\"CHANGEME\"|\"$cookieKey\"|" $s
+sed -i "0,|cookieKey|s|CHANGEME|$cookieKey|" $s
 
-echo "Preparing the includes..."
+echo "\nPreparing the includes..."
 sed -i "0,|// \$commentsDir|s|=|= $commentsDir|" includes/display_comments.php
 sed -i "0,|Poor man's captcha|s|Esay but ofubcstaed quistoen?|$captchaQuestion|" includes/form-submit_comment.html
 
-echo "Removing examples from the commenters file..."
+echo "\nRemoving examples from the commenters file..."
 mv private/commenters.php private/commenters.bak
 echo '<?php\n\n$commenters = [];' > private/commenters.php
 
-echo "Linking comecon.php to your website root..."
+echo "\nLinking comecon.php to your website root..."
 ln -s comecon.php $siteDir/comecon.php
 
-echo "==================================="
-echo "\nAll done! Comecon has been founded!"
+echo "\n==================================="
+echo "All done! Comecon has been founded!"
 echo "==================================="
 
 echo "\nRemember that in the HTML of every blog post you will have to insert three elements:"
