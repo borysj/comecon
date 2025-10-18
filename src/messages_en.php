@@ -6,7 +6,7 @@
 // If you are translating the messages, LABEL and MSG are the most important,
 // and there are fewest of them.
 
-define('EXITMSG_BADCOMMENTCAPTCHA', "I suspect you of being a robot.");
+define('EXITMSG_POSSIBLESPAM', "I suspect you of being a robot.");
 define('EXITMSG_WRONGPASSWORD', "Your comment has not been added.<br>
         You have used a reserved nickname in a wrong way.");
 define('EXITMSG_ERRORURL', "An error occurred while reading the address of the page<br>

@@ -17,7 +17,7 @@ if (!empty($userPassword)) {
 $captcha = trim(htmlspecialchars($_POST["captcha"], ENT_QUOTES));
 if (!$vipInfo[0]) {
     if ($captcha !== $settings['save']['commentCaptcha']) {
-        exit(EXITMSG_BADCOMMENTCAPTCHA . " ::: " . __FILE__ . ":" . __LINE__);
+        exit(EXITMSG_POSSIBLESPAM . " ::: " . __FILE__ . ":" . __LINE__);
     }
 }
 

@@ -1,6 +1,6 @@
 <?php
 
-define('EXITMSG_BADCOMMENTCAPTCHA', "Czy nie jesteś przypadkiem robotem?");
+define('EXITMSG_POSSIBLESPAM', "Czy nie jesteś przypadkiem robotem?");
 define('EXITMSG_WRONGPASSWORD', "Komentarz nie został dodany.<br>
     Użyłeś w niewłaściwy sposób zarezerwowanego podpisu.");
 define('EXITMSG_ERRORURL', "Nastąpił błąd podczas odczytywania adresu strony,<br>

@@ -5,6 +5,9 @@
 <legend align="left">C O M E C O N</legend>
 <input type="hidden" id="postID" name="postID" value="<?=$postID ?>">
 <input type="hidden" id="postFullTitle" name="postFullTitle" value="">
+<input type="text" name="admin" value="" style="position:absolute;left:-9995px;"
+tabindex="-1" autocomplete="off" aria-hidden="true">
+<input type="hidden" name="timestamp" value="<?=time() ?>">
 
 <label for="comment">Leave your opinion (max. 4000 characters):</label>
 <textarea id="comment" name="comment" maxlength="3900"

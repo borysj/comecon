@@ -39,6 +39,12 @@ if (isset($_GET["action"])) {
             require __DIR__ . "/src/email_notification.php";
             break;
         case "save":
+            if ($_POST["website"] !== "") {
+                exit(ERRORMSG_POSSIBLESPAM);
+            }
+            if (time() - $_POST["timestamp"] < 3) {
+                exit(ERRORMSG_POSSIBLESPAM);
+            }
             // We expect $_POST["postID"], but we do not need to check for
             // its existence. It has already been done by display_comment.php
             // which should come before the comment submission form. If
