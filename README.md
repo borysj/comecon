@@ -10,7 +10,7 @@ following the instructions in [Deployment](#deployment). The entry point is
 `comecon.php`.
 
 Furthermore, Comecon does not use any binary database. There is no SQL involved.
-The comments are written to and read from flat text files. This -weird-
+The comments are written to and read from flat text files. This <s>weird</s>
 conservative design decision is explained below in [FAQ](#faq-db).
 
 Comecon has **not** been optimized for a large commenting traffic.  It probably
